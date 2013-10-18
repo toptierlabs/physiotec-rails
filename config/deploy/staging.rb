@@ -1,6 +1,6 @@
 set :rails_env, "staging"
 set :branch, 'develop'
-#set :domain,  "librovillepreview.com"
+#set :domain,  "physiotec.com"
 #role :web, domain
 #role :app, domain
 #role :db,  domain, :primary => true

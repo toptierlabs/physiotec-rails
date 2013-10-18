@@ -190,7 +190,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin (~> 0.5.1)
-  capistrano (~> 2.15.5)
+  capistrano
   capistrano-ext
   carrierwave
   coffee-rails (~> 3.2.1)

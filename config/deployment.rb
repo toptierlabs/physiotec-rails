@@ -13,6 +13,7 @@ set :application, "physiotec"
 set :repository, "git@github.com:toptierlabs/physiotec-rails.git"
 set :scm, :git
 set :scm_verbose, false
+set :use_sudo, true
 set :keep_releases, 5
 
 desc "check production task"
@@ -28,6 +29,8 @@ task :check_production do
     end
   end
 end
+
+
 
 set :aws_private_key_path, "~/.ssh/physiotec.pem"
 
@@ -88,6 +91,7 @@ namespace :bundle do
 
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
+
     run "cd #{current_path} && bundle install  --without=test --no-update-sources"
   end
 
@@ -99,13 +103,20 @@ namespace :deploy do
       run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} assets:precompile --trace"
     end
   end
+
+  desc "Install Git"
+  task :install_git do
+    run "sudo yum install git -y"
+  end
+
+
 end
 
 
 
 # The address of the remote host on EC2 (the Public DNS address)
 set :location, "ec2-54-200-192-119.us-west-2.compute.amazonaws.com"
-set :gemhome, "/var/lib/gems/1.8/gems/"
+set :gemhome, "/usr/share/ruby/1.9/gems/1.9.1/"
 # setup some Capistrano roles
 role :app, location
 role :web, location
@@ -119,3 +130,4 @@ ssh_options[:keys] = ["~/.ssh/physiotec.pem"]
 
 before "deploy", "check_production"
 after "deploy:finalize_update", "deploy:assets:precompile"
+after "deploy:setup", "deploy:install_git"
