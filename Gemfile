@@ -29,7 +29,9 @@ gem 'carrierwave'
 
 gem 'fog', '~> 1.3.1' # Need to specify version, as carrierwave references older (0.9.0) which doesn't allow configuration of Rackspace UK Auth URL
 
-gem 'capistrano', '~> 3.0.0'
+gem 'capistrano', '~> 2.15.5'
+gem 'capistrano-ext'
+gem 'rvm-capistrano'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
