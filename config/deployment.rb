@@ -70,7 +70,7 @@ namespace :setup_server do
       commands = <<-SH.split("\n").map(&:strip).join(";")
         sudo touch #{authorized_keys2}
         sudo cat /tmp/my_key.pub | sudo tee -a #{authorized_keys2}
-        sudo rm /tmp/my_key.pub
+        sudo rm /tmp/my_key.pubhttps://console.aws.amazon.com/elasticbeanstalk/home?region=us-west-2#/environment/monitoring?applicationName=physiotec-rails&environmentId=e-76vfemuse9
         sudo chmod 600 #{authorized_keys2}
         sudo chown #{user} #{authorized_keys2}
         sudo chgrp #{user} #{authorized_keys2}
@@ -109,6 +109,17 @@ namespace :deploy do
     run "sudo yum install git -y"
   end
 
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+  [:start, :stop].each do |t|
+  desc "#{t} task isn't needed for Passenger"
+  task t, :roles => :app do
+    # nothing
+  end
+end
 
 end
 
