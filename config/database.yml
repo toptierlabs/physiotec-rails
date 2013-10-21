@@ -43,10 +43,10 @@ test:
 
 production:
   adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: physiotec-rails_production
+  host: aazb1aqhojrxc1.ceqzikhypzkl.us-west-2.rds.amazonaws.com
+  port: 3306
+  database: ebdb
+  username: ebroot
+  password: TopTier2011
   pool: 5
-  username: root
-  password:
-  socket: /tmp/mysql.sock
+  timeout: 5000
