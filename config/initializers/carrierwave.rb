@@ -7,8 +7,7 @@ CarrierWave.configure do |config|
     #:host                   => 's3.amazonaws.com',             # optional, defaults to nil
     #:endpoint               => 'http://physiotec-rails.s3.amazonaws.com/' # optional, defaults to nil
   }
-  #config.storage = :fog
   config.fog_directory  = 'physiotec-rails'                                 # required
-  #config.fog_public     = true                                   # optional, defaults to true
-  #config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}  # optional, defaults to {}
+  config.fog_public     = false
+  config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}
 end

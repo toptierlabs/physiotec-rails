@@ -8,12 +8,51 @@ class FileUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
   # storage :file
+
+  after :store, :convert_video
+
   storage :fog
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  def convert_video(file)
+    pipelineid = "1382374792752-0ai0m6"
+    web_mp4_preset_id = "1351620000001-000030"
+
+    transcoder = AWS::ElasticTranscoder::Client.new
+    transcoder.create_job(options = {
+      pipeline_id: pipelineid,
+      input: {
+        key: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/#{@filename}",
+        frame_rate: 'auto',
+        resolution: 'auto',
+        aspect_ratio: 'auto',
+        interlaced: 'auto',
+        container: 'auto'
+      },
+      outputs: [{
+        key: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/converted_#{@filename}",
+        preset_id: web_mp4_preset_id,
+        thumbnail_pattern: "",
+        rotate: '0'
+      }]
+      }
+    )
+    puts "="*100
+    puts self.to_json
+    puts self.file.url
+    puts @filename
+    puts "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/#{@filename}"
+    puts "="*100
+    puts "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/converted_#{@filename}"
+
+    #@filename = "converted_#{@filename}"
+    model.update_column(mounted_as, "converted_#{@filename}")
+
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
