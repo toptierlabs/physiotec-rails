@@ -22,8 +22,9 @@ class FileUploader < CarrierWave::Uploader::Base
   def convert_video(file)
     
     pipelineid = Rails.env.production? ? "1382374792752-0ai0m6" : "1382548852289-kax4vo"
-    web_mp4_preset_id = "1351620000001-000030"
-
+    
+    web_mp4_480_preset_id = "1351620000001-000030"
+    web_mp4_360_preset_id = "1351620000001-000040"
     #convert the uploaded video
     transcoder = AWS::ElasticTranscoder::Client.new
     transcoder.create_job(options = {
@@ -38,7 +39,13 @@ class FileUploader < CarrierWave::Uploader::Base
       },
       outputs: [{
         key: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/converted_#{@filename}",
-        preset_id: web_mp4_preset_id,
+        preset_id: web_mp4_480_preset_id,
+        thumbnail_pattern: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/thumbnail_{count}",
+        rotate: '0'
+      },
+      {
+        key: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/converted_360_#{@filename}",
+        preset_id: web_mp4_360_preset_id,
         thumbnail_pattern: "",
         rotate: '0'
       }]
