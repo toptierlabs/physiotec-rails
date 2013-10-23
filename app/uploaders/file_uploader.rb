@@ -20,9 +20,11 @@ class FileUploader < CarrierWave::Uploader::Base
   end
 
   def convert_video(file)
-    pipelineid = "1382374792752-0ai0m6"
+    
+    pipelineid = Rails.env.production? ? "1382374792752-0ai0m6" : "1382548852289-kax4vo"
     web_mp4_preset_id = "1351620000001-000030"
 
+    #convert the uploaded video
     transcoder = AWS::ElasticTranscoder::Client.new
     transcoder.create_job(options = {
       pipeline_id: pipelineid,
@@ -42,15 +44,8 @@ class FileUploader < CarrierWave::Uploader::Base
       }]
       }
     )
-    puts "="*100
-    puts self.to_json
-    puts self.file.url
-    puts @filename
-    puts "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/#{@filename}"
-    puts "="*100
-    puts "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/converted_#{@filename}"
 
-    #@filename = "converted_#{@filename}"
+    #add converted_ prefix to video's filename attribute
     model.update_column(mounted_as, "converted_#{@filename}")
 
   end
