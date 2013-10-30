@@ -1,0 +1,37 @@
+//@import "bootstrap-theme.min";
+@import "bootstrap.min";
+
+.jumbotron {
+	margin-top: 75px
+}
+
+.formtastic {
+   .inline-errors {
+  		color: #b94a48;
+	}
+
+   ol {
+      list-style-type:none;
+      padding: 0px;
+   }
+   li {
+      list-style-type:none;
+   }
+   .form-control {
+  	   margin-bottom: 15px;
+   }
+   p {
+   	   font-size: 0.7em;  
+   }
+}
+
+  //devise errors
+  #error_explanation {
+        h2 {
+        	font-size: 1em;
+        }
+        font-size: 0.7em;
+        ol {
+        	list-style-type: circle;
+        }
+  }
