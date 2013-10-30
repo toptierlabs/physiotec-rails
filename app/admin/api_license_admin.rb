@@ -1,7 +1,7 @@
 ActiveAdmin.register ApiLicenseAdmin do
   
   form do |f|
-    f.inputs api_license_admin.api_license.name + " Admin Details" do
+    f.inputs "Admin Details" do
       f.input :api_license      
       f.input :email
       f.input :first_name
