@@ -1,4 +1,7 @@
 class ApiLicenseAdmin < ActiveRecord::Base
+
+  rolify
+  
   #before the model creates generates the api keys
   before_create :generate_api_keys
 
