@@ -1,9 +1,9 @@
 PhysiotecV3::Application.routes.draw do
   
 
-  devise_for :api_license_admins, :controllers => {:confirmations => 'confirmations'}
+  devise_for :users, :controllers => {:confirmations => 'confirmations'}
 
-  devise_scope :api_license_admin do
+  devise_scope :user do
     put "/confirm" => "confirmations#confirm"
     post "/confirm" => "confirmations#confirm"
   end

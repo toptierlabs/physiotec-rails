@@ -1,4 +1,4 @@
-class ApiLicenseAdmin < ActiveRecord::Base
+class User < ActiveRecord::Base
 
   rolify
   
