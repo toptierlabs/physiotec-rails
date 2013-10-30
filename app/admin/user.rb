@@ -1,5 +1,4 @@
 ActiveAdmin.register User do
-  rolify
   form do |f|
     f.inputs "User Details" do
       f.input :api_license      
