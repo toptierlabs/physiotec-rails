@@ -21,20 +21,6 @@ module Api
         end
       end
 
-      # GET /licenses/new
-      # GET /licenses/new.json
-      def new
-        @license = License.new
-
-        respond_to do |format|
-          format.json { render json: @license }
-        end
-      end
-
-      # GET /licenses/1/edit
-      def edit
-        @license = License.find(params[:id])
-      end
 
       # POST /licenses
       # POST /licenses.json

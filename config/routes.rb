@@ -11,6 +11,8 @@ PhysiotecV3::Application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -71,6 +73,14 @@ PhysiotecV3::Application.routes.draw do
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
       resources :licenses
+      resources :users do
+
+        collection do
+          post '/login' => 'users#login'
+        end
+
+      end
+      
     end
   end
 end

@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+         :recoverable, :trackable, :validatable, :confirmable#, :rememberable
 
   #Set the attributes validations
   validates :email, :first_name, :last_name, :api_license_id,
@@ -15,9 +15,22 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes
   attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :first_name, :last_name, :api_license_id
+                  :first_name, :last_name, :api_license_id, :session_token,
+                  :session_token_created_at
 
-  #The user inserts the password after he recieves a email confirmation
+  validates :session_token, :uniqueness => true
+
+  #Set the method to create new session tokens
+  def new_session_token
+    self.session_token = SecureRandom.urlsafe_base64
+    self.session_token_created_at = DateTime.now
+    self.save
+    #returns the session token
+    self.session_token
+  end
+
+
+  #An user inserts his password after he recieves a email confirmation
   def password_required?
     super if self.confirmed?
   end 

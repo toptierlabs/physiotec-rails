@@ -11,7 +11,6 @@ module Api
 
       before_filter :restrict_access 
 
-
       private
 
       def render_not_found(exception)
