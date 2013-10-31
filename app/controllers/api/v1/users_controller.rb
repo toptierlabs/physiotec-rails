@@ -1,6 +1,10 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiController
+
+      before_filter :identify_user, :except=>[:login] 
+
+
       # GET /users
       # GET /users.json
       def index

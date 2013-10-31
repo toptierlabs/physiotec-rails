@@ -1,9 +1,12 @@
 development:
   bypass_api_key_verification: true
+  bypass_token_verification: true
   catch_exceptions: false
 test:
   bypass_api_key_verification: false
+  bypass_token_verification: false
   catch_exceptions: true
 production:
   bypass_api_key_verification: false
+  bypass_token_verification: false
   catch_exceptions: true

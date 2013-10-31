@@ -38,7 +38,18 @@ module Api
         api_key
       end
 
-              
+      def read_user_id
+        user_id = request.headers["X-USER-ID"]
+        user_id = params["user_id"] if user_id.nil?
+        user_id
+      end
+
+      def read_user_token
+        user_token = request.headers["X-USER-TOKEN"]
+        user_token = params["user_token"] if user_token.nil?
+        user_token
+      end
+
       def restrict_access
         api_key = read_api_key
         hash = request.headers["X-URL-HASH"] 
@@ -67,7 +78,29 @@ module Api
 
         render json: {:error => "401"}, :status => :unauthorized if unauthorized
       end
+    end
 
+    def identify_user
+      user_id = read_user_id
+      user_token = read_user_token
+      unauthorized = false
+
+      if !user_id.nil? && (!user_token.nil? || AUTH_CONFIG['bypass_token_verification'])
+        user = User.find(user_id)
+        if !AUTH_CONFIG['bypass_token_verification']
+          if user.token == user_token
+            @user = user
+          else 
+            unauthorized = true
+          end
+        else
+          @user = user
+        end
+      else
+        unauthorized = true
+      end
+
+      render json: {:error => "401"}, :status => :unauthorized if unauthorized
     end
   end
 end
