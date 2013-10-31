@@ -1,6 +1,8 @@
 module Api
   module V1
     class LicensesController < Api::V1::ApiController
+      before_filter :identify_user
+
       # GET /licenses
       # GET /licenses.json
       def index
