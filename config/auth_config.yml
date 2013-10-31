@@ -1,0 +1,8 @@
+development:
+  bypass_api_key_verification: true
+
+test:
+  bypass_api_key_verification: false
+
+production:
+  bypass_api_key_verification: false
