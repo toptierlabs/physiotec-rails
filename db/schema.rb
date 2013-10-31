@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131030211057) do
+ActiveRecord::Schema.define(:version => 20131031140624) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -49,9 +49,13 @@ ActiveRecord::Schema.define(:version => 20131030211057) do
   create_table "api_licenses", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "public_api_key"
+    t.string   "secret_api_key"
   end
+
+  add_index "api_licenses", ["public_api_key"], :name => "index_api_licenses_on_public_api_key"
 
   create_table "licenses", :force => true do |t|
     t.integer  "maximum_clinics"
@@ -79,8 +83,6 @@ ActiveRecord::Schema.define(:version => 20131030211057) do
     t.string   "first_name",                             :null => false
     t.string   "last_name",                              :null => false
     t.integer  "api_license_id",                         :null => false
-    t.string   "public_api_key",                         :null => false
-    t.string   "secret_api_key",                         :null => false
     t.string   "email",                  :default => "", :null => false
     t.string   "encrypted_password",     :default => "", :null => false
     t.string   "reset_password_token"
