@@ -2,11 +2,11 @@ module Api
   module V1
     class ApiController < ApplicationController
       respond_to :json
-      rescue_from Exception, :with => :render_error
-      rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found
-      rescue_from ActionController::RoutingError, :with => :render_not_found
-      rescue_from ActionController::UnknownController, :with => :render_not_found
-      rescue_from AbstractController::ActionNotFound, :with => :render_not_found
+      rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
+      rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
+      rescue_from ActionController::RoutingError, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
+      rescue_from ActionController::UnknownController, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
+      rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 
 
       before_filter :restrict_access 
