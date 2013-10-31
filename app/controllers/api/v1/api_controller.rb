@@ -89,12 +89,12 @@ module Api
         user = User.find(user_id)
         if !AUTH_CONFIG['bypass_token_verification']
           if user.token == user_token
-            @user = user
+            @current_user = user
           else 
             unauthorized = true
           end
         else
-          @user = user
+          @current_user = user
         end
       else
         unauthorized = true

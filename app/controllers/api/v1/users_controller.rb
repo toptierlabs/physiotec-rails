@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::V1::ApiController
-
+      # @current_user will hold the identified user
       before_filter :identify_user, :except=>[:login] 
 
 
