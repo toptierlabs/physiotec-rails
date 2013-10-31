@@ -44,7 +44,7 @@ module Api
         hash = request.headers["X-URL-HASH"] 
         unauthorized = false
 
-        if !api_key.nil? && !hash.nil?
+        if !api_key.nil? && (!hash.nil? || AUTH_CONFIG['bypass_api_key_verification'])
           api_license = ApiLicense.find_by_public_api_key(api_key)
           
           # Check if bypass api verification is enabled
