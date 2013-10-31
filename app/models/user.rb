@@ -1,7 +1,5 @@
 class User < ActiveRecord::Base
 
-  rolify
-  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -33,7 +31,20 @@ class User < ActiveRecord::Base
   #An user inserts his password after he recieves a email confirmation
   def password_required?
     super if self.confirmed?
-  end 
+  end
+
+  #ad role to an user
+  def add_role(role)
+  end
+
+  #sets profile for current user
+  def set_profile(profile)
+    #profile ||= Profile::default
+    #load profile roles
+    #for each role self.add_role "admin"
+  end
+
+
 
   def password_match?
     self.errors[:password] << "can't be blank" if password.blank?

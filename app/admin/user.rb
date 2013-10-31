@@ -12,17 +12,17 @@ ActiveAdmin.register User do
   end
   
   #custom controller that creates the user with admin roles on the selected api_license
-  controller do
+#   controller do
 
-    def create
-      super do |format|
-        @user.add_role "admin"
-      end
-    end
+#     def create
+#       super do |format|
+#         @user.add_role "admin"
+#       end
+#     end
 
-  end
+#   end
 
-end
+# end
   
   #belongs_to :api_license
   #navigation_menu :api_license

@@ -72,7 +72,7 @@ module Api
       end
 
       # DELETE /users/1
-      # DELETE /users/1.json
+      # DELETE /users/1.jsonº
       def destroy
         @user = User.find(params[:id])
         @user.destroy

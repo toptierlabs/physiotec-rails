@@ -56,7 +56,6 @@ gem "devise", "~> 3.1.1"
 gem "haml-rails", "~> 0.4"
 
 
-#cancan and rolify for user permissions and scopes
+#cancan for user permissions
 gem "cancan", "~> 1.6.10"
-gem "rolify", "~> 3.2.0"
 
