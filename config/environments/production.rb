@@ -66,7 +66,7 @@ PhysiotecV3::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => 'physiotecrails-develop-7ukggef3zk.elasticbeanstalk.com' }
+  config.action_mailer.default_url_options = { :host => 'elasticbeanstalk.com' }
   config.action_mailer.delivery_method = :smtp
 
   # change to true to allow email to be sent during development
