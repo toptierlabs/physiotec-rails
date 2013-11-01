@@ -10,7 +10,7 @@ ActiveAdmin.register User do
     #label api_license_admin.api_license.name
     
   end
-  
+end
   #custom controller that creates the user with admin roles on the selected api_license
 #   controller do
 
