@@ -62,6 +62,11 @@ class User < ActiveRecord::Base
     end
 
     confirmable
-  end 
+  end
+
+  #display name for ActiveAdmin
+  def display_name
+    self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
+  end
 
 end
