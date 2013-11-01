@@ -21,7 +21,7 @@ test:
 
 production:
   adapter: mysql2
-  host: aazb1aqhojrxc1.ceqzikhypzkl.us-west-2.rds.amazonaws.com
+  host: aa7yo13ayuzkjl.ceqzikhypzkl.us-west-2.rds.amazonaws.com
   port: 3306
   database: ebdb
   username: ebroot
