@@ -6,4 +6,5 @@ ActiveAdmin.register UsersScopes do
     default_actions
   end
   config.sort_order = "user_id_asc"
+  
 end
