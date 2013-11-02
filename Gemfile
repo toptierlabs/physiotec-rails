@@ -59,3 +59,8 @@ gem "haml-rails", "~> 0.4"
 #cancan for user permissions
 gem "cancan", "~> 1.6.10"
 
+# Amazon SES
+gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'
+
+
+
