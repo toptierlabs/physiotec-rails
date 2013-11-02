@@ -35,6 +35,8 @@ PhysiotecV3::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  config.assets.precompile += %w( confirmation.css  confirmation.js)
+
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   config.action_mailer.delivery_method = :ses
