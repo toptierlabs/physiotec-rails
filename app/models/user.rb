@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
                   :first_name, :last_name, :api_license_id, :session_token,
                   :session_token_created_at
 
-  validates :session_token, :uniqueness => true
+  validates :session_token, :uniqueness => true, :allow_blank => true
 
   #Set the method to create new session tokens
   def new_session_token
