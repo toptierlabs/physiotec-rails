@@ -1,8 +1,10 @@
 class Scope < ActiveRecord::Base
-  belongs_to :permission
-  attr_accessible :permission_id, :name
+  belongs_to :scope_group
+  has_many :scope_permissions
 
-  def display_name
-  	self.permission.name + ' (' + self.name + ')'
-  end
+  #uniqueness of the name inside a scope group
+  validates :name, :uniqueness => {:scope => :scope_group_id}
+
+  attr_accessible :name, :scope_group_id
+
 end

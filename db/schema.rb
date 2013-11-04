@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131101170014) do
+ActiveRecord::Schema.define(:version => 20131104205620) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -68,11 +68,31 @@ ActiveRecord::Schema.define(:version => 20131101170014) do
     t.datetime "updated_at",      :null => false
   end
 
+  create_table "permission_scope_groups", :force => true do |t|
+    t.integer  "permission_id"
+    t.integer  "scope_group_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "permission_scope_groups", ["permission_id"], :name => "index_permission_scope_groups_on_permission_id"
+  add_index "permission_scope_groups", ["scope_group_id"], :name => "index_permission_scope_groups_on_scope_group_id"
+
   create_table "permissions", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "profile_scope_permissions", :force => true do |t|
+    t.integer  "profile_id"
+    t.integer  "scope_permission_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "profile_scope_permissions", ["profile_id"], :name => "index_profile_scope_permissions_on_profile_id"
+  add_index "profile_scope_permissions", ["scope_permission_id"], :name => "index_profile_scope_permissions_on_scope_permission_id"
 
   create_table "profiles", :force => true do |t|
     t.string   "name"
@@ -80,24 +100,39 @@ ActiveRecord::Schema.define(:version => 20131101170014) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "profiles_scopes", :force => true do |t|
-    t.integer  "profile_id"
-    t.integer  "scope_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "scope_groups", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
-  add_index "profiles_scopes", ["profile_id"], :name => "index_profiles_scopes_on_profile_id"
-  add_index "profiles_scopes", ["scope_id"], :name => "index_profiles_scopes_on_scope_id"
-
-  create_table "scopes", :force => true do |t|
-    t.string   "name"
+  create_table "scope_permissions", :force => true do |t|
+    t.integer  "scope_id"
     t.integer  "permission_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "scopes", ["permission_id"], :name => "index_scopes_on_permission_id"
+  add_index "scope_permissions", ["permission_id"], :name => "index_scope_permissions_on_permission_id"
+  add_index "scope_permissions", ["scope_id"], :name => "index_scope_permissions_on_scope_id"
+
+  create_table "scopes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "scope_group_id"
+  end
+
+  create_table "user_scope_permissions", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "scope_permission_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "user_scope_permissions", ["scope_permission_id"], :name => "index_user_scope_permissions_on_scope_permission_id"
+  add_index "user_scope_permissions", ["user_id"], :name => "index_user_scope_permissions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "first_name",                               :null => false
@@ -127,15 +162,5 @@ ActiveRecord::Schema.define(:version => 20131101170014) do
   add_index "users", ["email"], :name => "index_api_license_admins_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_api_license_admins_on_reset_password_token", :unique => true
   add_index "users", ["session_token"], :name => "index_users_on_session_token"
-
-  create_table "users_scopes", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "scope_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "users_scopes", ["scope_id"], :name => "index_users_scopes_on_scope_id"
-  add_index "users_scopes", ["user_id"], :name => "index_users_scopes_on_user_id"
 
 end

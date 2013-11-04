@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
 
   validates :session_token, :uniqueness => true, :allow_blank => true
 
+  has_many :user_scope_permissions
+  has_many :scope_permissions, :through=>:user_scope_permissions
+
   #Set the method to create new session tokens
   def new_session_token
     self.session_token = SecureRandom.urlsafe_base64
