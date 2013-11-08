@@ -8,4 +8,7 @@ class ProfileScopePermission < ActiveRecord::Base
   #other validations
   validates :profile_id, :scope_permission, :presence => true, :allow_blank => false
 
+  def display_name
+  	self.scope_permission.display_name
+  end
 end

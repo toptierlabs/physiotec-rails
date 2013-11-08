@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :first_name, :last_name, :api_license_id, :session_token,
-                  :session_token_created_at
+                  :session_token_created_at, :profiles
 
   validates :session_token, :uniqueness => true, :allow_blank => true
 
@@ -71,5 +71,14 @@ class User < ActiveRecord::Base
   def display_name
     self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
   end
+
+  #a user may have many profiles
+
+  has_many :user_profiles
+  has_many :profiles, :through => :user_profiles
+
+  accepts_nested_attributes_for :user_profiles, :allow_destroy => true
+
+
 
 end

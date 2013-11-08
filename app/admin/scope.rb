@@ -1,7 +1,12 @@
 ActiveAdmin.register Scope do
-  # index do
-  #   column :id
-  #   column :display_name
-  #   default_actions
-  # end
+  menu :parent => "1. Scopes", :label => "Scopes"
+
+  index do
+    column :id
+    column :scope_group
+    column :name
+    column :created_at
+    column :updated_at
+    default_actions
+  end
 end

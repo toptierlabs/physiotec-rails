@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131104205620) do
+ActiveRecord::Schema.define(:version => 20131107145736) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -84,6 +84,16 @@ ActiveRecord::Schema.define(:version => 20131104205620) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "profile_assignments", :force => true do |t|
+    t.integer  "profile_id"
+    t.integer  "destination_profile_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "profile_assignments", ["destination_profile_id"], :name => "index_profile_assignments_on_destination_profile_id"
+  add_index "profile_assignments", ["profile_id"], :name => "index_profile_assignments_on_profile_id"
+
   create_table "profile_scope_permissions", :force => true do |t|
     t.integer  "profile_id"
     t.integer  "scope_permission_id"
@@ -123,6 +133,16 @@ ActiveRecord::Schema.define(:version => 20131104205620) do
     t.datetime "updated_at",     :null => false
     t.integer  "scope_group_id"
   end
+
+  create_table "user_profiles", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "profile_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_profiles", ["profile_id"], :name => "index_user_profiles_on_profile_id"
+  add_index "user_profiles", ["user_id"], :name => "index_user_profiles_on_user_id"
 
   create_table "user_scope_permissions", :force => true do |t|
     t.integer  "user_id"

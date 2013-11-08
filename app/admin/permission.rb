@@ -1,14 +1,16 @@
 ActiveAdmin.register Permission do
+  menu :parent => "2. Permissions", :label => "Permissions"
+    
+    #returns the scopes linked with the permission via the scope groups
     member_action :scopes, :method => :get do
-      permission = Permission.find(params[:id])
-      puts '#'*50
       @response = []
+      permission = Permission.find(params[:id])
       permission.permission_scope_groups.each do |permission_scope_groups|
       	permission_scope_groups.scope_group.scopes.each do |scope|
       		@response << scope.as_json(:only=>[:id, :name])
       	end
       end
-      puts @response.to_json
       render json: @response
     end
+
 end

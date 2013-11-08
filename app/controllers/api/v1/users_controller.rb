@@ -45,17 +45,40 @@ module Api
 
       # POST /users
       # POST /users.json
+      #The content of the request must have a json with the following format:
+      # { email: String,
+      #   first_name: String,
+      #   last_name: String,
+      #   profiles: [String] }
       def create
-        @user = User.new(params[:user])
-
+        #api license
+        @api_license
+        puts params
+        puts '-'*50
+        puts params[:user][:user_profiles]
+        user = User.new(params[:user].except(:user_profiles))
+        user.api_license_id = @api_license.id
+        error = false
+        params[:user][:user_profiles].each do | profile_name |
+          profile = Profile.find_by_name(profile_name)
+          error = profile.nil?
+          break if error
+          user.profiles << profile
+        end
+        puts user.to_json
+        puts user.profiles.all
+        puts '-'*50
         respond_to do |format|
-          if @user.save
-            format.json { render json: @user, status: :created, location: @user }
+          if !error && user.save
+            format.json { render json: user, status: :created }
           else
-            format.json { render json: @user.errors, status: :unprocessable_entity }
+            format.json { render json: user.errors, status: :unprocessable_entity }
           end
         end
       end
+
+#{"{email:\"mdehorta test@gmail.com\", first_name:\"matias\",last_name:\"prueba\",profiles:"=>{"\"Media\n\", \"Author\""=>{"}"=>nil}}, "format"=>:json, "action"=>"create", "controller"=>"api/v1/users"}
+
 
       # PUT /users/1
       # PUT /users/1.json
