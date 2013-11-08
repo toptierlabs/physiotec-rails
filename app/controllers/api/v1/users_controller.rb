@@ -2,8 +2,7 @@ module Api
   module V1
     class UsersController < Api::V1::ApiController
       # @current_user will hold the identified user
-      before_filter :identify_user, :except=>[:login] 
-
+      before_filter :identify_user, :except=>[:login]
 
       # GET /users
       # GET /users.json
@@ -29,7 +28,7 @@ module Api
       #POST /users/login
       def login
         #search the user by email
-        user = User.find_by_email(params[:email])        
+        user = User.find_by_email(params[:email])     
         #check if the recieved password matches the user password
         if user !=nil and user.valid_password?(params[:password])
           #creates a session token
@@ -51,34 +50,36 @@ module Api
       #   last_name: String,
       #   profiles: [String] }
       def create
-        #api license
-        @api_license
-        puts params
-        puts '-'*50
-        puts params[:user][:user_profiles]
-        user = User.new(params[:user].except(:user_profiles))
-        user.api_license_id = @api_license.id
-        error = false
-        params[:user][:user_profiles].each do | profile_name |
-          profile = Profile.find_by_name(profile_name)
-          error = profile.nil?
-          break if error
-          user.profiles << profile
+        error = !validates(@current_user, :user, :create)
+        #if user can create another user
+        if !error
+          #new user from parameters
+          user = User.new(params[:user].except(:user_profiles))
+          user.api_license_id = @api_license.id
+          error = false
+          #profile assignations
+          params[:user][:user_profiles].each do | profile_name |
+            profile = Profile.find_by_name(profile_name)
+            error = profile.nil?
+            #current user can assign ingresed profile
+            error = validates(@current_user, :create, profile.name.parameterize.underscore.to_sym) unless error
+            break if error
+            user.profiles << profile
+          end
+          error = !user.save unless error
         end
-        puts user.to_json
-        puts user.profiles.all
-        puts '-'*50
+
         respond_to do |format|
-          if !error && user.save
+          if !error
             format.json { render json: user, status: :created }
           else
-            format.json { render json: user.errors, status: :unprocessable_entity }
+            #if user == nil then the current user does not have sufficient privileges
+            response_error = { :error => "Can not complete the operation because you do not have sufficient privileges." }
+            response_error = user.errors unless user.nil?
+            format.json { render json: response_error, status: :unprocessable_entity }
           end
         end
       end
-
-#{"{email:\"mdehorta test@gmail.com\", first_name:\"matias\",last_name:\"prueba\",profiles:"=>{"\"Media\n\", \"Author\""=>{"}"=>nil}}, "format"=>:json, "action"=>"create", "controller"=>"api/v1/users"}
-
 
       # PUT /users/1
       # PUT /users/1.json

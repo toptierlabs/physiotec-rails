@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131107145736) do
+ActiveRecord::Schema.define(:version => 20131108203038) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20131107145736) do
     t.string   "phone"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "api_license_id"
   end
 
   create_table "permission_scope_groups", :force => true do |t|

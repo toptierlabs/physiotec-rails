@@ -13,6 +13,13 @@ module Api
 
   protected
 
+        def validates(model, permission, scope)
+          # if the current_user does not have permission to complete the action
+          # an error would be raised as a response
+          Ability.new(model).can? permission, scope
+        end
+
+
         def render_not_found(exception)
           # logger.info(exception) # for logging 
           respond_to do |format|

@@ -79,6 +79,22 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :user_profiles, :allow_destroy => true
 
+  # After create (the method is executed once) creates the user_scope_permissions
+  # for the user, given the profiles
+  after_create :assign_scopes_permissions
+
+  def assign_scopes_permissions
+    self.profiles.each do | profile |
+      #gets the permissions and  scopes for the current profile
+      profile.scope_permissions.each do | scope_permission |
+        #creates the relation unless it alredy exists
+        if UserScopePermission.where(user_id: self.id, scope_permission_id: scope_permission.id).empty?
+          UserScopePermission.create(user_id: self.id, scope_permission_id: scope_permission.id)
+        end
+      end
+    end
+  end
+
 
 
 end

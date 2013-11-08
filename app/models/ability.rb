@@ -7,11 +7,26 @@ class Ability
     #loads all permissions with them scopes for the ingresed user
     UserScopePermission.where(:user_id => user.id).each do |perm_scope|
       #converts the permission obtained from the database to a symbol (A => :a)
-      permission = perm_scope.scope_permission.permission.name.downcase.to_sym
+      permission = perm_scope.scope_permission.permission.name.parameterize.underscore.to_sym
       #converts the scope obtained from the database to a symbol (A => :a)
-      scope = perm_scope.scope_permission.scope.name.downcase.to_sym
+      scope = perm_scope.scope_permission.scope.name.parameterize.underscore.to_sym
       #creates the ability for the given user                                                                                                                   
       can permission, scope
+
+      #If the user has the ability to manage users
+      puts permission
+      if permission == :user
+        user.profiles.each do | profile |
+          ProfileAssignment.where(:profile_id => profile.id).each do | assign_profile |
+            #converts the name of the profile obtained from the database to a symbol (A b => :a_b)
+            permission_sym = assign_profile.destination_profile.name.parameterize.underscore.to_sym
+            #If can? :user, :create then can? :create, :'profile'
+            can scope, permission_sym
+          end
+        end
+      end
+
+
     end
   end   
 

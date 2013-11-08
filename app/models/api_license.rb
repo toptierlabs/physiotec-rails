@@ -3,7 +3,7 @@ class ApiLicense < ActiveRecord::Base
   #Generates api keys before the model is created
   before_validation :generate_api_keys, :on => :create
 
-  attr_accessible :description, :name, :public_api_key, :secret_api_key
+  attr_accessible :description, :name, :public_api_key, :secret_api_key, :licenses
 
   #Set the attributes validations
   validates :name, :description,
@@ -13,7 +13,7 @@ class ApiLicense < ActiveRecord::Base
 
 
   has_many :users
-
+  has_many :licenses
 
   def generate_api_keys
   	self.public_api_key = SecureRandom.urlsafe_base64

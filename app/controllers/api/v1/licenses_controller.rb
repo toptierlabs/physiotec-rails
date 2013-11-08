@@ -6,10 +6,16 @@ module Api
       # GET /licenses
       # GET /licenses.json
       def index
-        @licenses = License.all
-
+        error = !validates(@current_user, :license, :read)
+        licenses = License.where(api_license_id: @api_license.id) unless error 
         respond_to do |format|
-          format.json { render json: @licenses }
+          if !error
+            format.json { render json: licenses }
+          else
+            error = { :error => "Can not complete the operation because you do not have sufficient privileges." }
+            format.json { render json: error, status: :unprocessable_entity }
+          end
+
         end
       end
 
@@ -27,13 +33,21 @@ module Api
       # POST /licenses
       # POST /licenses.json
       def create
-        @license = License.new(params[:license])
+        error = !validates(@current_user, :license, :create)
+        if !error
+          license = License.new(params[:license].except(:api_license_id))
+          license.api_license_id = @api_license.id
+          #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone
+          error = !license.save
+        end
 
         respond_to do |format|
-          if @license.save
-            format.json { render json: @license, status: :created, location: @license }
+          if !error
+            format.json { render json: license, status: :created}
           else
-            format.json { render json: @license.errors, status: :unprocessable_entity }
+            response_error = { :error => "Can not complete the operation because you do not have sufficient privileges." }
+            response_error = license.errors unless license.nil?
+            format.json { render json: response_error, status: :unprocessable_entity }
           end
         end
       end
@@ -41,13 +55,22 @@ module Api
       # PUT /licenses/1
       # PUT /licenses/1.json
       def update
-        @license = License.find(params[:id])
+        error = !validates(@current_user, :license, :create)
+        license = License.where(id: params[:id]).first unless error
+        error = true if license.nil?
+        if !error
+          puts params[:license].to_json
+          error = !license.update_attributes(params[:license].except(:api_license_id))
+          puts error 
 
-        respond_to do |format|
-          if @license.update_attributes(params[:license])
-            format.json { head :no_content }
-          else
-            format.json { render json: @license.errors, status: :unprocessable_entity }
+          respond_to do |format|
+            if !error
+              format.json { render json: license, status: :updated }
+            else
+              response_error = { :error => "Can not complete the operation." }
+              response_error = lincense.errors unless license.nil?
+              format.json { render json: response_error, status: :unprocessable_entity }
+            end
           end
         end
       end

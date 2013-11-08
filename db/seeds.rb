@@ -5,14 +5,14 @@
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
 # Creates the permissions
-permissions = ["Translate", "Clinic", "Excercise"]
+permissions = ["Translate", "Clinic", "Excercise", "License", "User"]
 
 permissions.each do | name |
   Permission.create(name: name)
 end
 
 # Creates the scope groups
-scope_groups = [["Common", "Common permissions, like create, modify or delete."], ["Languages", "A Group of different languages."],
+scope_groups = [["Common", "Common permissions, like create, read, modify or delete."], ["Languages", "A Group of different languages."],
                 ["Clinic", "Privileges over the clinic."]]
 
 scope_groups.each do | name, description |
@@ -20,7 +20,7 @@ scope_groups.each do | name, description |
 end
 
 # Creates the scopes
-scopes = [["Create", "Common"], ["Modify", "Common"], ["Delete", "Common"],
+scopes = [["Create", "Common"], ["Read", "Common"], ["Modify", "Common"], ["Delete", "Common"],
          ["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
          ["Spanish", "Languages"], ["Own", "Clinic"], ["Clinic", "Clinic"],
          ["License", "Clinic"]]
@@ -31,7 +31,7 @@ end
 
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Excercise", "Common"],
-                          ["Clinic", "Clinic"]]
+                          ["Clinic", "Clinic"], ["License", "Common"], ["User", "Common"]]
 
 permission_scope_group.each do | permission, scope_group |
   PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
@@ -41,13 +41,15 @@ end
 #Relation between scopes and permissions
 #First the languages and the translate group
 scope_permission = [["Translate", "English"], ["Translate", "French"], ["Translate", "Portuguese"],
-                   ["Translate", "Spanish"], ["Excercise", "Create"], ["Excercise", "Modify"],
+                   ["Translate", "Spanish"], ["Excercise", "Create"], ["Excercise", "Read"], ["Excercise", "Modify"],
                    ["Excercise", "Delete"], ["Clinic", "Own"], ["Clinic", "Clinic"],
-                   ["Clinic", "License"]]
+                   ["Clinic", "License"],
+                   ["License", "Create"], ["License", "Read"], ["License", "Modify"], ["License", "Delete"],
+                   ["User", "Create"], ["User", "Read"], ["User", "Modify"], ["User", "Delete"]]
 
 scope_permission.each do | permission, scope |
   ScopePermission.create(permission_id: Permission.find_by_name(permission).id,
-                            scope_id: Scope.find_by_name(scope).id )
+                              scope_id: Scope.find_by_name(scope).id )
 end
 
 #Creation of profiles
@@ -65,7 +67,15 @@ profile_scope_permission = [["Author", ["Excercise", "Create"]],
                            ["Translator", ["Translate", "English"]],
                            ["Translator", ["Translate", "French"]],
                            ["Translator", ["Translate", "Portuguese"]],
-                           ["Translator", ["Translate", "Spanish"]]]
+                           ["Translator", ["Translate", "Spanish"]],
+                           ["License administrator", ["License", "Create"]],
+                           ["License administrator", ["License", "Read"]],
+                           ["License administrator", ["License", "Modify"]],
+                           ["License administrator", ["License", "Delete"]],
+                           ["License administrator", ["User", "Create"]],
+                           ["License administrator", ["User", "Read"]],
+                           ["License administrator", ["User", "Modify"]],
+                           ["License administrator", ["User", "Delete"]]]
 
 
 
@@ -91,6 +101,6 @@ profile_assignment = [["License administrator", "Clinic Administrator"],
                      ["Clinic Administrator", "Media"]]
 
 profile_assignment.each do | profile, destination_profile |
-  ProfileAssignment.create(profile: Profile.find_by_name(profile),
-                           destination_profile: Profile.find_by_name(destination_profile))
+  ProfileAssignment.create(profile_id: Profile.find_by_name(profile).id,
+                           destination_profile_id: Profile.find_by_name(destination_profile).id)
 end

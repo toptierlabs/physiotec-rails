@@ -3,7 +3,7 @@ class Profile < ActiveRecord::Base
 
   attr_accessible :name, :profile_scope_permissions,
                   #for nested compatibility
-                  :profile_scope_permissions_attributes, :source_profiles
+                  :scope_permissions_attributes, :source_profiles
 
   has_many :profile_scope_permissions
   has_many :scope_permissions, :through => :profile_scope_permissions
