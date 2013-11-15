@@ -83,4 +83,6 @@ PhysiotecV3::Application.routes.draw do
       
     end
   end
+
+  match '*all' => 'api/v1/api#cors_access_control', :constraints => {:method => 'OPTIONS'}
 end

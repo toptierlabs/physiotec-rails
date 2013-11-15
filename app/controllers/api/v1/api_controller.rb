@@ -9,7 +9,17 @@ module Api
       rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 
 
-      before_filter :restrict_access 
+      before_filter :restrict_access, :except=>:cors_access_control
+      after_filter :cors_access_control, :except=>:cors_access_control
+
+      def cors_access_control
+        headers['Access-Control-Allow-Origin'] = '*'
+        headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+        headers['Access-Control-Request-Method'] = '*'
+        headers['Access-Control-Allow-Headers'] = 'X-API-KEY, X-USER-ID, X-USER-TOKEN, Origin, X-Requested-With, Content-Type, Accept, Authorization'
+        head(:ok) if request.request_method == "OPTIONS"
+      end
+
 
   protected
 
@@ -106,6 +116,9 @@ module Api
           end
           render json: {:error => "401"}, :status => :unauthorized if unauthorized
         end
+
+        
+
       end
   end
 end

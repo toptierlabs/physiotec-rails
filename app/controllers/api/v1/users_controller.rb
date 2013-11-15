@@ -10,7 +10,7 @@ module Api
         @users = User.all
 
         respond_to do |format|
-          format.json { render json: @users }
+          format.json { render json:  { users: @users.as_json }  }
         end
       end
 
