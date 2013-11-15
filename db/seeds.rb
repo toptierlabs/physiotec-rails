@@ -4,6 +4,13 @@
 # Create a default user if there isn't any 
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
+#Initialize the actions
+actions = ["Create", "Read", "Modify", "Delete"]
+
+actions.each do | action |
+  Action.create(name: action)
+end
+
 # Creates the permissions
 permissions = ["Translate", "Clinic", "Excercise", "License", "User"]
 
@@ -12,7 +19,7 @@ permissions.each do | name |
 end
 
 # Creates the scope groups
-scope_groups = [["Common", "Common permissions, like create, read, modify or delete."], ["Languages", "A Group of different languages."],
+scope_groups = [["Languages", "A Group of different languages."],
                 ["Clinic", "Privileges over the clinic."]]
 
 scope_groups.each do | name, description |
@@ -20,8 +27,7 @@ scope_groups.each do | name, description |
 end
 
 # Creates the scopes
-scopes = [["Create", "Common"], ["Read", "Common"], ["Modify", "Common"], ["Delete", "Common"],
-         ["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
+scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
          ["Spanish", "Languages"], ["Own", "Clinic"], ["Clinic", "Clinic"],
          ["License", "Clinic"]]
 
@@ -30,27 +36,27 @@ scopes.each do | name, scope_group |
 end
 
 #Links the permissions and the scope groups
-permission_scope_group = [["Translate", "Languages"], ["Excercise", "Common"],
-                          ["Clinic", "Clinic"], ["License", "Common"], ["User", "Common"]]
+permission_scope_group = [["Translate", "Languages"], ["Translate", "Clinic"], ["Clinic", "Clinic"],
+                         ["Excercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"]]
 
 permission_scope_group.each do | permission, scope_group |
   PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
-                            scope_group_id: ScopeGroup.find_by_name(scope_group).id )
+                              scope_group_id: ScopeGroup.find_by_name(scope_group).id )
 end
 
 #Relation between scopes and permissions
 #First the languages and the translate group
-scope_permission = [["Translate", "English"], ["Translate", "French"], ["Translate", "Portuguese"],
-                   ["Translate", "Spanish"], ["Excercise", "Create"], ["Excercise", "Read"], ["Excercise", "Modify"],
-                   ["Excercise", "Delete"], ["Clinic", "Own"], ["Clinic", "Clinic"],
-                   ["Clinic", "License"],
-                   ["License", "Create"], ["License", "Read"], ["License", "Modify"], ["License", "Delete"],
-                   ["User", "Create"], ["User", "Read"], ["User", "Modify"], ["User", "Delete"]]
+# scope_permission = [["Translate", "English"], ["Translate", "French"], ["Translate", "Portuguese"],
+#                    ["Translate", "Spanish"],
+#                    ["Excercise", "Create"], ["Excercise", "Read"], ["Excercise", "Modify"], ["Excercise", "Delete"],
+#                    ["Clinic", "Own"], ["Clinic", "Clinic"], ["Clinic", "License"],
+#                    ["License", "Create"], ["License", "Read"], ["License", "Modify"], ["License", "Delete"],
+#                    ["User", "Create"], ["User", "Read"], ["User", "Modify"], ["User", "Delete"]]
 
-scope_permission.each do | permission, scope |
-  ScopePermission.create(permission_id: Permission.find_by_name(permission).id,
-                              scope_id: Scope.find_by_name(scope).id )
-end
+# scope_permission.each do | permission, scope |
+#   ScopePermission.create(permission_id: Permission.find_by_name(permission).id,
+#                               scope_id: Scope.find_by_name(scope).id )
+# end
 
 #Creation of profiles
 profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
@@ -61,30 +67,41 @@ profiles_list.each do | name |
 end
 
 #Link scopes and permissions with a profile
-profile_scope_permission = [["Author", ["Excercise", "Create"]],
-                           ["Author", ["Excercise", "Modify"]],
-                           ["Author", ["Excercise", "Delete"]],
-                           ["Translator", ["Translate", "English"]],
-                           ["Translator", ["Translate", "French"]],
-                           ["Translator", ["Translate", "Portuguese"]],
-                           ["Translator", ["Translate", "Spanish"]],
-                           ["License administrator", ["License", "Create"]],
-                           ["License administrator", ["License", "Read"]],
-                           ["License administrator", ["License", "Modify"]],
-                           ["License administrator", ["License", "Delete"]],
-                           ["License administrator", ["User", "Create"]],
-                           ["License administrator", ["User", "Read"]],
-                           ["License administrator", ["User", "Modify"]],
-                           ["License administrator", ["User", "Delete"]]]
+#[ Profile, Permission, Action, [ *Scope ] ]
 
+profile_scope_permission = [["Author", "Excercise", "Create", []],
+                           ["Author", "Excercise", "Modify", ["Own"]],
+                           ["Author", "Excercise", "Delete", ["Own"]],
+                           ["Author", "Excercise", "Create", ["Clinic"]],
 
+                           ["Translator", "Translate", "Create", ["English", "Own"]],
+                           ["Translator", "Translate", "Create", ["French", "Own"]],
+                           ["Translator", "Translate", "Create", ["Portuguese", "Own"]],
+                           ["Translator", "Translate", "Create", ["Spanish", "Own"]],
 
-profile_scope_permission.each do | profile, scope_permission |
+                           ["License administrator", "License", "Create", []],
+                           ["License administrator", "License", "Read", ["License"]],
+                           ["License administrator", "License", "Modify", ["Own"]],
+                           ["License administrator", "License", "Delete", ["License"]],
+
+                           ["License administrator", "User", "Create", []],
+                           ["License administrator", "User", "Read", ["License"]],
+                           ["License administrator", "User", "Modify", ["License"]],
+                           ["License administrator", "User", "Delete", ["Own"]]]
+
+profile_scope_permission.each do | profile, permission, action, profile_scopes |
+  #sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,
+                              #action_id: Action.find_by_name( action ).id ).first
+
+  sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
+                               action_id: Action.find_by_name( action ).id )# if sp.nil?
+  profile_scopes.each do | scope |
+    ScopePermissionGroupScope.create( scope_permission_id: sp.id,
+                                      scope_id: Scope.find_by_name(scope).id )
+  end
+
   ProfileScopePermission.create(profile_id: Profile.find_by_name(profile).id,
-                                scope_permission_id: ScopePermission.where(
-                                                      permission_id:Permission.find_by_name(scope_permission[0]).id,
-                                                      scope_id:Scope.find_by_name(scope_permission[1]).id
-                                                      ).first.id)
+                                scope_permission_id: sp.id)
 end
 
 #Creates the relationship between a profile and his destination profiles (profile assignment)

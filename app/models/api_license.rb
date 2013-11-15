@@ -20,4 +20,7 @@ class ApiLicense < ActiveRecord::Base
   	self.secret_api_key = SecureRandom.urlsafe_base64 + SecureRandom.urlsafe_base64
   end
 
+  #multiple associations with exercises
+  has_many :exercises, as: :context
+
 end

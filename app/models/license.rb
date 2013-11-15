@@ -8,5 +8,8 @@ class License < ActiveRecord::Base
             :presence => true
 
   validates :email, :uniqueness => true
+
+  #multiple associations with exercises
+  has_many :exercises, as: :context
   
 end

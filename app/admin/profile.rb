@@ -1,5 +1,4 @@
 ActiveAdmin.register Profile do
-  menu :parent => "3. Profiles", :label => "Profiles"
 
     show do |profile|
       attributes_table do
@@ -8,10 +7,19 @@ ActiveAdmin.register Profile do
         row :created_at
         row :updated_at
         row "Permission scopes" do |obj|
-          obj.permissions_pretty_list
+          ul do
+            obj.permissions_pretty_list.each do | ppl |
+              li do
+                status_tag(ppl[:action], :warning)
+                status_tag(ppl[:permission], :ok)
+                ppl[:scopes].each do | scope |
+                  status_tag(scope)
+                end
+              end
+            end
+          end
         end
       end
-      active_admin_comments
     end
 
 
@@ -19,7 +27,17 @@ ActiveAdmin.register Profile do
   index do
     column :name
     column 'Permissions' do |obj|
-      obj.permissions_pretty_list
+      ul do
+        obj.permissions_pretty_list.each do | ppl |
+          li do
+            status_tag(ppl[:action], :warning)
+            status_tag(ppl[:permission], :ok)
+            ppl[:scopes].each do | scope |
+              status_tag(scope)
+            end
+          end
+        end
+      end
     end
 
     default_actions

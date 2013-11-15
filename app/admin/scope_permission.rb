@@ -1,9 +1,31 @@
 ActiveAdmin.register ScopePermission do
-menu :parent => "2. Permissions", :label => "Scope Permissions"
+  #menu :label => "Permissions"
+  #navigation_menu :scope_permission
+  #customization on new and edit profile pages
+  form do |f|
+    f.inputs "Permission and Action" do
+      f.input :permission    
+      f.input :action
+    end
+    f.inputs "Scopes" do
+      f.has_many :scope_permission_group_scopes, :allow_destroy => true, :heading => 'Current Scopes', :new_record => true do |cf|
+        cf.input :scope
+      end
+    end
+    f.actions
+  end
+
   index do
     column :id
     column :permission
-    column :scope
+    column :action
+
+    column 'Scopes' do |obj|
+      obj.datatype.each do | ppl |
+        status_tag(ppl)
+      end
+    end
+
     column :created_at
     column :updated_at
     default_actions

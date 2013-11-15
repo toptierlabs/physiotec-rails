@@ -11,7 +11,7 @@ class Ability
       #converts the scope obtained from the database to a symbol (A => :a)
       scope = perm_scope.scope_permission.scope.name.parameterize.underscore.to_sym
       #creates the ability for the given user                                                                                                                   
-      can permission, scope
+      can permission, scope, :test
 
       #If the user has the ability to manage users
       puts permission

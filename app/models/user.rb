@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+  include PermissionHelper
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -11,15 +13,21 @@ class User < ActiveRecord::Base
 
   belongs_to :api_license
 
+  # Can be blank
+  belongs_to :license
+
+
   # Setup accessible (or protected) attributes
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :first_name, :last_name, :api_license_id, :session_token,
-                  :session_token_created_at, :profiles
+                  :session_token_created_at, :profiles,
+                  :user_profiles_attributes, :user_scope_permissions_attributes
 
   validates :session_token, :uniqueness => true, :allow_blank => true
 
   has_many :user_scope_permissions
   has_many :scope_permissions, :through=>:user_scope_permissions
+  accepts_nested_attributes_for :user_scope_permissions, :allow_destroy => true
 
   #Set the method to create new session tokens
   def new_session_token
@@ -68,7 +76,7 @@ class User < ActiveRecord::Base
   end
 
   #display name for ActiveAdmin
-  def display_name
+  def datatype
     self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
   end
 
@@ -94,6 +102,37 @@ class User < ActiveRecord::Base
       end
     end
   end
+
+  def permissions_pretty_list
+    ppl = []
+    self.user_scope_permissions.each do |psp|
+      ppl <<  psp.datatype
+    end
+    puts '/'*100
+    puts ppl.to_json
+    ppl
+  end
+
+  # Returns an array of arrays witch each one contains the
+  # following information about a permission and its scopes:
+  # result = [[permission.name, action.name, *scopes]]
+
+  # def relevant_rules_for_match
+  #   result = []
+  #   auxiliar = []
+  #   user_scope_permissions.each do | usp |
+  #     #First push the permission and then the action
+  #     auxiliar << usp.scope_permission.permission.name
+  #     auxiliar << usp.scope_permission.action.name
+  #     #Pushes the name of the linked scopes
+  #     usp.scope_permission.scopes.each do | scope |
+  #       auxiliar << scope.name
+  #     end
+  #     result << auxiliar
+  #     auxiliar = []
+  #   end
+  #   result
+  # end
 
 
 

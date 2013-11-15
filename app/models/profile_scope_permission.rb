@@ -6,9 +6,13 @@ class ProfileScopePermission < ActiveRecord::Base
   # uniqueness of the permission inside the same scope
   validates :scope_permission_id, :uniqueness => {:scope => :profile_id}
   #other validations
-  validates :profile_id, :scope_permission, :presence => true, :allow_blank => false
+  #validates :profile_id, :scope_permission, :presence => true, :allow_blank => false
 
-  def display_name
-  	self.scope_permission.display_name
+  def datatype
+    result = {}
+    result[:action] = self.scope_permission.action.name
+    result[:permission] = self.scope_permission.permission.name
+    result[:scopes] = self.scope_permission.datatype
+    result
   end
 end

@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131108203038) do
+ActiveRecord::Schema.define(:version => 20131114183717) do
+
+  create_table "actions", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -56,6 +62,38 @@ ActiveRecord::Schema.define(:version => 20131108203038) do
   end
 
   add_index "api_licenses", ["public_api_key"], :name => "index_api_licenses_on_public_api_key"
+
+  create_table "assignments", :force => true do |t|
+    t.integer  "assignable_id"
+    t.string   "assignable_type"
+    t.integer  "user_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "assignments", ["user_id"], :name => "index_assignments_on_user_id"
+
+  create_table "clinics", :force => true do |t|
+    t.string   "name"
+    t.integer  "license_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "clinics", ["license_id"], :name => "index_clinics_on_license_id"
+
+  create_table "exercises", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.integer  "license_id"
+    t.integer  "owner_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "exercises", ["owner_id"], :name => "index_exercises_on_owner_id"
 
   create_table "licenses", :force => true do |t|
     t.integer  "maximum_clinics"
@@ -118,15 +156,24 @@ ActiveRecord::Schema.define(:version => 20131108203038) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "scope_permissions", :force => true do |t|
+  create_table "scope_permission_group_scopes", :force => true do |t|
+    t.integer  "scope_permission_id"
     t.integer  "scope_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "scope_permission_group_scopes", ["scope_id"], :name => "index_scope_permission_group_scopes_on_scope_id"
+  add_index "scope_permission_group_scopes", ["scope_permission_id"], :name => "index_scope_permission_group_scopes_on_scope_permission_id"
+
+  create_table "scope_permissions", :force => true do |t|
     t.integer  "permission_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "action_id"
   end
 
   add_index "scope_permissions", ["permission_id"], :name => "index_scope_permissions_on_permission_id"
-  add_index "scope_permissions", ["scope_id"], :name => "index_scope_permissions_on_scope_id"
 
   create_table "scopes", :force => true do |t|
     t.string   "name"

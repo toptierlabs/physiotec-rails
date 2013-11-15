@@ -3,7 +3,7 @@ class Profile < ActiveRecord::Base
 
   attr_accessible :name, :profile_scope_permissions,
                   #for nested compatibility
-                  :scope_permissions_attributes, :source_profiles
+                  :scope_permissions_attributes, :source_profiles, :profile_scope_permissions_attributes
 
   has_many :profile_scope_permissions
   has_many :scope_permissions, :through => :profile_scope_permissions
@@ -13,10 +13,9 @@ class Profile < ActiveRecord::Base
   def permissions_pretty_list
   	ppl = []
   	self.profile_scope_permissions.each do |psp|
-  		ppl <<  psp.display_name
+  		ppl <<  psp.datatype
   	end
-
-  	ppl.join(', ')
+  	ppl
   end
 
   # a profile may have multiple profiles, this relation is used when a

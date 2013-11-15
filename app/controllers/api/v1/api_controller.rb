@@ -26,7 +26,8 @@ module Api
         def validates(model, permission, scope)
           # if the current_user does not have permission to complete the action
           # an error would be raised as a response
-          Ability.new(model).can? permission, scope
+          # Ability.new(model).can? permission, scope
+          @current_user.can? permission, scope
         end
 
 
