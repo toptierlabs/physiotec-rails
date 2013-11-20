@@ -5,4 +5,8 @@ class Assignment < ActiveRecord::Base
 
   attr_accessible :user_id
 
+  def clinic
+  	return self
+  end
+
 end

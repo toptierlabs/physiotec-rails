@@ -6,4 +6,8 @@ class Clinic < ActiveRecord::Base
   #multiple associations with exercises
   has_many :exercises, as: :context
 
+  def clinic
+  	self
+  end
+
 end

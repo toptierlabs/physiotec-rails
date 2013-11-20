@@ -29,6 +29,11 @@ class User < ActiveRecord::Base
   has_many :scope_permissions, :through=>:user_scope_permissions
   accepts_nested_attributes_for :user_scope_permissions, :allow_destroy => true
 
+  #has many clinics
+  has_many :user_clinics
+  has_many :clinics, :through=>:user_clinics
+  accepts_nested_attributes_for :user_clinics, :allow_destroy => true
+
   #Set the method to create new session tokens
   def new_session_token
     self.session_token = SecureRandom.urlsafe_base64

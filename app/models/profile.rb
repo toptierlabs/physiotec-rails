@@ -30,4 +30,17 @@ class Profile < ActiveRecord::Base
     self.find_by_name("License administrator")
   end
 
+  after_save :create_scope
+
+  def create_scope    
+  scope = Scope.find_by_name(self.name_was) if self.name_changed?
+  if !scope.nil?
+    scope.name = self.name
+    scope.save
+  else
+    sg_id =  ScopeGroup.find_by_name("Profiles")
+    Scope.create(name: self.name, scope_group_id: sg_id)
+  end
+end
+
  end

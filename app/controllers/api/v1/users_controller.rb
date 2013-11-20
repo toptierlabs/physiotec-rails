@@ -50,19 +50,24 @@ module Api
       #   last_name: String,
       #   profiles: [String] }
       def create
-        error = !validates(@current_user, :user, :create)
+        error = !(@current_user.can? :user, :create)
         #if user can create another user
         if !error
           #new user from parameters
-          user = User.new(params[:user].except(:user_profiles))
+          user = User.new(params[:user].except(:user_profiles).except(:profiles))
           user.api_license_id = @api_license.id
-          error = false
+
           #profile assignations
           params[:user][:user_profiles].each do | profile_name |
             profile = Profile.find_by_name(profile_name)
+
             error = profile.nil?
+            puts error
             #current user can assign ingresed profile
-            error = validates(@current_user, :create, profile.name.parameterize.underscore.to_sym) unless error
+            puts @current_user.to_json
+            error = !@current_user.can?(:profile, :assign, :scopes=>[profile.name.parameterize.underscore.to_sym]) unless error
+            puts !@current_user.can?(:profile, :assign, :scopes=>[:author])
+            puts error
             break if error
             user.profiles << profile
           end
@@ -74,8 +79,7 @@ module Api
             format.json { render json: user, status: :created }
           else
             #if user == nil then the current user does not have sufficient privileges
-            response_error = { :error => "Can not complete the operation because you do not have sufficient privileges." }
-            response_error = user.errors unless user.nil?
+            response_error = response_error || { :error => "Can not complete the operation because you do not have sufficient privileges." }
             format.json { render json: response_error, status: :unprocessable_entity }
           end
         end

@@ -5,14 +5,14 @@
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
 #Initialize the actions
-actions = ["Create", "Read", "Modify", "Delete"]
+actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign"]
 
 actions.each do | action |
   Action.create(name: action)
 end
 
 # Creates the permissions
-permissions = ["Translate", "Clinic", "Excercise", "License", "User"]
+permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Profile"]
 
 permissions.each do | name |
   Permission.create(name: name)
@@ -20,7 +20,8 @@ end
 
 # Creates the scope groups
 scope_groups = [["Languages", "A Group of different languages."],
-                ["Clinic", "Privileges over the clinic."]]
+                ["Clinic", "Privileges over the clinic."],
+                ["Profiles", ["All the profiles"]]]
 
 scope_groups.each do | name, description |
   ScopeGroup.create(name: name, description: description)
@@ -29,7 +30,7 @@ end
 # Creates the scopes
 scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
          ["Spanish", "Languages"], ["Own", "Clinic"], ["Clinic", "Clinic"],
-         ["License", "Clinic"]]
+         ["License", "Clinic"], ["Api License", "Clinic"]]
 
 scopes.each do | name, scope_group |
   Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
@@ -87,7 +88,12 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
                            ["License administrator", "User", "Create", []],
                            ["License administrator", "User", "Read", ["License"]],
                            ["License administrator", "User", "Modify", ["License"]],
-                           ["License administrator", "User", "Delete", ["Own"]]]
+                           ["License administrator", "User", "Delete", ["Own"]],
+
+                           ["License administrator", "Profile", "Assign", ["Author"]],
+                           ["License administrator", "Profile", "Assign", ["Translator"]],
+                           ["License administrator", "Profile", "Assign", ["Media"]]
+                           ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
   #sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,

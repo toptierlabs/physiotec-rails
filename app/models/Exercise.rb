@@ -11,14 +11,19 @@ class Exercise < ActiveRecord::Base
   	list_scopes = []
 		#user is owner
   	if self.owner == user
-  		list_scopes <<  :own << :clinic << :license
+  		list_scopes <<  :own << :clinic << :license << :api_license
   	#user belongs to the same clilic
-  	elsif self.context.method_defined?(:clinic) && user.method_defined?(:clinic) && self.context.clinic == user.clinic
-  		list_scopes << :clinic << :license
+  	elsif (self.context.respond_to?(:clinic)) && (user.clinics.include? self.context.clinic)
+  		list_scopes << :clinic << :license << :api_license
   	#user belongs to the same license
-  	elsif self.context.method_defined?(:license) && user.method_defined?(:license) && self.context.license == user.license
-  		list_scopes << :license
-  	end
+  	elsif self.context.respond_to?(:license) && self.context.license == user.license
+  		list_scopes << :license << :api_license
+    elsif self.context.respond_to?(:api_license) && self.context.api_license == user.api_license
+      list_scopes << :api_license
+    end
+    list_scopes
+    # elsif self.context.instance_of? Clinic && user.clinics.include? self.context
+    #   list_scopes << :clinic << :license
   end
 
 end

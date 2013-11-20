@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131114183717) do
+ActiveRecord::Schema.define(:version => 20131118130037) do
 
   create_table "actions", :force => true do |t|
     t.string   "name"
@@ -181,6 +181,16 @@ ActiveRecord::Schema.define(:version => 20131114183717) do
     t.datetime "updated_at",     :null => false
     t.integer  "scope_group_id"
   end
+
+  create_table "user_clinics", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "clinic_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_clinics", ["clinic_id"], :name => "index_user_clinics_on_clinic_id"
+  add_index "user_clinics", ["user_id"], :name => "index_user_clinics_on_user_id"
 
   create_table "user_profiles", :force => true do |t|
     t.integer  "user_id"

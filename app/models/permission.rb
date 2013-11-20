@@ -10,4 +10,9 @@ class Permission < ActiveRecord::Base
   #nested attributes
   accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
 
+  def sym_name #no test for nil
+  	#returns a symbol representation of the string
+  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  end
+
 end

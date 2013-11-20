@@ -11,5 +11,9 @@ class License < ActiveRecord::Base
 
   #multiple associations with exercises
   has_many :exercises, as: :context
+
+  def license
+  	self
+  end
   
 end

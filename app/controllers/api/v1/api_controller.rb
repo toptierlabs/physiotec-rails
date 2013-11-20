@@ -22,14 +22,11 @@ module Api
 
 
   protected
-
-        def validates(model, permission, scope)
-          # if the current_user does not have permission to complete the action
-          # an error would be raised as a response
-          # Ability.new(model).can? permission, scope
-          @current_user.can? permission, scope
+        def authorize_request(permission, action, scopes=nil)
+          auth = @current_user.can?(permission, action, scopes)
+          render json: {:error => "401"}, :status => :unauthorized if !auth
+          auth
         end
-
 
         def render_not_found(exception)
           # logger.info(exception) # for logging 

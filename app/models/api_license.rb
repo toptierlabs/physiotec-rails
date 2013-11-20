@@ -23,4 +23,8 @@ class ApiLicense < ActiveRecord::Base
   #multiple associations with exercises
   has_many :exercises, as: :context
 
+  def api_license
+    self
+  end
+
 end

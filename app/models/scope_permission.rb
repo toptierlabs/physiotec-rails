@@ -1,5 +1,7 @@
 class ScopePermission < ActiveRecord::Base
 
+  #TODO validates uniqueness of a scope_permission
+
   belongs_to :permission
   belongs_to :action
 
