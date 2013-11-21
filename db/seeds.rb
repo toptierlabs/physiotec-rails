@@ -97,8 +97,7 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
   #sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,
-                              #action_id: Action.find_by_name( action ).id ).first
-
+                              #action_id: Action.find_by_name( action ).id ).firsts
   sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
                                action_id: Action.find_by_name( action ).id )# if sp.nil?
   profile_scopes.each do | scope |

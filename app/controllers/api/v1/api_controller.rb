@@ -104,7 +104,7 @@ module Api
           if !user_id.nil? && (!user_token.nil? || AUTH_CONFIG['bypass_token_verification'])
             user = User.find(user_id)
             if !AUTH_CONFIG['bypass_token_verification']
-              if user.token == user_token
+              if user.session_token == user_token
                 @current_user = user
               else 
                 unauthorized = true

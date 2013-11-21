@@ -79,23 +79,39 @@ module Api
 					elsif authorize_request(:permission, :modify, @scope_permission) #when false it renders not authorized
 											
 						#Array with the id of scopes linked with @scope_permission
-						current_scopes = @scope_permission.scopes.map{ |s| s.id }
+						current_scopes = []
+						scope_permission_link = {}
+						@scope_permission.scope_permission_group_scopes.includes(:scope).each do | spgs |
+							current_scopes << spgs.scope_id
+							scope_permission_link[spgs.scope_id] = spgs.id
+						end
+
 						#Scopes to remove
 						remove_scopes = current_scopes - params[:scope_permission][:scopes]
+
+						#Scope_permission_group_scopes to remove
+						scope_permission_remove = {}
+						remove_scopes.each do | rs |
+							scope_permission_remove[rs] = scope_permission_link[rs] 
+						end
+
 						#Scopes to add
 						add_scopes = params[:scope_permission][:scopes] - current_scopes
 
-						@scope_permission.scope_permission_group_scopes.where(:scope_id => remove_scopes).each do |scope_id|
-							#@scope_permission.permission_scope_groups_attributes=
+						update_scopes = {}
+						scope_permission_remove.each_with_index do |k, i|
+						#k holds an array with 2 elements, the first one is the scope_id, the second one is the spgs_id
+							update_scopes[i] = {scope_id: k[0], _destroy: true, id: k[1]}
 						end
+						add_scopes.each_with_index do |s, i|
+							update_scopes[i] = {scope_id: s}
+						end	
 
-						add_scopes.each do | scope_id |
-							scope = Scope.where(id: scope_id).first
-							error = scope.nil?
-							@scope_permission.scopes << scope
-						end
+						#{"0"=>{"scope_id"=>"", "_destroy"=>"0", "id"=>"66"}
+						formatted_params = params[:scope_permission].except(:scopes)
+						formatted_params[:scope_permission_group_scopes_attributes] = update_scopes
 
-						if @scope_permission.update_attributes(params[:scope_permission].except(:scopes) )
+						if @scope_permission.update_attributes( formatted_params )
 							format.json { render json: @scope_permission, status: :updated }
 						else
 							format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
