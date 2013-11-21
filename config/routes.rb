@@ -1,5 +1,6 @@
 PhysiotecV3::Application.routes.draw do
   
+  mount ApiExplorer::Engine => "/api_explorer"
 
   devise_for :users, :controllers => {:confirmations => 'confirmations'}
 

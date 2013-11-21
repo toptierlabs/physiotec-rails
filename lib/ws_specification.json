@@ -1,0 +1,17 @@
+{
+	"methods": [ {
+		"name": "Users index",
+		"url": "v1/users",
+		"description": "The index of users",
+		"method": "GET",
+		"parameters": [{"name": "API_TOKEN"}]
+	}, 
+	{
+		"name": "User login",
+		"url": "v1/users/login",
+		"description": "Users login",
+		"method": "POST",
+		"parameters": [{"name": "API_TOKEN"}, {"name": "email"}, {"name": "password"}]
+	}
+	]
+}
