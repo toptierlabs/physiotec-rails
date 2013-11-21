@@ -1,5 +1,6 @@
 module Api
   module V1
+    
     class LicensesController < Api::V1::ApiController
       before_filter :identify_user
 
@@ -51,7 +52,7 @@ module Api
         if authorize_request(:license, :modify)
           license = License.where(id: params[:id]).first
           respond_to do |format|
-            puts license.to_json unless license.nil?
+
             if license.nil?
               format.json { render json: { :error => "License not found." }, status: :unprocessable_entity }
 

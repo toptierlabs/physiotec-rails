@@ -23,8 +23,11 @@ module Api
 
   protected
         def authorize_request(permission, action, scopes=nil)
-          auth = @current_user.can?(permission, action, scopes)
-          render json: {:error => "401"}, :status => :unauthorized if !auth
+          auth = @current_user.can?(permission, action, scopes) || AUTH_CONFIG['super_user']
+          if !auth
+            render json: {:error => "401"}, :status => :unauthorized
+            #break
+          end
           auth
         end
 

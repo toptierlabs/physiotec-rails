@@ -17,10 +17,14 @@ module Api
       # GET /users/1
       # GET /users/1.json
       def show
-        @user = User.find(params[:id])
+        @user = User.where(id: params[:id]).first
 
         respond_to do |format|
-          format.json { render json: @user }
+          if @user.nil?
+            format.json { render json: { :error => true, :error_description => "User not found." }, status: :unprocessable_entity }
+          else
+            format.json { render json: @user }
+          end
         end
       end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131118130037) do
+ActiveRecord::Schema.define(:version => 20131120193512) do
 
   create_table "actions", :force => true do |t|
     t.string   "name"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(:version => 20131118130037) do
     t.integer  "action_id"
   end
 
+  add_index "scope_permissions", ["action_id"], :name => "index_scope_permissions_on_action_id"
   add_index "scope_permissions", ["permission_id"], :name => "index_scope_permissions_on_permission_id"
 
   create_table "scopes", :force => true do |t|

@@ -5,6 +5,7 @@ class ScopePermission < ActiveRecord::Base
   belongs_to :permission
   belongs_to :action
 
+
   attr_accessible :permission_id, :action_id, :scopes, :scope_permission_group_scopes_attributes
   # uniqueness of the permission inside the same scope
 
@@ -27,7 +28,7 @@ class ScopePermission < ActiveRecord::Base
   #validates :permission_id, :uniqueness => {:scope => :scope_id}
 
   #can't be undefined
-  validates :permission_id, :presence => true
+  validates :permission, :action, :presence => true
 
   
   class GoodnessValidator < ActiveModel::Validator

@@ -2,6 +2,7 @@ development:
   bypass_api_key_verification: true
   bypass_token_verification: true
   catch_exceptions: false
+  super_user: true
 test:
   bypass_api_key_verification: false
   bypass_token_verification: false

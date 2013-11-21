@@ -74,9 +74,10 @@ PhysiotecV3::Application.routes.draw do
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
       resources :licenses
+      resources :scope_permissions
 
       resources :users do
-        resources :permissions, :controller => 'users/permissions'
+        resources :scope_permissions, :controller => 'users/scope_permissions'
         collection do
           post '/login' => 'users#login'          
         end
