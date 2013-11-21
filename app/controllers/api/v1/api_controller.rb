@@ -115,7 +115,7 @@ module Api
           else
             unauthorized = true
           end
-          render json: {:error => "401"}, :status => :unauthorized if unauthorized
+          render json: {:error => "401"}, :login_failed=> true, :status => :unauthorized if unauthorized
         end
 
         

@@ -21,7 +21,7 @@ module Api
 
         respond_to do |format|
           if @user.nil?
-            format.json { render json: { :error => true, :error_description => "User not found." }, status: :unprocessable_entity }
+            format.json { render json: { :error => "User not found." }, status: :unprocessable_entity }
           else
             format.json { render json: @user }
           end

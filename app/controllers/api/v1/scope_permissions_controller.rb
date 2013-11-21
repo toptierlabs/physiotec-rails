@@ -67,22 +67,34 @@ module Api
 			# Updates an existing link between the selected_user and a permission.
 			# PRECONDITIONS: The given permission and the given user must exist in the system.
 			def update
-				@scope_permission = @selected_user.scope_permissions.find(id: params[:scope_permission][:id])
-				
-				if @scope_permission.nil?
-					format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
+				@scope_permission = ScopePermission.where(params[:id]).first
+				respond_to do |format|	
+					if @scope_permission.nil?
+						format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
 
-				elsif authorize_request(:permission, :modify, @scope_permission) #when false it renders not authorized
-					respond_to do |format|
-						@scope_permission.update_attributes(params[:scope_permission].except(:permission_id, :scopes))
-						#Array with the scope ids linked with @scope_permission
+					#The given scopes exists in the system
+					elsif (params[:scope_permission][:scopes].length != Scope.where(:id => params[:scope_permission][:scopes]).length)
+						format.json { render json: { :error => "Scopes not found." }, status: :unprocessable_entity }
+
+					elsif authorize_request(:permission, :modify, @scope_permission) #when false it renders not authorized
+											
+						#Array with the id of scopes linked with @scope_permission
 						current_scopes = @scope_permission.scopes.map{ |s| s.id }
 						#Scopes to remove
 						remove_scopes = current_scopes - params[:scope_permission][:scopes]
 						#Scopes to add
 						add_scopes = params[:scope_permission][:scopes] - current_scopes
 
-							
+						@scope_permission.scope_permission_group_scopes.where(:scope_id => remove_scopes).each do |scope_id|
+						end
+
+						add_scopes.each do | scope_id |
+							scope = Scope.where(id: scope_id).first
+							error = scope.nil?
+							@scope_permission.scopes << scope
+						end
+
+						if @scope_permission.update_attributes(params[:scope_permission].except(:scopes) )
 							format.json { render json: @scope_permission, status: :updated }
 						else
 							format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
