@@ -86,7 +86,7 @@ module Api
 						add_scopes = params[:scope_permission][:scopes] - current_scopes
 
 						@scope_permission.scope_permission_group_scopes.where(:scope_id => remove_scopes).each do |scope_id|
-							@scope_permission.permission_scope_groups_attributes=
+							#@scope_permission.permission_scope_groups_attributes=
 						end
 
 						add_scopes.each do | scope_id |
@@ -124,6 +124,6 @@ module Api
 				end
 
 
-			end
+			end 
 		end
 	end

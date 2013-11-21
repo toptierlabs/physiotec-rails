@@ -39,7 +39,8 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
-    api_explorer (0.0.1)
+    api_explorer (0.0.3)
+      coderay (~> 1.1.0)
       jquery-rails
       rails (~> 3.2.13)
     arbre (1.0.1)
@@ -57,6 +58,7 @@ GEM
       thor
     builder (3.0.4)
     cancan (1.6.10)
+    coderay (1.1.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -192,7 +194,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin (~> 0.6.2)
-  api_explorer
+  api_explorer (~> 0.0.3)
   aws-ses (~> 0.5.0)
   cancan (~> 1.6.10)
   coffee-rails (~> 3.2.1)
