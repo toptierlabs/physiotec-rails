@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.13'
 
 
-gem 'api_explorer', '~> 0.0.3'
+gem 'api_explorer', '~> 0.0.6'
 gem 'thin', '~> 1.6.1'
 
 # Bundle edge Rails instead:

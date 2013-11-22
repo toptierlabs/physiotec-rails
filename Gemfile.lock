@@ -39,7 +39,7 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
-    api_explorer (0.0.3)
+    api_explorer (0.0.6)
       coderay (~> 1.1.0)
       jquery-rails
       rails (~> 3.2.13)
@@ -194,7 +194,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin (~> 0.6.2)
-  api_explorer (~> 0.0.3)
+  api_explorer (~> 0.0.6)
   aws-ses (~> 0.5.0)
   cancan (~> 1.6.10)
   coffee-rails (~> 3.2.1)
