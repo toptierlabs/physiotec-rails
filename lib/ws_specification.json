@@ -12,6 +12,20 @@
 		"description": "Users login",
 		"method": "POST",
 		"parameters": [{"name": "api_key"}, {"name": "email"}, {"name": "password"}]
+	},
+	{
+		"name": "Permissions index",
+		"url": "api/v1/permissions",
+		"description": "The index of permissions",
+		"method": "GET",
+		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
+	},
+	{
+		"name": "Permission creation",
+		"url": "api/v1/permissions",
+		"description": "Creation of new permissions",
+		"method": "POST",
+		"parameters": [{"Hashed permission ({\"permission\":{\"name\":String,\"scopes\":[\"scope name\"]}})": "permission"}]
 	}
 	]
 }

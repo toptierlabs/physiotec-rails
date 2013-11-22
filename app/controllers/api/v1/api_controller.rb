@@ -15,7 +15,7 @@ module Api
         headers['Access-Control-Allow-Origin'] = '*'
         headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
         headers['Access-Control-Request-Method'] = '*'
-        headers['Access-Control-Allow-Headers'] = 'X-API-KEY, X-USER-ID, X-USER-TOKEN, Origin, X-Requested-With, Content-Type, Accept, Authorization'
+        headers['Access-Control-Allow-Headers'] = 'X-URL-HASH, X-API-KEY, X-USER-ID, X-USER-TOKEN, Origin, X-Requested-With, Content-Type, Accept, Authorization'
         head(:ok) if request.request_method == "OPTIONS"
       end
 
@@ -122,5 +122,3 @@ module Api
       end
   end
 end
-
-

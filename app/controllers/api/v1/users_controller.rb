@@ -7,7 +7,7 @@ module Api
       # GET /users
       # GET /users.json
       def index
-        @users = User.all
+        @users = User.where(api_license_id: @api_license.id)
 
         respond_to do |format|
           format.json { render json:  { users: @users.as_json }  }
@@ -34,7 +34,7 @@ module Api
         #search the user by email
         user = User.find_by_email(params[:email])     
         #check if the recieved password matches the user password
-        if user !=nil and user.valid_password?(params[:password])
+        if (user !=nil) && (user.api_license_id == @api_license.id) && (user.valid_password?(params[:password]))
           #creates a session token
           session_token = user.new_session_token
           respond_to do |format|
@@ -66,7 +66,6 @@ module Api
             profile = Profile.find_by_name(profile_name)
 
             error = profile.nil?
-            puts error
             #current user can assign ingresed profile
             puts @current_user.to_json
             error = !@current_user.can?(:profile, :assign, :scopes=>[profile.name.parameterize.underscore.to_sym]) unless error

@@ -34,20 +34,21 @@ module Api
           #permission.api_license_id = @api_license.id?          
           #what happens if a scope_permission is created and then the permission's scopes are updated?
           respond_to do |format|
-            if (ScopeGroups.where(id: params[:permission][:scope_groups]).length != params[:permission][:scope_groups].length)
+            if (ScopeGroup.where(id: params[:permission][:scope_groups]).length != params[:permission][:scope_groups].length)
               format.json { render json: { :error => "Could not find all the given scope groups." }, status: :unprocessable_entity }
 
             else
-
+              scopes_to_add=[]
               params[:permission][:scope_groups].each_with_index do |s, i|
                 scopes_to_add[i] = {scope_group_id: s}
               end 
 
               #creates the formatted_params for correct creation of nested scopes
               formatted_params = params[:permission].except(:scope_groups)
-              formatted_params[:permission_scope_groups] = scopes_to_add
+              formatted_params[:permission_scope_groups_attributes] = scopes_to_add
 
-              if @permission.create(formatted_params)
+              @permission = Permission.new(formatted_params)
+              if @permission.save
                 format.json { render json: @permission, status: :created}
               else
                 format.json { render json: @permission.errors, status: :unprocessable_entity }

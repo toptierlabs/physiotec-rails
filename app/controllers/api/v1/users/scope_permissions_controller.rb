@@ -46,15 +46,15 @@ module Api
 				# PRECONDITIONS: The given scope_permission and the given user must exist in the system.
 				def create
 					if authorize_request(:permission, :create, @selected_user)
-						@permission = @selected_user.scope_permissions.new(user_id: @selected_user.id, scope_permission_id: params[:permission_id])
+						@scope_permission = @selected_user.scope_permissions.new(user_id: @selected_user.id, scope_permission_id: params[:scope_permission_id])
 
 						#:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone
 					 
 						respond_to do |format|
-							if @permission.save
-								format.json { render json: @permission, status: :created}
+							if @scope_permission.save
+								format.json { render json: @scope_permission, status: :created}
 							else
-								format.json { render json: @permission.errors.to_json, status: :unprocessable_entity }
+								format.json { render json: @scope_permission.errors.to_json, status: :unprocessable_entity }
 							end
 						end
 					end
