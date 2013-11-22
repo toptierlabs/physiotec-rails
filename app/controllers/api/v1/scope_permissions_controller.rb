@@ -100,7 +100,7 @@ module Api
 
 						update_scopes = {}
 						scope_permission_remove.each_with_index do |k, i|
-						#k holds an array with 2 elements, the first one is the scope_id, the second one is the spgs_id
+						#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
 							update_scopes[i] = {scope_id: k[0], _destroy: true, id: k[1]}
 						end
 						add_scopes.each_with_index do |s, i|

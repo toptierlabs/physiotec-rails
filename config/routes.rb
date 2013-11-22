@@ -71,11 +71,15 @@ PhysiotecV3::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
           
-
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
       resources :licenses
       resources :scope_permissions
+      resources :permissions, :except => :update
+
+      resources :scope_groups, :except => :update do
+        resources :scopes, :controller => 'scope_groups/scopes'
+      end
 
       resources :users do
         resources :scope_permissions, :controller => 'users/scope_permissions'

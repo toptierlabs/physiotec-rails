@@ -8,9 +8,8 @@ module Api
       rescue_from ActionController::UnknownController, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
       rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 
-
-      before_filter :restrict_access, :except=>:cors_access_control
-      after_filter :cors_access_control, :except=>:cors_access_control
+      before_filter :cors_access_control, :except=>:cors_access_control
+      before_filter :restrict_access, :except=>:cors_access_control      
 
       def cors_access_control
         headers['Access-Control-Allow-Origin'] = '*'
@@ -25,7 +24,7 @@ module Api
         def authorize_request(permission, action, scopes=nil)
           auth = @current_user.can?(permission, action, scopes) || AUTH_CONFIG['super_user']
           if !auth
-            render json: {:error => "401"}, :status => :unauthorized
+            render json: {:error => "403"}, :status => :unauthorized
             #break
           end
           auth
@@ -115,7 +114,7 @@ module Api
           else
             unauthorized = true
           end
-          render json: {:error => "401"}, :login_failed=> true, :status => :unauthorized if unauthorized
+          render json: {:error => "401"}, :status => :unauthorized if unauthorized
         end
 
         
