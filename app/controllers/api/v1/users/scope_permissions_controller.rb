@@ -8,18 +8,16 @@ module Api
 
 				# @selected_user will hold the user identified by the url parameters
 				def read_user
-					@selected_user = User.where( id: params[:user_id] ).first
-					render json: {:error => "404"}, :status => :render_not_found if @selected_user.nil?
-					# TODO: ERROR 500
+					@selected_user = User.find( params[:id] )
 				end
 
 
 				#List all the scope_permissions
 				def index
 					if true#authorize_request(:permission, :read, @selected_user)
-						@permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
+						@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 						respond_to do | format |
-							format.json { render json:  { scope_permissions: @permissions.as_json(:include=>{action:{only:[:id, :name]},
+							format.json { render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}},
 													#only render the previous fields
 													:only => []) }  }
@@ -46,10 +44,9 @@ module Api
 				# PRECONDITIONS: The given scope_permission and the given user must exist in the system.
 				def create
 					if authorize_request(:permission, :create, @selected_user)
-						@scope_permission = @selected_user.scope_permissions.new(user_id: @selected_user.id, scope_permission_id: params[:scope_permission_id])
+						@scope_permission = ScopePermission.find(params[:scope_permission][:scope_permission_id])
+						@selected_user.scope_permissions << @scope_permission
 
-						#:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone
-					 
 						respond_to do |format|
 							if @scope_permission.save
 								format.json { render json: @scope_permission, status: :created}
@@ -63,17 +60,17 @@ module Api
 				# Updates an existing link between the selected_user and a scope_permission.
 				# PRECONDITIONS: The given permission and the given user must exist in the system.
 				def update
-					@permission = @selected_user.scope_permissions.find(id: params[:id])
+					@scope_permission = @selected_user.scope_permissions.find(id: params[:id])
 					
-					if @permission.nil?
-						format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
+					if @scope_permission.nil?
+						format.json { render json: { :error => "Scope Permission not found." }, status: :unprocessable_entity }
 
-					elsif authorize_request(:permission, :modify, @permission) #when false it renders not authorized
+					elsif authorize_request(:permission, :modify, @scope_permission) #when false it renders not authorized
 						respond_to do |format|
-							if @permission.update_attributes(params[:permission].except(:permission_id))
-								format.json { render json: @permission, status: :updated }
+							if @scope_permission.update_attributes(params[:scope_permission][:scope_permission_id].except(:permission_id))
+								format.json { render json: @scope_permission, status: :updated }
 							else
-								format.json { render json: @permission.errors, status: :unprocessable_entity }
+								format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
 							end
 						end
 					end
@@ -84,17 +81,17 @@ module Api
 				# PRECONDITIONS: The given permission and the given user must exist in the system.
 	 
 				def destroy
-					@permission = @selected_user.scope_permissions.find(id: params[:id])
+					@scope_permission = @selected_user.scope_permissions.find(id: params[:id])
 					
-					if @permission.nil?
-						format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
+					if @scope_permission.nil?
+						format.json { render json: { :error => "Scope Permission not found." }, status: :unprocessable_entity }
 
 					elsif authorize_request(:permission, :delete, @permission) #when false it renders not authorized
 						respond_to do |format|
-							if @permission.destroy
-								format.json { render json: @permission, status: :updated }
+							if @scope_permission.destroy
+								format.json { render json: @scope_permission, status: :updated }
 							else
-								format.json { render json: @permission.errors, status: :unprocessable_entity }
+								format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
 							end
 						end
 					end

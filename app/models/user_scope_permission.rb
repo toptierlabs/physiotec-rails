@@ -6,6 +6,8 @@ class UserScopePermission < ActiveRecord::Base
   # uniqueness of the permission inside the same scope
   # validates :scope_permission_id, :uniqueness => {:scope => :user_id}
 
+  validates :scope_permission_id, :uniqueness => {:scope => :user_id}
+
   def datatype
     result = {}
     result[:action] = self.scope_permission.action.name

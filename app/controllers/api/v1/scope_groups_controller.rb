@@ -27,12 +27,11 @@ module Api
       end
 
       # POST /scope_groups
-      # POST /scope_groups.json
+      #INPUT: :name, :description, [ [:name] ]
       def create
         #:name, :description, [ [:name] ]
         if authorize_request(:permission, :create)
           #scope_groups.api_license_id = @api_license.id?          
-          #what happens if a scope_permission is created and then the permission's scopes are updated?
           respond_to do |format|
 
             @scope_group = ScopeGroup.new( params[:scope_group].except(:scopes) )

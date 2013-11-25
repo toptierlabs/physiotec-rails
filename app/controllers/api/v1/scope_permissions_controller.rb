@@ -21,7 +21,7 @@ module Api
 			# Shows the permission for @selected_user
 			# PRECONDITIONS: The given scope permission must exist in the system.
 			def show
-				if true#authorize_request(:permission, :read)
+				if authorize_request(:permission, :read)
 					@scope_permission = ScopePermission.includes(:action,:permission,:scopes).where(id: params[:id]).first
 					respond_to do | format |
 						if @scope_permission.nil?
@@ -57,15 +57,15 @@ module Api
 						elsif @scope_permission.save
 							format.json { render json: @scope_permission, status: :created}
 						else
-							response_error = @scope_permission.errors || { :error => "Could not find the given scopes." }
+							response_error = @scope_permission.errors || { :error => "Could not find all the given scopes." }
 							format.json { render json: response_error, status: :unprocessable_entity }
 						end
 					end
 				end
 			end
 
-			# Updates an existing link between the selected_user and a permission.
-			# PRECONDITIONS: The given permission and the given user must exist in the system.
+			# Updates a permission, it updates the name, the action and the scopes
+			# PRECONDITIONS: The given scope_permission must exist in the system.
 			def update
 				@scope_permission = ScopePermission.where(params[:id]).first
 				respond_to do |format|	
@@ -86,7 +86,7 @@ module Api
 							scope_permission_link[spgs.scope_id] = spgs.id
 						end
 
-						#Scopes to remove
+						#scopes to remove
 						remove_scopes = current_scopes - params[:scope_permission][:scopes]
 
 						#Scope_permission_group_scopes to remove
@@ -122,7 +122,7 @@ module Api
 
 				# Disposes the given scope_permission
 				# The user and the permission will remain in the system
-				# PRECONDITIONS: The given permission exist in the system.
+				# PRECONDITIONS: The given permission must exist in the system.
 
 				def destroy					
 					@scope_permission =ScopePermission.where(id: params[:id]).first

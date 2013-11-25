@@ -4,6 +4,13 @@ module Api
       # @current_user will hold the identified user
       before_filter :identify_user, :except=>[:login]
 
+      before_filter :read_user, :except =>[:index, :login, :create]
+
+      # @selected_user will hold the user identified by the url parameters
+      def read_user
+        @selected_user = User.find( params[:id] )
+      end
+
       # GET /users
       # GET /users.json
       def index
@@ -17,14 +24,9 @@ module Api
       # GET /users/1
       # GET /users/1.json
       def show
-        @user = User.where(id: params[:id]).first
-
+        @user = User.find(id: params[:id])
         respond_to do |format|
-          if @user.nil?
-            format.json { render json: { :error => "User not found." }, status: :unprocessable_entity }
-          else
-            format.json { render json: @user }
-          end
+          format.json { render json: @user }
         end
       end
 
@@ -32,16 +34,16 @@ module Api
       #POST /users/login
       def login
         #search the user by email
-        user = User.find_by_email(params[:email])     
+        user = User.find_by_email(params[:email])
         #check if the recieved password matches the user password
-        if (user !=nil) && (user.api_license_id == @api_license.id) && (user.valid_password?(params[:password]))
+        if (user !=nil) && (user.valid_password?(params[:password]))
           #creates a session token
           session_token = user.new_session_token
           respond_to do |format|
             format.json { render json: {token: session_token, user_id: user.id}, status: :created}
           end
         else
-          render json: {:error => "401"}, status: 401
+          render json: {:error => "401"}, status: 401 #unauthorized
         end
       end
 
@@ -54,50 +56,43 @@ module Api
       #   last_name: String,
       #   profiles: [String] }
       def create
-        error = !(@current_user.can? :user, :create)
         #if user can create another user
-        if !error
+        if (@current_user.can? :user, :create)
           #new user from parameters
-          user = User.new(params[:user].except(:user_profiles).except(:profiles))
-          user.api_license_id = @api_license.id
+          respond_to do |format|
+            if (Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
+              format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
+            else
 
-          #profile assignations
-          params[:user][:user_profiles].each do | profile_name |
-            profile = Profile.find_by_name(profile_name)
+              profiles_to_add=[]
+              params[:user][:user_profiles].each_with_index do |s, i|
+                profiles_to_add[i] = {profile_id: s}
+              end 
+              #creates the formatted_params for correct profile assignation
+              formatted_params = params[:user].except(:user_profiles).except(:profiles)
+              formatted_params[:api_license_id] = @api_license.id
+              formatted_params[:user_profiles_attributes] = profiles_to_add
 
-            error = profile.nil?
-            #current user can assign ingresed profile
-            puts @current_user.to_json
-            error = !@current_user.can?(:profile, :assign, :scopes=>[profile.name.parameterize.underscore.to_sym]) unless error
-            puts !@current_user.can?(:profile, :assign, :scopes=>[:author])
-            puts error
-            break if error
-            user.profiles << profile
-          end
-          error = !user.save unless error
-        end
-
-        respond_to do |format|
-          if !error
-            format.json { render json: user, status: :created }
-          else
-            #if user == nil then the current user does not have sufficient privileges
-            response_error = response_error || { :error => "Can not complete the operation because you do not have sufficient privileges." }
-            format.json { render json: response_error, status: :unprocessable_entity }
+              @user = User.new(formatted_params)
+              if @user.save
+                format.json { render json: @user, status: :created}
+              else
+                format.json { render json: @user.errors, status: :unprocessable_entity }
+              end
+            end
           end
         end
       end
 
+
       # PUT /users/1
       # PUT /users/1.json
       def update
-        @user = User.find(params[:id])
-
         respond_to do |format|
-          if @user.update_attributes(params[:user])
+          if @selected_user.update_attributes(params[:user])
             format.json { head :no_content }
           else
-            format.json { render json: @user.errors, status: :unprocessable_entity }
+            format.json { render json: @selected_user.errors, status: :unprocessable_entity }
           end
         end
       end
@@ -105,13 +100,72 @@ module Api
       # DELETE /users/1
       # DELETE /users/1.jsonº
       def destroy
-        @user = User.find(params[:id])
-        @user.destroy
-
+        @selected_user = User.find(params[:id])
         respond_to do |format|
-          format.json { head :no_content }
+
+          if @selected_user.destroy
+            format.json { head :no_content }
+          else
+            format.json { render json: @selected_user.errors, status: :unprocessable_entity }
+          end
+
         end
       end
+
+      #users/:id/assign_profile?profile_id=9
+      def assign_profile
+        authorize_request(:profile, :create, @current_user)
+        @profile = Profile.find(params[:profile_id])
+        @selected_user.profiles << @profile
+        respond_to do |format|
+          if @selected_user.save
+            format.json { render json: @selected_user, status: :created}
+          else
+            format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
+          end
+        end
+      end
+
+      #users/:id/unassign_profile?profile_id=9
+      def unassign_profile
+        authorize_request(:profile, :delete, @current_user)
+        
+        respond_to do |format|
+          if @selected_user.user_profiles.find_by_profile_id(params[:profile_id]).delete
+            format.json { head :no_content }
+          else
+            format.json { render json: @profile.errors, status: :unprocessable_entity }
+          end
+        end
+      end
+
+      #users/:id/assign_ability?scope_permission_id=9
+      def assign_ability
+        authorize_request(:permission, :create, @current_user)
+        formatted_params = {}
+        formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
+        respond_to do |format|
+          if @selected_user.update_attributes(formatted_params)
+            format.json { render json: @selected_user, status: :created}
+          else
+            format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
+          end
+        end
+      end
+
+      #users/:id/unassign_ability?scope_permission_id=9
+      def unassign_ability
+        authorize_request(:permission, :delete, @current_user)
+        
+        respond_to do |format|
+          if @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id]).delete
+            format.json { head :no_content }
+          else
+            format.json { render json: @profile.errors, status: :unprocessable_entity }
+          end
+        end
+      end
+
     end
   end
 end

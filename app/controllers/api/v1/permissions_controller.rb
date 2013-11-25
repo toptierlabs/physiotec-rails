@@ -19,9 +19,9 @@ module Api
       # GET /permissions/1.json
       def show
         if authorize_request(:permission, :read)
-          @permission = Permission.find(params[:id])
+          @permission = Permission.includes(:scope_groups).find(params[:id])
           respond_to do | format |
-            format.json { render json: @permission }
+            format.json { render json: @permission.as_json(:include=>:scope_groups) }
           end
         end
       end
