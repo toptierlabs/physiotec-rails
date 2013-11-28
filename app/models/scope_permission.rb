@@ -33,7 +33,6 @@ class ScopePermission < ActiveRecord::Base
   
   class ScopesInScopeGroupsValidator < ActiveModel::Validator
     def validate(record)
-      puts record.to_json
       record.scopes.each do | spgs |
         if !record.permission.permission_scope_groups.where('scope_group_id = ?', spgs.scope_group.id).exists?
           record.errors[:base] << "invalid scopes for the current permission"

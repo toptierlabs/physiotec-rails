@@ -14,10 +14,12 @@
 ActiveRecord::Schema.define(:version => 20131126124801) do
 
   create_table "actions", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name",       :default => "", :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
+
+  add_index "actions", ["name"], :name => "index_actions_on_name", :unique => true
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"

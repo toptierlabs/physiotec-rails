@@ -11,11 +11,14 @@ actions.each do | action |
   Action.create(name: action)
 end
 
+#Creates the default api license
+ApiLicense.create(name: "Test API License", description: "Test License")
+
 # Creates the permissions
 permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Profile"]
 
 permissions.each do | name |
-  Permission.create(name: name)
+  Permission.create(name: name, api_license_id: ApiLicense.first.id)
 end
 
 # Creates the scope groups
@@ -24,7 +27,7 @@ scope_groups = [["Languages", "A Group of different languages."],
                 ["Profiles", ["All the profiles"]]]
 
 scope_groups.each do | name, description |
-  ScopeGroup.create(name: name, description: description)
+  ScopeGroup.create(name: name, description: description, api_license_id: ApiLicense.first.id)
 end
 
 # Creates the scopes
@@ -64,7 +67,7 @@ profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
                  "Patient", "License administrator", "Clinic Administrator"]
 
 profiles_list.each do | name |
-  Profile.create(name: name)
+  Profile.create(name: name, api_license_id: ApiLicense.first.id)
 end
 
 #Link scopes and permissions with a profile
