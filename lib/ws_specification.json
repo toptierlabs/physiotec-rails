@@ -4,7 +4,7 @@
 		"url": "api/v1/users",
 		"description": "The index of users",
 		"method": "GET",
-		"parameters": [{"name": "API_TOKEN"}]
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
 	}, 
 	{
 		"name": "User login",
@@ -14,25 +14,47 @@
 		"parameters": [{"name": "api_key"}, {"name": "email"}, {"name": "password"}]
 	},
 	{
-		"name": "Permissions index",
-		"url": "api/v1/permissions",
-		"description": "The index of permissions",
-		"method": "GET",
-		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
-	},
-	{
 		"name": "Action: List all",
 		"url": "api/v1/actions",
-		"description": "List all the current actions in the system",
+		"description": "List all actions in the system",
 		"method": "GET",
-		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
 	},
 	{
 		"name": "Action: Show",
-		"url": "api/v1/actions",
-		"description": "List all the current actions in the system",
+		"url": "api/v1/actions/:id",
+		"description": "Shows information about the given action",
 		"method": "GET",
-		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
+	},
+
+	{
+		"name": "Permissions: Index",
+		"url": "api/v1/permissions",
+		"description": "The index of permissions",
+		"method": "GET",
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
+	},
+	{
+		"name": "Permissions: Show",
+		"url": "api/v1/permissions/:id",
+		"description": "The index of permissions",
+		"method": "GET",
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
+	},
+	{
+		"name": "Permissions: Create",
+		"url": "api/v1/permissions",
+		"description": "The index of permissions",
+		"method": "POST",
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}, { "name" : "permission[name]"}, { "name" : "permission[scope_groups][]"}, { "name" : "permission[scope_groups][]"}, { "name" : "permission[scope_groups][]"}]
+	},
+	{
+		"name": "Permissions: Destroy",
+		"url": "api/v1/permissions",
+		"description": "The index of permissions",
+		"method": "DELETE",
+		"parameters": [{"name": "api_key"}, {"name" : "user_token"}, { "name" : "user_id"}]
 	}
 	]
 }

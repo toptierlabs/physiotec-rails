@@ -29,11 +29,12 @@ module Api
       # POST /permissions
       # POST /permissions.json
       def create
-        #:name, :permission_scope_groups, :permission_scope_groups_attributes
-        if authorize_request(:permission, :create)
-          #permission.api_license_id = @api_license.id?          
+        if authorize_request(:permission, :create)        
           #what happens if a scope_permission is created and then the permission's scopes are updated?
           respond_to do |format|
+            #fix for api explorer compatibility
+            params[:permission][:scope_groups].each{ |i| puts i}
+            params[:permission][:scope_groups].map{ |i| i.to_s.to_i}
             if (ScopeGroup.where(id: params[:permission][:scope_groups]).length != params[:permission][:scope_groups].length)
               format.json { render json: { :error => "Could not find all the given scope groups." }, status: :unprocessable_entity }
 

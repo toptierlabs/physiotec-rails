@@ -43,7 +43,7 @@ module Api
             format.json { render json: {token: session_token, user_id: user.id}, status: :created}
           end
         else
-          render json: {:error => "401"}, status: 401 #unauthorized
+          render json: {:error => "Wrong user and password"}, status: 401 #unauthorized
         end
       end
 
@@ -76,7 +76,7 @@ module Api
             if @user.save
               format.json { render json: @user, status: :created}
             else
-              format.json { render json: @user.errors, status: :unprocessable_entity }
+              format.json { render json: @user.errors.full_messages, status: :unprocessable_entity }
             end
           end
         end
@@ -90,13 +90,13 @@ module Api
           if @selected_user.update_attributes(params[:user].except(:api_license_id))
             format.json { head :no_content }
           else
-            format.json { render json: @selected_user.errors, status: :unprocessable_entity }
+            format.json { render json: @selected_user.errors.full_messages, status: :unprocessable_entity }
           end
         end
       end
 
       # DELETE /users/1
-      # DELETE /users/1.jsonº
+      # DELETE /users/1.json
       def destroy
         @selected_user = User.find(params[:id])
         respond_to do |format|
@@ -117,7 +117,7 @@ module Api
         @selected_user.profiles << @profile
         respond_to do |format|
           if @selected_user.save
-            format.json { render json: @selected_user, status: :created}
+            format.json { render json: @selected_user.as_json(:include => [:profiles]) , status: :created}
           else
             format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
           end
@@ -129,7 +129,10 @@ module Api
         authorize_request(:profile, :delete, @current_user)
         
         respond_to do |format|
-          if @selected_user.user_profiles.find_by_profile_id(params[:profile_id]).delete
+          @profile = @selected_user.user_profiles.find_by_profile_id(params[:profile_id])
+          if @profile.nil?
+            format.json { render json: {:error => "404"}, status: 404 }      
+          elsif @profile.delete
             format.json { head :no_content }
           else
             format.json { render json: @profile.errors, status: :unprocessable_entity }
@@ -138,6 +141,7 @@ module Api
       end
 
       def assign_ability
+      # users/:id/assign_ability?scope_permission_id=9
       # Creates a link between the selected_user and the scope_permission with id scope_permission_id given by the parameters.
       # PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
         authorize_request(:permission, :create, @current_user)
@@ -145,29 +149,31 @@ module Api
         formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
         respond_to do |format|
           if @selected_user.update_attributes(formatted_params)
-            format.json { render json: @selected_user, status: :created}
+            format.json { render json: @selected_user.as_json(:include=>:scope_permissions), status: :created}
           else
             format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
           end
         end
       end
 
+
       def unassign_ability
-      #users/:id/unassign_ability?scope_permission_id=9
-      # Disposes an existing link between the selected_user and a scope_permission.
+      # Disposes an existing link between the user and a scope_permission.
       # The user and the permission will remain in the system
-      # PRECONDITIONS: The given permission and the given user must exist in the system.      
+      # PRECONDITIONS: The given permission and the given user must exist in the system.
         authorize_request(:permission, :delete, @current_user)
         
         respond_to do |format|
-          if @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id]).delete
+          @scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
+          if @scope_permission.nil?
+            format.json { render json: {:error => "404"}, status: 404 }            
+          elsif @scope_permission.delete
             format.json { head :no_content }
           else
-            format.json { render json: @profile.errors, status: :unprocessable_entity }
+            format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
           end
         end
       end
-
 
     end
   end

@@ -78,7 +78,7 @@ module Api
         formatted_params[:profile_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
         respond_to do |format|
           if @profile.update_attributes(formatted_params)
-            format.json { render json: @profile, status: :created}
+            format.json { render json: @profile.as_json(:include=>:scope_permissions), status: :created}
           else
             format.json { render json: @profile.errors.to_json, status: :unprocessable_entity }
           end
@@ -89,16 +89,19 @@ module Api
       # POST profiles/:id/unassign_ability?scope_permission_id=9
       def unassign_ability
       # Disposes an existing link between the profile and a scope_permission.
-      # The user and the permission will remain in the system
+      # The profile and the permission will remain in the system
       # PRECONDITIONS: The given permission and the given user must exist in the system.
         authorize_request(:permission, :delete, @current_user)
         @profile = Profile.find(params[:id])
         
         respond_to do |format|
-          if @profile.profile_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id]).delete
+          @scope_permission = @profile.profile_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
+          if @scope_permission.nil?
+            format.json { render json: {:error => "404"}, status: 404 }            
+          elsif @scope_permission.delete
             format.json { head :no_content }
           else
-            format.json { render json: @profile.errors, status: :unprocessable_entity }
+            format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
           end
         end
       end
