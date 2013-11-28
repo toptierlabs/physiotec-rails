@@ -49,7 +49,6 @@ module Api
 
 
       # POST /users
-      # POST /users.json
       #The content of the request must have a json with the following format:
       # { email: String,
       #   first_name: String,
@@ -57,28 +56,27 @@ module Api
       #   profiles: [String] }
       def create
         #if user can create another user
-        if (@current_user.can? :user, :create)
-          #new user from parameters
-          respond_to do |format|
-            if (Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
-              format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
+        #new user from parameters
+        respond_to do |format|
+          authorize_request(:user, :create)
+          if (Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
+            format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
+          else
+
+            profiles_to_add=[]
+            params[:user][:user_profiles].each_with_index do |s, i|
+              profiles_to_add[i] = {profile_id: s}
+            end 
+            #creates the formatted_params for correct profile assignation
+            formatted_params = params[:user].except(:user_profiles).except(:profiles)
+            formatted_params[:api_license_id] = @api_license.id
+            formatted_params[:user_profiles_attributes] = profiles_to_add
+
+            @user = User.new(formatted_params)
+            if @user.save
+              format.json { render json: @user, status: :created}
             else
-
-              profiles_to_add=[]
-              params[:user][:user_profiles].each_with_index do |s, i|
-                profiles_to_add[i] = {profile_id: s}
-              end 
-              #creates the formatted_params for correct profile assignation
-              formatted_params = params[:user].except(:user_profiles).except(:profiles)
-              formatted_params[:api_license_id] = @api_license.id
-              formatted_params[:user_profiles_attributes] = profiles_to_add
-
-              @user = User.new(formatted_params)
-              if @user.save
-                format.json { render json: @user, status: :created}
-              else
-                format.json { render json: @user.errors, status: :unprocessable_entity }
-              end
+              format.json { render json: @user.errors, status: :unprocessable_entity }
             end
           end
         end
@@ -89,7 +87,7 @@ module Api
       # PUT /users/1.json
       def update
         respond_to do |format|
-          if @selected_user.update_attributes(params[:user])
+          if @selected_user.update_attributes(params[:user].except(:api_license_id))
             format.json { head :no_content }
           else
             format.json { render json: @selected_user.errors, status: :unprocessable_entity }
@@ -139,8 +137,9 @@ module Api
         end
       end
 
-      #users/:id/assign_ability?scope_permission_id=9
       def assign_ability
+      # Creates a link between the selected_user and the scope_permission with id scope_permission_id given by the parameters.
+      # PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
         authorize_request(:permission, :create, @current_user)
         formatted_params = {}
         formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
@@ -153,8 +152,11 @@ module Api
         end
       end
 
-      #users/:id/unassign_ability?scope_permission_id=9
       def unassign_ability
+      #users/:id/unassign_ability?scope_permission_id=9
+      # Disposes an existing link between the selected_user and a scope_permission.
+      # The user and the permission will remain in the system
+      # PRECONDITIONS: The given permission and the given user must exist in the system.      
         authorize_request(:permission, :delete, @current_user)
         
         respond_to do |format|
@@ -165,6 +167,7 @@ module Api
           end
         end
       end
+
 
     end
   end

@@ -31,7 +31,7 @@ class ScopePermission < ActiveRecord::Base
   validates :permission, :action, :presence => true
 
   
-  class GoodnessValidator < ActiveModel::Validator
+  class ScopesInScopeGroupsValidator < ActiveModel::Validator
     def validate(record)
       puts record.to_json
       record.scopes.each do | spgs |
@@ -41,7 +41,7 @@ class ScopePermission < ActiveRecord::Base
       end      
     end
   end
-  validates_with GoodnessValidator
+  validates_with ScopesInScopeGroupsValidator
 
   #display name for ActiveAdmin
   def datatype

@@ -27,7 +27,9 @@ module Api
       end
 
       # POST /scope_groups
-      #INPUT: :name, :description, [ [:name] ]
+      #PARAMS: {  :scope_group=>{:name => String,
+      #           :description => String,
+      #           :scopes =>  [name:String] }}
       def create
         #:name, :description, [ [:name] ]
         if authorize_request(:permission, :create)
@@ -35,6 +37,7 @@ module Api
           respond_to do |format|
 
             @scope_group = ScopeGroup.new( params[:scope_group].except(:scopes) )
+            @scope_group.api_license_id = @api_license.id
 
             #creates the scopes
             if !params[:scope_group][:scopes].nil?

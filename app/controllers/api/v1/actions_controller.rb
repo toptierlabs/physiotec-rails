@@ -4,7 +4,7 @@ module Api
 
       before_filter :identify_user
 
-      #Displays all the actions available in the system
+      #Returns all the actions available in the system
       def index
         if authorize_request(:permissions, :read)
           @actions = Action.all #add context to permission, api_license or null (generic)

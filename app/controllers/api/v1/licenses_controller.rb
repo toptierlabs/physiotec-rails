@@ -28,11 +28,11 @@ module Api
 
       # POST /licenses
       # POST /licenses.json
+      # Recieves #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone as params
       def create
         if authorize_request(:license, :create)
           license = License.new(params[:license])
           license.api_license_id = @api_license.id
-            #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone
          
           respond_to do |format|
             if license.save

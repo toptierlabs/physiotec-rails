@@ -1,12 +1,15 @@
 class Profile < ActiveRecord::Base
-  validates :name, :presence => true, :uniqueness => true, :allow_blank => false
 
-  attr_accessible :name, :profile_scope_permissions,
+
+  attr_accessible :name, :profile_scope_permissions, :destination_profiles,
                   #for nested compatibility
-                  :scope_permissions_attributes, :source_profiles, :profile_scope_permissions_attributes
+                  :scope_permissions_attributes, :source_profiles, :profile_scope_permissions_attributes, :api_license_id
 
-  has_many :profile_scope_permissions
+  has_many :profile_scope_permissions, :dependent => :destroy
   has_many :scope_permissions, :through => :profile_scope_permissions
+
+  validates :name, :presence => true, :allow_blank => false
+  validates :name, :uniqueness => {:scope => :api_license_id}
 
   accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true
 
@@ -33,14 +36,29 @@ class Profile < ActiveRecord::Base
   after_save :create_scope
 
   def create_scope    
-  scope = Scope.find_by_name(self.name_was) if self.name_changed?
-  if !scope.nil?
-    scope.name = self.name
-    scope.save
-  else
-    sg_id =  ScopeGroup.find_by_name("Profiles")
-    Scope.create(name: self.name, scope_group_id: sg_id)
+    scope = Scope.find_by_name(self.name_was) if self.name_changed?
+    if !scope.nil?
+      scope.name = self.name
+      scope.save
+    else
+      sg_id =  ScopeGroup.find_by_name("Profiles")
+      Scope.create(name: self.name, scope_group_id: sg_id)
+    end
   end
-end
+
+  def permission_scopes_list
+    # returns an array of arrays with the name of the destination profiles as elements
+    def hash_formatter(permission, action, s)
+      {:permission => permission, :action => action, :scopes => [s.parameterize.underscore.to_sym] }
+    end
+
+    result = []
+    self.destination_profiles.each do |p|
+      result << hash_formatter(:profile, :assign, p.name)
+      result << hash_formatter(:profile, :unassign, p.name)
+    end
+    result
+
+  end
 
  end

@@ -7,8 +7,8 @@ module Api
       # GET /permissions
       # GET /permissions.json
       def index
-        if authorize_request(:permissions, :read) #give also api_license?
-          @permissions = Permission.all #add context to permission, api_license or null (generic)
+        if authorize_request(:permissions, :read)
+          @permissions = Permission.where(:api_license_id => @api_license.id)
           respond_to do | format |
               format.json { render json: @permissions }
           end
@@ -48,6 +48,7 @@ module Api
               formatted_params[:permission_scope_groups_attributes] = scopes_to_add
 
               @permission = Permission.new(formatted_params)
+              @permission.api_license_id = @api_license.id
               if @permission.save
                 format.json { render json: @permission, status: :created}
               else

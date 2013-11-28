@@ -4,6 +4,6 @@ class ScopeGroup < ActiveRecord::Base
 
   validates :name, :uniqueness => true
 
-  attr_accessible :description, :name
+  attr_accessible :description, :name, :api_license_id
   
 end

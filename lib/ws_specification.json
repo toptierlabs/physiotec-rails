@@ -21,11 +21,18 @@
 		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
 	},
 	{
-		"name": "Permission creation",
-		"url": "api/v1/permissions",
-		"description": "Creation of new permissions",
-		"method": "POST",
-		"parameters": [{"Hashed permission ({\"permission\":{\"name\":String,\"scopes\":[\"scope name\"]}})": "permission"}]
+		"name": "Action: List all",
+		"url": "api/v1/actions",
+		"description": "List all the current actions in the system",
+		"method": "GET",
+		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
+	},
+	{
+		"name": "Action: Show",
+		"url": "api/v1/actions",
+		"description": "List all the current actions in the system",
+		"method": "GET",
+		"parameters": [{"name": "API_TOKEN"},{"name": "API_TOKEN"}]
 	}
 	]
 }

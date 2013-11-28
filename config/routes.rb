@@ -77,6 +77,12 @@ PhysiotecV3::Application.routes.draw do
       resources :licenses
       resources :scope_permissions
       resources :permissions, :except => :update
+      resources :profiles do
+        member do
+          post 'assign_ability'
+          post 'unassign_ability'
+        end
+      end
       resources :actions, :only => [:index, :show]
 
       resources :scope_groups, :except => :update do
@@ -90,14 +96,14 @@ PhysiotecV3::Application.routes.draw do
           post 'assign_ability'
           post 'unassign_ability'
         end
-        resources :scope_permissions, :controller => 'users/scope_permissions'
+        resources :user_scope_permissions, :controller => 'users/user_scope_permissions', :only => [:index, :show]
         resources :user_profiles, :controller => 'users/user_profiles', :only => [:index, :show]
 
         collection do
-          post '/login' => 'users#login'          
-        end
+          post '/login' => 'users#login'
 
-      end
+      end          
+        end
       
     end
   end

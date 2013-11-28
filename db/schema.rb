@@ -11,15 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131120193512) do
+ActiveRecord::Schema.define(:version => 20131126124801) do
 
   create_table "actions", :force => true do |t|
-    t.string   "name",       :default => "", :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
-
-  add_index "actions", ["name"], :name => "index_actions_on_name", :unique => true
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "namespace"
@@ -121,9 +119,12 @@ ActiveRecord::Schema.define(:version => 20131120193512) do
 
   create_table "permissions", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "api_license_id"
   end
+
+  add_index "permissions", ["api_license_id"], :name => "index_permissions_on_api_license_id"
 
   create_table "profile_assignments", :force => true do |t|
     t.integer  "profile_id"
@@ -147,16 +148,22 @@ ActiveRecord::Schema.define(:version => 20131120193512) do
 
   create_table "profiles", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "api_license_id"
   end
+
+  add_index "profiles", ["api_license_id"], :name => "index_profiles_on_api_license_id"
 
   create_table "scope_groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "api_license_id"
   end
+
+  add_index "scope_groups", ["api_license_id"], :name => "index_scope_groups_on_api_license_id"
 
   create_table "scope_permission_group_scopes", :force => true do |t|
     t.integer  "scope_permission_id"

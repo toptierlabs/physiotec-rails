@@ -118,6 +118,26 @@ class User < ActiveRecord::Base
     ppl
   end
 
+  def hash_formatter(permission, action, s)
+    {:permission => permission, :action => action, :scopes => s }
+  end
+
+  def scope_permissions_list
+    #creates a list with the scope_permissions linked with the user
+    res = scope_permissions.joins(:permission,:action,:scopes).map do |p|
+      scope_list = p.scopes.map{ |s| s.name.parameterize.underscore.to_sym }
+      hash_formatter(p.permission.name.parameterize.underscore.to_sym, p.action.name.parameterize.underscore.to_sym, scope_list)
+    end
+
+    #creates a list with the scope_permissions related to profile assignment linked with the profiles
+    profiles.each do |p|
+      p.permission_scopes_list.each do |s|
+        res << s
+      end
+    end
+    res
+  end
+
   # Returns an array of arrays witch each one contains the
   # following information about a permission and its scopes:
   # result = [[permission.name, action.name, *scopes]]

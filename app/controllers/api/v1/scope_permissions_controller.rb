@@ -40,28 +40,35 @@ module Api
 			# PRECONDITIONS: The given action, permission and scopes must exist in the system.
 			# PARAMS => {:action_id=>'', :permission_id=>'', scopes=>[:scope_id]}
 			def create
-				if authorize_request(:permission, :create)
-					@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
-					#creates the scope_permission_group_scopes
-					error = false
-					params[:scope_permission][:scopes].each do | scope_id |
-						scope = Scope.where(id: scope_id).first
-						error = scope.nil?
-						break if error
-						@scope_permission.scopes << scope
-					end
-
-					respond_to do |format|
-						if error
-							format.json { render json: { :error => "Could not find the given scopes." }, status: :unprocessable_entity }
-						elsif @scope_permission.save
-							format.json { render json: @scope_permission, status: :created}
+				authorize_request(:permission, :create)
+				respond_to do |format|
+					#If action does not exists
+					if Action.find_by_id(params[:scope_permission][:action_id]).nil?
+						format.json { render json: { :error => "Could not find the given action." }, status: :unprocessable_entity }
+					#If permission does not exists
+					elsif Permission.find_by_id(params[:scope_permission][:permission_id]).nil?
+						format.json { render json: { :error => "Could not find the given permission." }, status: :unprocessable_entity }
+					else
+						#validates the scopes
+						perm = Permission.find_by_id(params[:scope_permission][:permission_id])
+						if ( perm.scope_groups.joins(:scopes).where(scopes:{id: params[:scope_permission][:scopes]}).length != params[:scope_permission][:scopes].length )
+							format.json { render json: { :error => "Could not find all the given scopes." }, status: :unprocessable_entity }
 						else
-							response_error = @scope_permission.errors || { :error => "Could not find all the given scopes." }
-							format.json { render json: response_error, status: :unprocessable_entity }
+							@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
+							#creates the scope_permission_group_scopes
+							params[:scope_permission][:scopes].each do | scope_id |
+								scope = Scope.where(id: scope_id).first
+								@scope_permission.scopes << scope
+							end				
+							if @scope_permission.save
+								format.json { render json: @scope_permission, status: :created}
+							else
+								response_error = @scope_permission.errors
+								format.json { render json: response_error, status: :unprocessable_entity }
+							end
 						end
 					end
-				end
+				end				
 			end
 
 			# Updates a permission, it updates the name, the action and the scopes
@@ -120,26 +127,26 @@ module Api
 				end
 			end
 
-				# Disposes the given scope_permission
-				# The user and the permission will remain in the system
-				# PRECONDITIONS: The given permission must exist in the system.
+			# Disposes the given scope_permission
+			# The user and the permission will remain in the system
+			# PRECONDITIONS: The given permission must exist in the system.
 
-				def destroy					
-					@scope_permission =ScopePermission.where(id: params[:id]).first
-					respond_to do |format|
-						if @scope_permission.nil?
-							format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
-						elsif authorize_request(:permission, :delete, @scope_permission) #when false it renders not authorized
-							if @scope_permission.destroy
-								format.json { render status: :no_content }
-							else
-								format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
-							end
+			def destroy					
+				@scope_permission =ScopePermission.where(id: params[:id]).first
+				respond_to do |format|
+					if @scope_permission.nil?
+						format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
+					elsif authorize_request(:permission, :delete, @scope_permission) #when false it renders not authorized
+						if @scope_permission.destroy
+							format.json { render status: :no_content }
+						else
+							format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
 						end
 					end
 				end
+			end
 
 
-			end 
-		end
+		end 
 	end
+end
