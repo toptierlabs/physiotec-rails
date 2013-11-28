@@ -24,7 +24,7 @@ module Api
       # GET /users/1
       # GET /users/1.json
       def show
-        @user = User.find(id: params[:id])
+        @user = User.find(params[:id])
         respond_to do |format|
           format.json { render json: @user }
         end
@@ -59,10 +59,10 @@ module Api
         #new user from parameters
         respond_to do |format|
           authorize_request(:user, :create)
-          if (Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
+          if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
             format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
           else
-
+            params[:user][:user_profiles] ||= []
             profiles_to_add=[]
             params[:user][:user_profiles].each_with_index do |s, i|
               profiles_to_add[i] = {profile_id: s}
