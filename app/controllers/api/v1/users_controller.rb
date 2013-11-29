@@ -43,7 +43,7 @@ module Api
             format.json { render json: {token: session_token, user_id: user.id}, status: :created}
           end
         else
-          render json: {:error => "Wrong user or password"}, status: 401 #unauthorized
+          render json: {:error => "Wrong user or password"}, status: 401 #nuauthorized
         end
       end
 
@@ -112,7 +112,7 @@ module Api
 
       #users/:id/assign_profile?profile_id=9
       def assign_profile
-        authorize_request(:profile, :create, @current_user)
+        authorize_request(:profile, :create)
         @profile = Profile.find(params[:profile_id])
         @selected_user.profiles << @profile
         respond_to do |format|
@@ -126,7 +126,7 @@ module Api
 
       #users/:id/unassign_profile?profile_id=9
       def unassign_profile
-        authorize_request(:profile, :delete, @current_user)
+        authorize_request(:profile, :delete)
         
         respond_to do |format|
           @profile = @selected_user.user_profiles.find_by_profile_id(params[:profile_id])
@@ -144,7 +144,7 @@ module Api
       # users/:id/assign_ability?scope_permission_id=9
       # Creates a link between the selected_user and the scope_permission with id scope_permission_id given by the parameters.
       # PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
-        authorize_request(:permission, :create, @current_user)
+        authorize_request(:permission, :create)
         formatted_params = {}
         formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
         respond_to do |format|
@@ -161,7 +161,7 @@ module Api
       # Disposes an existing link between the user and a scope_permission.
       # The user and the permission will remain in the system
       # PRECONDITIONS: The given permission and the given user must exist in the system.
-        authorize_request(:permission, :delete, @current_user)
+        authorize_request(:permission, :delete)
         
         respond_to do |format|
           @scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])

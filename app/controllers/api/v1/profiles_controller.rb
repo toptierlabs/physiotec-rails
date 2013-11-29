@@ -72,7 +72,7 @@ module Api
       def assign_ability
       # Creates a link between the profile and the scope_permission with id permission_id given by the parameters.
       # PRECONDITIONS: The given scope_permission and the given user must exist in the system.
-        authorize_request(:permission, :create, @current_user)
+        authorize_request(:permission, :create)
         @profile = Profile.find(params[:id])
         formatted_params = {}
         formatted_params[:profile_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
@@ -91,7 +91,7 @@ module Api
       # Disposes an existing link between the profile and a scope_permission.
       # The profile and the permission will remain in the system
       # PRECONDITIONS: The given permission and the given user must exist in the system.
-        authorize_request(:permission, :delete, @current_user)
+        authorize_request(:permission, :create)
         @profile = Profile.find(params[:id])
         
         respond_to do |format|
