@@ -92,8 +92,8 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
                            ["License administrator", "User", "Modify", []],
                            ["License administrator", "User", "Delete", []],
 
-                           ["License administrator", "Profile", "Assign", []],
-                           ["License administrator", "Profile", "Unassign", []]
+                           ["License administrator", "Permission", "Assign", []],
+                           ["License administrator", "Permission", "Unassign", []]
                            ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |

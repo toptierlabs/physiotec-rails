@@ -9,7 +9,7 @@ class ApiLicense < ActiveRecord::Base
   validates :name, :description,
             :public_api_key, :secret_api_key, :presence => true
 
-  validates :public_api_key, :secret_api_key, :uniqueness => true
+  validates :name, :public_api_key, :secret_api_key, :uniqueness => true
 
 
   has_many :users
