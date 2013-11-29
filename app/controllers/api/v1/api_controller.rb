@@ -24,7 +24,7 @@ module Api
         def authorize_request(permission, action, scopes=nil)
           auth = @current_user.can?(@api_license, permission, action, scopes) || AUTH_CONFIG['super_user']
           if !auth
-            render json: {:error => "403"}, :status => :unauthorized
+            render json: {:error => "Access Forbidden"}, :status => 403
             #break
           end
           auth
