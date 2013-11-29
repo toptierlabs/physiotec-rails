@@ -14,7 +14,7 @@ module Api
 
 				#List all the scope_permissions
 				def index
-					if true#authorize_request(:permission, :read, @selected_user)
+					authorize_request(:permission, :read, @selected_user)
 						@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 						respond_to do | format |
 							format.json { render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
@@ -22,7 +22,6 @@ module Api
 													#only render the previous fields
 													:only => []) }  }
 						end
-					end
 				end
 
 				# Shows the scope_permission for @selected_user

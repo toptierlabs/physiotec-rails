@@ -7,7 +7,7 @@ module Api
       # GET /permissions
       # GET /permissions.json
       def index
-        if authorize_request(:permissions, :read)
+        if authorize_request(:permission, :read)
           @permissions = Permission.where(:api_license_id => @api_license.id)
           respond_to do | format |
               format.json { render json: @permissions }

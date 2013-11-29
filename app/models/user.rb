@@ -124,10 +124,13 @@ class User < ActiveRecord::Base
 
   def scope_permissions_list
     #creates a list with the scope_permissions linked with the user
-    res = scope_permissions.joins(:permission,:action,:scopes).map do |p|
+    res = []
+    scope_permissions.joins(:permission,:action).includes(:scopes).each do |p|
       scope_list = p.scopes.map{ |s| s.name.parameterize.underscore.to_sym }
-      hash_formatter(p.permission.name.parameterize.underscore.to_sym, p.action.name.parameterize.underscore.to_sym, scope_list)
+      res << hash_formatter(p.permission.name.parameterize.underscore.to_sym, p.action.name.parameterize.underscore.to_sym, scope_list)
     end
+    puts res
+    puts '-'*100
 
     #creates a list with the scope_permissions related to profile assignment linked with the profiles
     profiles.each do |p|
