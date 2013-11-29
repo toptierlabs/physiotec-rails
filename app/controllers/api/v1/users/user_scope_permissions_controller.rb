@@ -18,9 +18,7 @@ module Api
 						@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 						respond_to do | format |
 							format.json { render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
-													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}},
-													#only render the previous fields
-													:only => []) }  }
+													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}) }  }
 						end
 				end
 
