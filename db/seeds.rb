@@ -15,7 +15,7 @@ end
 ApiLicense.create(name: "Test API License", description: "Test License")
 
 # Creates the permissions
-permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Profile"]
+permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Profile", "Permission"]
 
 permissions.each do | name |
   Permission.create(name: name, api_license_id: ApiLicense.first.id)
@@ -23,8 +23,7 @@ end
 
 # Creates the scope groups
 scope_groups = [["Languages", "A Group of different languages."],
-                ["Clinic", "Privileges over the clinic."],
-                ["Profiles", ["All the profiles"]]]
+                ["Clinic", "Privileges over the clinic."]]
 
 scope_groups.each do | name, description |
   ScopeGroup.create(name: name, description: description, api_license_id: ApiLicense.first.id)
@@ -41,7 +40,7 @@ end
 
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Clinic"], ["Clinic", "Clinic"],
-                         ["Excercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"]]
+                         ["Excercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"], ["Permission", "Clinic"]]
 
 permission_scope_group.each do | permission, scope_group |
   PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
@@ -89,13 +88,12 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
                            ["License administrator", "License", "Delete", ["License"]],
 
                            ["License administrator", "User", "Create", []],
-                           ["License administrator", "User", "Read", ["License"]],
-                           ["License administrator", "User", "Modify", ["License"]],
-                           ["License administrator", "User", "Delete", ["Own"]],
+                           ["License administrator", "User", "Read", []],
+                           ["License administrator", "User", "Modify", []],
+                           ["License administrator", "User", "Delete", []],
 
-                           ["License administrator", "Profile", "Assign", ["Author"]],
-                           ["License administrator", "Profile", "Assign", ["Translator"]],
-                           ["License administrator", "Profile", "Assign", ["Media"]]
+                           ["License administrator", "Profile", "Assign", []],
+                           ["License administrator", "Profile", "Unassign", []]
                            ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |

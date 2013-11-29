@@ -43,7 +43,7 @@ module Api
             format.json { render json: {token: session_token, user_id: user.id}, status: :created}
           end
         else
-          render json: {:error => "Wrong user and password"}, status: 401 #unauthorized
+          render json: {:error => "Wrong user or password"}, status: 401 #unauthorized
         end
       end
 
