@@ -15,7 +15,7 @@ end
 ApiLicense.create(name: "Test API License", description: "Test License")
 
 # Creates the permissions
-permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Profile", "Permission"]
+permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Permission"]
 
 permissions.each do | name |
   Permission.create(name: name, api_license_id: ApiLicense.first.id)
