@@ -1,12 +1,17 @@
 module Api
   module V1
     class ApiController < ApplicationController
+
+      require "permissions_helper"
+
       respond_to :json
-      rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
+      
       rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
       rescue_from ActionController::RoutingError, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
       rescue_from ActionController::UnknownController, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
       rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
+      rescue_from PermissionsHelper::ForbiddenAccess, :with => :render_forbidden_access if AUTH_CONFIG['catch_exceptions']
+      #rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
 
       before_filter :cors_access_control, :except=>:cors_access_control
       before_filter :restrict_access, :except=>:cors_access_control      
@@ -22,12 +27,19 @@ module Api
 
   protected
         def authorize_request(permission, action, scopes=nil)
+          puts @api_license.to_json
           auth = @current_user.can?(@api_license, permission, action, scopes) || AUTH_CONFIG['super_user']
           if !auth
-            render json: {:error => "Access Forbidden"}, :status => 403
+            raise PermissionsHelper::ForbiddenAccess.new
+            #render json: {:error => "Access Forbidden"}, :status => :forbidden and return
             #break
           end
           auth
+        end
+
+        def render_forbidden_access(exception)
+          # logger.info(exception) # for logging 
+          render json: {:error => "403"}, status: 403
         end
 
         def render_not_found(exception)

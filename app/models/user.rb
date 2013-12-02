@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
   def scope_permissions_list
     #creates a list with the scope_permissions linked with the user
     res = []
-    scope_permissions.joins(:permission,:action).includes(:scopes).each do |p|
+    scope_permissions.joins(:permission,:action).includes(:scopes,:action, :permission).each do |p|
       scope_list = p.scopes.map{ |s| s.name.parameterize.underscore.to_sym }
       res << hash_formatter(p.permission.name.parameterize.underscore.to_sym, p.action.name.parameterize.underscore.to_sym, scope_list)
     end
@@ -140,6 +140,16 @@ class User < ActiveRecord::Base
     end
     res
   end
+
+  def assignable_profiles_datatype
+    res = []
+    self.profiles.each do |p|
+        res.concat(p.assignable_profiles_datatype)
+    end
+    #remove duplicate elements with uniq
+    res.uniq
+  end
+
 
   # Returns an array of arrays witch each one contains the
   # following information about a permission and its scopes:

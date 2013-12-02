@@ -4,6 +4,7 @@
 # Create a default user if there isn't any 
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
+
 #Initialize the actions
 actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign"]
 
@@ -14,8 +15,10 @@ end
 #Creates the default api license
 ApiLicense.create(name: "Test API License", description: "Test License")
 
+
+
 # Creates the permissions
-permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Permission"]
+permissions = ["Translate", "Clinic", "Excercise", "License", "User", "Permission", "Profile"]
 
 permissions.each do | name |
   Permission.create(name: name, api_license_id: ApiLicense.first.id)
@@ -40,7 +43,7 @@ end
 
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Clinic"], ["Clinic", "Clinic"],
-                         ["Excercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"], ["Permission", "Clinic"]]
+                         ["Excercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"], ["Permission", "Clinic"], ["Profile", "Clinic"]]
 
 permission_scope_group.each do | permission, scope_group |
   PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
@@ -92,8 +95,12 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
                            ["License administrator", "User", "Modify", []],
                            ["License administrator", "User", "Delete", []],
 
-                           ["License administrator", "Permission", "Assign", []],
-                           ["License administrator", "Permission", "Unassign", []]
+                           ["License administrator", "Permission", "Create", []],
+                           ["License administrator", "Permission", "Delete", []],
+                           ["License administrator", "Permission", "Read", []],
+
+                           ["License administrator", "Profile", "Assign", []],
+                           ["License administrator", "Profile", "Unassign", []]
                            ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
@@ -127,3 +134,11 @@ profile_assignment.each do | profile, destination_profile |
   ProfileAssignment.create(profile_id: Profile.find_by_name(profile).id,
                            destination_profile_id: Profile.find_by_name(destination_profile).id)
 end
+
+#Creates a default user
+u = User.new(:email => 'dev-test@physiotec.org',:api_license_id=>1, :first_name=> 'Test User', :last_name=>'Dev')
+u.password = 'pepepepe'
+u.password_confirmation = 'pepepepe'
+u.profiles << Profile.find_by_name('License administrator')
+u.save
+u.confirm!

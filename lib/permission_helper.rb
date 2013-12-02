@@ -6,7 +6,7 @@ module PermissionHelper
    	#TODO get the scopes and the permissions for the current object, currently there is not a defined database model
 
     result = false
-    if !self.api_license.nil? && (self.api_license.id == api_license.id)
+    if !self.api_license.nil? && (self.api_license_id == api_license.id)
       user_permissions ||= permission_scopes_list(permission, action)
 
       #if extra_args[:scopes] equals nils then scopes := [], else extra_args[:scopes]

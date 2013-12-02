@@ -24,7 +24,7 @@ class Profile < ActiveRecord::Base
   # a profile may have multiple profiles, this relation is used when a
   # new user is created, or a user wants to assign to another user a profile
 
-  has_many :profile_assignment
+  has_many :profile_assignment, :dependent => :destroy
   has_many :destination_profiles, :through => :profile_assignment
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
@@ -46,19 +46,27 @@ class Profile < ActiveRecord::Base
   #   end
   # end
 
-  def permission_scopes_list
-    # returns an array of arrays with the name of the destination profiles as elements
-    def hash_formatter(permission, action, s)
-      {:permission => permission, :action => action, :scopes => [s.parameterize.underscore.to_sym] }
-    end
+  # returns an array of arrays with the name of the destination profiles as elements
+  def hash_formatter(permission, action, s)
+    {:permission => permission, :action => action, :scopes => [s.parameterize.underscore.to_sym] }
+  end
 
+  def permission_scopes_list
     result = []
     self.destination_profiles.each do |p|
       result << hash_formatter(:profile, :assign, p.name)
       result << hash_formatter(:profile, :unassign, p.name)
     end
     result
+  end
 
+
+  def assignable_profiles_datatype
+    res = []
+    self.destination_profiles.each do | p |
+      res << self.as_json
+    end
+    res
   end
 
  end

@@ -147,12 +147,10 @@ module Api
         authorize_request(:permission, :create)
         formatted_params = {}
         formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
-        respond_to do |format|
-          if @selected_user.update_attributes(formatted_params)
-            format.json { render json: @selected_user.as_json(:include=>:scope_permissions), status: :created}
-          else
-            format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
-          end
+        if @selected_user.update_attributes(formatted_params)
+          render json: @selected_user.as_json(:include=>:scope_permissions), status: :created
+        else
+          render json: @selected_user.errors.to_json, status: :unprocessable_entity
         end
       end
 
@@ -173,6 +171,12 @@ module Api
             format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
           end
         end
+      end
+
+      def assignable_profiles
+      # List all the profiles that the selected_user user can assign to other users
+      result = @selected_user.assignable_profiles_datatype
+      render json:  { assignable_profiles: result }
       end
 
     end

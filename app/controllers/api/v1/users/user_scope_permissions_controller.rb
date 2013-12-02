@@ -8,7 +8,7 @@ module Api
 
 				# @selected_user will hold the user identified by the url parameters
 				def read_user
-					@selected_user = User.find( params[:id] )
+					@selected_user = User.find( params[:user_id] )
 				end
 
 
@@ -16,10 +16,10 @@ module Api
 				def index
 					authorize_request(:permission, :read)
 						@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
-						respond_to do | format |
-							format.json { render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
-													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}) }  }
-						end
+
+						render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
+													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}) }
+
 				end
 
 				# Shows the scope_permission for @selected_user

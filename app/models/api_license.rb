@@ -12,8 +12,8 @@ class ApiLicense < ActiveRecord::Base
   validates :name, :public_api_key, :secret_api_key, :uniqueness => true
 
 
-  has_many :users
-  has_many :licenses
+  has_many :users, :dependent => :destroy
+  has_many :licenses, :dependent => :destroy
 
   def generate_api_keys
   	self.public_api_key = SecureRandom.urlsafe_base64

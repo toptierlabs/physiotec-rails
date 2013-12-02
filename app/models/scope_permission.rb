@@ -10,11 +10,11 @@ class ScopePermission < ActiveRecord::Base
   # uniqueness of the permission inside the same scope
 
   #has many profiles
-  has_many :profile_scope_permissions
+  has_many :profile_scope_permissions, :dependent => :destroy
   has_many :profiles, :through=>:profile_scope_permissions
 
   #has many users
-  has_many :user_scope_permissions
+  has_many :user_scope_permissions, :dependent => :destroy
   has_many :user, :through=>:user_scope_permissions
 
   #has many scopes, the validation that one Scopepermission

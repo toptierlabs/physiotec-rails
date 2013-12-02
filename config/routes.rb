@@ -95,6 +95,7 @@ PhysiotecV3::Application.routes.draw do
           post 'unassign_profile'
           post 'assign_ability'
           post 'unassign_ability'
+          get 'assignable_profiles'
         end
         resources :user_scope_permissions, :controller => 'users/user_scope_permissions', :only => [:index, :show]
         resources :user_profiles, :controller => 'users/user_profiles', :only => [:index, :show]
