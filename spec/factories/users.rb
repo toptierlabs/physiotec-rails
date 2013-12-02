@@ -4,7 +4,7 @@ FactoryGirl.define do
     first_name "Myname"
     last_name "MyLast name"
     password "DoeDoe12" 
-    # api_license FactoryGirl.create(:api_license)
+    api_license FactoryGirl.create(:api_license)
   end 
 
 end 
