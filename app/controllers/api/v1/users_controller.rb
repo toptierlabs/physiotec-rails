@@ -65,6 +65,7 @@ module Api
             params[:user][:user_profiles] ||= []
             profiles_to_add=[]
             params[:user][:user_profiles].each_with_index do |s, i|
+              authorize_request(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
               profiles_to_add[i] = {profile_id: s}
             end 
             #creates the formatted_params for correct profile assignation
@@ -112,31 +113,29 @@ module Api
 
       #users/:id/assign_profile?profile_id=9
       def assign_profile
-        authorize_request(:profile, :create)
+        authorize_request(:profile, :assign)
         @profile = Profile.find(params[:profile_id])
+        authorize_request(:profile, :assign, {:scopes=>[@profile]} )        
         @selected_user.profiles << @profile
-        respond_to do |format|
-          if @selected_user.save
-            format.json { render json: @selected_user.as_json(:include => [:profiles]) , status: :created}
-          else
-            format.json { render json: @selected_user.errors.to_json, status: :unprocessable_entity }
-          end
+        if @selected_user.save
+          render json: @selected_user.as_json(:include => [:profiles]) , status: :created
+        else
+          render json: @selected_user.errors.to_json, status: :unprocessable_entity
         end
       end
 
       #users/:id/unassign_profile?profile_id=9
       def unassign_profile
-        authorize_request(:profile, :delete)
-        
-        respond_to do |format|
-          @profile = @selected_user.user_profiles.find_by_profile_id(params[:profile_id])
-          if @profile.nil?
-            format.json { render json: {:error => "404"}, status: 404 }      
-          elsif @profile.delete
-            format.json { head :no_content }
-          else
-            format.json { render json: @profile.errors, status: :unprocessable_entity }
-          end
+        authorize_request(:profile, :unassign)
+        @profile = @selected_user.user_profiles.find_by_profile_id(params[:profile_id])
+        authorize_request(:profile, :unassign, {:scopes=>[@profile]} )
+
+        if @profile.nil?
+          render json: {:error => "404"}, status: 404 
+        elsif @profile.delete
+          head :no_content
+        else
+          render json: @profile.errors, status: :unprocessable_entity
         end
       end
 

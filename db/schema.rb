@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131126124801) do
+ActiveRecord::Schema.define(:version => 20131202200402) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -108,6 +108,17 @@ ActiveRecord::Schema.define(:version => 20131126124801) do
     t.datetime "updated_at",      :null => false
     t.integer  "api_license_id"
   end
+
+  create_table "permissible_scopes", :force => true do |t|
+    t.integer  "permissible_id"
+    t.string   "permissible_type"
+    t.integer  "scope_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "permissible_scopes", ["permissible_id"], :name => "index_permissible_scopes_on_permissible_id"
+  add_index "permissible_scopes", ["permissible_type"], :name => "index_permissible_scopes_on_permissible_type"
 
   create_table "permission_scope_groups", :force => true do |t|
     t.integer  "permission_id"
