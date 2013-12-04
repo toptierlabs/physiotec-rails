@@ -55,28 +55,26 @@ module Api
 			def create
 				#if user can create another user
 				#new user from parameters
-				respond_to do |format|
-					authorize_request(:user, :create)
-					if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
-						format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
-					else
-						params[:user][:user_profiles] ||= []
-						profiles_to_add=[]
-						params[:user][:user_profiles].each_with_index do |s, i|
-							authorize_request(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
-							profiles_to_add[i] = {profile_id: s}
-						end 
-						#creates the formatted_params for correct profile assignation
-						formatted_params = params[:user].except(:user_profiles).except(:profiles)
-						formatted_params[:api_license_id] = @api_license.id
-						formatted_params[:user_profiles_attributes] = profiles_to_add
+				authorize_request(:user, :create)
+				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
+					format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
+				else
+					params[:user][:user_profiles] ||= []
+					profiles_to_add=[]
+					params[:user][:user_profiles].each_with_index do |s, i|
+						authorize_request(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
+						profiles_to_add[i] = {profile_id: s}
+					end 
+					#creates the formatted_params for correct profile assignation
+					formatted_params = params[:user].except(:user_profiles).except(:profiles)
+					formatted_params[:api_license_id] = @api_license.id
+					formatted_params[:user_profiles_attributes] = profiles_to_add
 
-						@user = User.new(formatted_params)
-						if @user.save
-							format.json { render json: @user, status: :created}
-						else
-							format.json { render json: @user.errors.full_messages, status: :unprocessable_entity }
-						end
+					@user = User.new(formatted_params)
+					if @user.save
+						render json: @user, status: :created
+					else
+						render json: @user.errors.full_messages, status: :unprocessable_entity
 					end
 				end
 			end
@@ -85,11 +83,48 @@ module Api
 			# PUT /users/1
 			# PUT /users/1.json
 			def update
-				respond_to do |format|
-					if @selected_user.update_attributes(params[:user].except(:api_license_id))
-						format.json { head :no_content }
+				authorize_request(:user, :modify)
+				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
+					render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity
+				else
+					params[:user][:user_profiles] ||= []
+					current_profiles = []
+					current_link = {}
+
+					@selected_user.user_profiles.each do | p |
+						current_profiles << p.profile_id
+						current_link[p.profile_id] = p.id
+					end
+
+					#get the profiles that must add
+					#Scopes to add
+					add_profiles = params[:user][:user_profiles] - current_profiles
+
+					#get the profiles that must delete
+					remove_profiles = current_profiles - params[:user][:user_profiles]
+
+					#Scope_permission_group_scopes to remove
+					profiles_remove = {}
+					remove_profiles.each do | rp |
+						profiles_remove[rp] = current_link[rp] 
+					end
+					#create pretty params
+					update_profiles = {}
+					profiles_remove.each_with_index do |k, i|
+					#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
+						update_profiles[i] = {profile_id: k[0], _destroy: true, id: k[1]}
+					end
+					add_profiles.each_with_index do |s, i|
+						update_profiles[i] = {profile_id: s}
+					end	
+
+					formatted_params = params[:user].except(:user_profiles,:id)
+					formatted_params[:user_profiles_attributes] = update_profiles
+
+					if @selected_user.update_attributes(formatted_params)
+						head :no_content
 					else
-						format.json { render json: @selected_user.errors.full_messages, status: :unprocessable_entity }
+						render json: @selected_user.errors.full_messages, status: :unprocessable_entity
 					end
 				end
 			end
