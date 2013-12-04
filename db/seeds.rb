@@ -75,8 +75,8 @@ end
 #Link scopes and permissions with a profile
 #[ Profile, Permission, Action, [ *Scope ] ]
 
-profile_scope_permission = [["Author", "Excercise", "Create", []],
-                           ["Author", "Excercise", "Modify", ["Own"]],
+profile_scope_permission = [["Author", "Excercise", "Create", ["Clinic"]],
+                           ["Author", "Excercise", "Modify", ["Clinic"]],
                            ["Author", "Excercise", "Delete", ["Own"]],
                            ["Author", "Excercise", "Create", ["Clinic"]],
 
@@ -85,22 +85,22 @@ profile_scope_permission = [["Author", "Excercise", "Create", []],
                            ["Translator", "Translate", "Create", ["Portuguese", "Own"]],
                            ["Translator", "Translate", "Create", ["Spanish", "Own"]],
 
-                           ["License administrator", "License", "Create", []],
-                           ["License administrator", "License", "Read", ["License"]],
+                           ["License administrator", "License", "Create", ["Own"]],
+                           ["License administrator", "License", "Read", ["API License"]],
                            ["License administrator", "License", "Modify", ["Own"]],
                            ["License administrator", "License", "Delete", ["License"]],
 
-                           ["License administrator", "User", "Create", []],
-                           ["License administrator", "User", "Read", []],
-                           ["License administrator", "User", "Modify", []],
-                           ["License administrator", "User", "Delete", []],
+                           ["License administrator", "User", "Create", ["License"]],
+                           ["License administrator", "User", "Read", ["Clinic"]],
+                           ["License administrator", "User", "Modify", ["Clinic"]],
+                           ["License administrator", "User", "Delete", ["Clinic"]],
 
-                           ["License administrator", "Permission", "Create", []],
-                           ["License administrator", "Permission", "Delete", []],
-                           ["License administrator", "Permission", "Read", []],
+                           ["License administrator", "Permission", "Create", ["License"]],
+                           ["License administrator", "Permission", "Delete", ["Clinic"]],
+                           ["License administrator", "Permission", "Read", ["Clinic"]],
 
-                           ["License administrator", "Profile", "Assign", []],
-                           ["License administrator", "Profile", "Unassign", []]
+                           ["License administrator", "Profile", "Assign", ["License"]],
+                           ["License administrator", "Profile", "Unassign", ["License"]]
                            ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |

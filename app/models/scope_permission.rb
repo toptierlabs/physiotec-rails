@@ -61,6 +61,12 @@ class ScopePermission < ActiveRecord::Base
     self.action.name + ' ' + self.permission.name + ' (' + display_scopes[0..-3] + ')'
   end
 
+
+  def permission_json
+    {:action=>self.action.as_json, :permission => self.permission.as_json, 
+      :scopes=> self.scope_permission_group_scopes.map{|spgs| spgs.permission_json } }
+  end
+
     # Validation: selected scope must be in at least one of the scope_group
   # associated with the permission through permission_scope_groups
   # include ActiveModel::Validations

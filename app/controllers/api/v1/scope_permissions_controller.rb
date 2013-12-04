@@ -5,18 +5,17 @@ module Api
 
 			before_filter :identify_user
 
-			#List all the scope_permissions
+
+			# List all the scope_permissions
 			def index
-				if true#authorize_request(:permission, :read)
-					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes).all
-					respond_to do | format |
-						format.json { render json:  { scope_permissions: @scope_permissions.as_json(:include=>{permission:{only:[:id, :name]},
-							action:{only:[:id, :name]}, scopes:{only: [:id, :name]}},
-							# only renders the previous fields and the object ids
-							:only => [:id]) }  }
-					end
-				end
+				authorize_request(:permission, :read)
+					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes).group(:permission_id,:action_id)
+					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
+										permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}})
+						}
+
 			end
+
 
 			# Shows the permission for @selected_user
 			# PRECONDITIONS: The given scope permission must exist in the system.

@@ -7,4 +7,5 @@ class ScopePermissionGroupScope < ActiveRecord::Base
   #validates :scope_permission_id, :scope_id, :presence => true
   validates :scope_id, :uniqueness => {:scope => :scope_permission_id}
 
+  
 end

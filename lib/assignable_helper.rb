@@ -9,24 +9,29 @@ module AssignableHelper
 			has_many :scopes, :through=>:permissible_scopes
 
 			# The owner must exists as a column in the model's table.
-			# Instead of using has_one to specify the owner, we decided to use
-			# belongs_to for permformance optimization
+			# Instead of using has_one and an auxiliary table to specify the owner
+			# we decided to use belongs_to for permformance optimization (less selects)
 			belongs_to :owner, :class_name => "User"
 
 			attr_accessible :owner_id
+
 		end
 	end
 
-	#has_many :scopes_set
-	#belongs_to :context
-
-	def add_set_of_scopes
-	#recieves as parameter an array of scope ids
+	def add_scope
+	#recieves as a parameter an array of scope ids
 	end
 
-	def set_of_scopes_datatype
-	#returns a hash with the reachable scopes
-	end
+	def approves_verification(scopes)
+	#recieves an array of scopes and returns true if
 
+	#select scopes and scope groups associated with this model
+	#create array with the scope groups of the given parameters
+	#!!!!!!////----//// remove clinic scope group from the created array
+	#!!!!!!////----//// check the Clinic scope of the permission and the context of the object match
+
+	#check if the arrays are equal
+	#compare arrays and if they match
+	end
 
 end
