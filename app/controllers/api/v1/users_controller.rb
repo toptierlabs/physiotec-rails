@@ -133,14 +133,10 @@ module Api
 			# DELETE /users/1.json
 			def destroy
 				@selected_user = User.find(params[:id])
-				respond_to do |format|
-
-					if @selected_user.destroy
-						format.json { head :no_content }
-					else
-						format.json { render json: @selected_user.errors, status: :unprocessable_entity }
-					end
-
+				if @selected_user.destroy
+					head :no_content
+				else
+					render json: @selected_user.errors, status: :unprocessable_entity
 				end
 			end
 
@@ -192,23 +188,21 @@ module Api
 			# The user and the permission will remain in the system
 			# PRECONDITIONS: The given permission and the given user must exist in the system.
 				authorize_request(:permission, :delete)
-				
-				respond_to do |format|
-					@scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
-					if @scope_permission.nil?
-						format.json { render json: {:error => "404"}, status: 404 }            
-					elsif @scope_permission.delete
-						format.json { head :no_content }
-					else
-						format.json { render json: @scope_permission.errors, status: :unprocessable_entity }
-					end
+		
+				@scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
+				if @scope_permission.nil?
+					render json: {:error => "404"}, status: 404
+				elsif @scope_permission.delete
+					head :no_content
+				else
+					render json: @scope_permission.errors, status: :unprocessable_entity
 				end
 			end
 
 			def assignable_profiles
-			# List all the profiles that the selected_user user can assign to other users
-			result = @selected_user.assignable_profiles_datatype
-			render json:  { assignable_profiles: result }
+				# List all the profiles that the selected_user user can assign to other users
+				result = @selected_user.assignable_profiles_datatype
+				render json: { assignable_profiles: result }
 			end
 
 		end

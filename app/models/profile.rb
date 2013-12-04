@@ -64,7 +64,7 @@ class Profile < ActiveRecord::Base
   def assignable_profiles_datatype
     res = []
     self.destination_profiles.each do | p |
-      res << p.as_json
+      res << p.as_json(:only=>[:id, :name])
     end
     res.uniq
   end

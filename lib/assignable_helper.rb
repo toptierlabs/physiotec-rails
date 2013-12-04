@@ -14,7 +14,7 @@ module AssignableHelper
 			belongs_to :owner, :class_name => "User"
 
 			attr_accessible :owner_id
-
+			attr_accessible :context_id
 		end
 	end
 
@@ -26,6 +26,8 @@ module AssignableHelper
 	#recieves an array of scopes and returns true if
 
 	#select scopes and scope groups associated with this model
+	self_scope_groups = self.scopes.map{ |v| v.scope_group_id }.uniq!
+	puts self_scope_groups
 	#create array with the scope groups of the given parameters
 	#!!!!!!////----//// remove clinic scope group from the created array
 	#!!!!!!////----//// check the Clinic scope of the permission and the context of the object match

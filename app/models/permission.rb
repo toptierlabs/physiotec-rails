@@ -1,6 +1,8 @@
 class Permission < ActiveRecord::Base
   attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes, :api_license_id
 
+  belongs_to :api_license
+
   #has many scope_permissions
   has_many :scope_permissions, :dependent => :destroy
 
