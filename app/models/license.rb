@@ -9,8 +9,10 @@ class License < ActiveRecord::Base
 
   validates :email, :uniqueness => true
 
-  #multiple associations with exercises
   has_many :exercises, as: :context
+  has_many :users, as: :context
+  has_many :clinics
+
 
   def license
   	self

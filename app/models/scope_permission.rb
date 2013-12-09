@@ -63,8 +63,24 @@ class ScopePermission < ActiveRecord::Base
 
 
   def permission_json
-    {:action=>self.action.as_json, :permission => self.permission.as_json, 
+    { :action=>self.action.as_json, :permission => self.permission.as_json, 
       :scopes=> self.scope_permission_group_scopes.map{|spgs| spgs.permission_json } }
+  end
+
+  def check_scopes(scopes)
+    result = false
+    # check the scopes: at least one scope of each scope_group must be in both sp from params and self
+    self_scope_groups = Hash[self.scopes.map{ |v| {v.id => v.scope_group_id} }]
+    params_scope_groups = Hash[scopes.map{ |v| {v.id => v.scope_group_id} }]
+    if ((self_scope_groups.keys - params_scope_groups.keys).length != 0)
+      result = false
+    else
+      #get the elements that are in both arrays
+      both_scopes = self_scope_groups.keys & params_scope_groups.keys
+      #if both_scopes contains all the scope_groups of params and self then it returns true
+      result = ((self_scope_groups.keys + params_scope_groups.keys) - both_scopes).length == 0
+    end
+    result
   end
 
     # Validation: selected scope must be in at least one of the scope_group

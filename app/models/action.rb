@@ -4,4 +4,10 @@ class Action < ActiveRecord::Base
   has_many :scope_permissions, :dependent => :destroy
 
   validates :name, :uniqueness => true
+
+  def name_as_sym #no test for nil
+  	#returns a symbol representation of the string
+  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  end
+
 end

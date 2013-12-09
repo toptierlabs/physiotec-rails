@@ -2,14 +2,16 @@ class Clinic < ActiveRecord::Base
 
 	include AssignableHelper
 
-  belongs_to :license
-  attr_accessible :name, :license_id
+	belongs_to :license
+	attr_accessible :name, :license_id
 
-  #multiple associations with exercises
-  has_many :exercises, as: :context
+	#multiple associations with exercises
+	has_many :exercises, as: :context
 
-  def clinic
-  	self
-  end
+	has_many :users, as: :context
+
+	def clinic
+	self
+	end
 
 end

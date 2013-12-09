@@ -7,7 +7,7 @@ module Api
       # GET /scope_groups
       # GET /scope_groups.json
       def index
-        if authorize_request(:permission, :read) #give also api_license?
+        if authorize_request!(:permission, :read) #give also api_license?
           @scope_groups = ScopeGroup.all(:include => :scopes) #add context to permission, api_license or null (generic)
           respond_to do | format |
               format.json { render json: {scope_groups: @scope_groups.as_json(:include => {:scopes=>{:only=>[:id,:name]}})} }
@@ -18,7 +18,7 @@ module Api
       # GET /scope_groups/1
       # GET /scope_groups/1.json
       def show
-        if authorize_request(:permission, :read)
+        if authorize_request!(:permission, :read)
           @scope_group = ScopeGroup.includes(:scopes).find(params[:id])
           respond_to do | format |
             format.json { render json: {scope_group: @scope_group.as_json(:include => {:scopes=>{:only=>[:id,:name]}})} }
@@ -32,7 +32,7 @@ module Api
       #           :scopes =>  [name:String] }}
       def create
         #:name, :description, [ [:name] ]
-        if authorize_request(:permission, :create)
+        if authorize_request!(:permission, :create)
           #scope_groups.api_license_id = @api_license.id?          
           respond_to do |format|
 
@@ -61,7 +61,7 @@ module Api
       # only updates the name and the description, for scope updating go to /scope_groups/scopes
       def update
         @scope_group = ScopeGroup.find(id: params[:id])
-        if authorize_request(:permission, :modify)
+        if authorize_request!(:permission, :modify)
           respond_to do |format|
             if @scope_group.update_attributes(name: params[:scope_group].name, description: params[:scope_group].description)
               format.json { render json: @scope_group, status: :updated }
@@ -75,7 +75,7 @@ module Api
       # DELETE /scope_groups/1
       # DELETE /scope_groups/1.json
       def destroy
-        if authorize_request(:permission, :delete)
+        if authorize_request!(:permission, :delete)
           @scope_group = ScopeGroup.find(params[:id])
           @scope_group.destroy
 
