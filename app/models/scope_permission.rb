@@ -107,4 +107,5 @@ class ScopePermission < ActiveRecord::Base
 
   # validates :scopes, :scope_group => true
 
+
 end

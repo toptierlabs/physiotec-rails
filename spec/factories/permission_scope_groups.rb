@@ -2,7 +2,8 @@
 
 FactoryGirl.define do
   factory :permission_scope_group do
-    permission nil
-    scope_group nil
+    permission 
+    scope_group 
   end
 end
+ 

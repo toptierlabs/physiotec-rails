@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :scope do
     name "MyString"
-    permission nil
+    scope_group
   end
 end

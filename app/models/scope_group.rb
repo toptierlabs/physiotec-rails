@@ -1,5 +1,7 @@
 class ScopeGroup < ActiveRecord::Base
+  belongs_to :api_license
   has_many :scopes, :dependent => :destroy
+
   #has_many :permission_scope_groups
   has_many :scope_permissions, :dependent => :destroy
 

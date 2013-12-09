@@ -4,4 +4,8 @@ FactoryGirl.define do
   factory :profile do
     name "MyString"
   end
+
+  factory :destination_profile, class: Profile do
+    name "Other profile"
+  end
 end

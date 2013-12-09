@@ -7,7 +7,15 @@ class Profile < ActiveRecord::Base
 
   has_many :profile_scope_permissions, :dependent => :destroy
   has_many :scope_permissions, :through => :profile_scope_permissions
+  # a profile may have multiple profiles, this relation is used when a
+  # new user is created, or a user wants to assign to another user a profile
 
+  has_many :profile_assignment
+  has_many :destination_profiles, :through => :profile_assignment
+  
+  belongs_to :api_license
+
+  accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
   validates :name, :presence => true, :allow_blank => false
   validates :name, :uniqueness => {:scope => :api_license_id}
 
@@ -28,6 +36,7 @@ class Profile < ActiveRecord::Base
   has_many :destination_profiles, :through => :profile_assignment
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
+
 
   def self.license_administrator_profile
     self.find_by_name("License administrator")
@@ -51,6 +60,7 @@ class Profile < ActiveRecord::Base
     {:permission => permission, :action => action, :scopes => [s.parameterize.underscore.to_sym] }
   end
 
+
   def permission_scopes_list
     result = []
     self.destination_profiles.each do |p|
@@ -69,4 +79,4 @@ class Profile < ActiveRecord::Base
     res.uniq
   end
 
- end
+end

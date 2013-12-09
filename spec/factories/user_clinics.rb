@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :user_clinic do
-    user nil
-    clinic nil
+    user 
+    clinic
   end
 end
