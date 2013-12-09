@@ -18,18 +18,20 @@ describe Profile do
   end
 
   it "should return an error if the api_license is empty" do
-    expect(FactoryGirl.build(:profile, api_license: nil)).to have(1).error_on(:api_license)
+    expect(FactoryGirl.build(:profile, api_license: nil)).to have(1).error_on(:api_license_id)
   end
   
   it "should not be valid if we have another profile with the same name for the same api license" do
-    prof = FactoryGirl.create(:profile)
+    api_license = FactoryGirl.create(:api_license, name: 'API')
+    prof = FactoryGirl.create(:profile, api_license: api_license)
     new_prof = prof.dup
 
     expect(new_prof.valid?).to be_false
   end
 
   it "can exist two permissions with the same name on different api licenses" do
-    prof = FactoryGirl.create(:profile)
+    api_license = FactoryGirl.create(:api_license, name: 'API')
+    prof = FactoryGirl.create(:profile, api_license: api_license)
     new_prof = prof.dup
     new_prof.api_license = FactoryGirl.create(:api_license, name: 'New API')
 

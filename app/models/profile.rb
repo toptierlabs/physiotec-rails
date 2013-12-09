@@ -16,7 +16,7 @@ class Profile < ActiveRecord::Base
   belongs_to :api_license
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
-  validates :name, :presence => true, :allow_blank => false
+  validates :name, :api_license_id, :presence => true
   validates :name, :uniqueness => {:scope => :api_license_id}
 
   accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true

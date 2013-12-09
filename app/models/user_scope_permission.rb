@@ -7,6 +7,7 @@ class UserScopePermission < ActiveRecord::Base
   # validates :scope_permission_id, :uniqueness => {:scope => :user_id}
 
   validates :scope_permission_id, :uniqueness => {:scope => :user_id}
+  validates :scope_permission_id, :user_id, :presence => true
 
   def datatype
     result = {}

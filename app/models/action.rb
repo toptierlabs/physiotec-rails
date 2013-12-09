@@ -3,7 +3,7 @@ class Action < ActiveRecord::Base
 
   has_many :scope_permissions, :dependent => :destroy
 
-  validates :name, :uniqueness => true
+  validates :name, :uniqueness => true, :presence => true
 
   def name_as_sym #no test for nil
   	#returns a symbol representation of the string

@@ -11,7 +11,7 @@ describe UserClinic do
   end
 
   it "should return an error if the user is empty" do
-    expect( FactoryGirl.build(:user_clinic, user: nil) ).to have(1).error_on(:user)
+    expect( FactoryGirl.build(:user_clinic, user: nil) ).to have(1).error_on(:user_id)
   end
 
   it "should have a clinic" do
@@ -19,6 +19,6 @@ describe UserClinic do
   end
 
   it "should return an error if the user is empty" do
-    expect( FactoryGirl.build(:user_clinic, clinic: nil) ).to have(1).error_on(:clinic)
+    expect( FactoryGirl.build(:user_clinic, clinic: nil) ).to have(1).error_on(:clinic_id)
   end
 end 

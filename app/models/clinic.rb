@@ -10,8 +10,16 @@ class Clinic < ActiveRecord::Base
 
 	has_many :users, as: :context
 
+	validates :name, :uniqueness => {:scope => :license_id}
+	validates :name, :presence => true
+	
+
 	def clinic
-	self
+		self
+	end
+
+	def api_license
+		self.license.api_license
 	end
 
 end

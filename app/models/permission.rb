@@ -15,7 +15,7 @@ class Permission < ActiveRecord::Base
   #nested attributes
   accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
 
-  validates :name, :uniqueness => {:scope => :api_license_id}
+  validates :name, :uniqueness => {:scope => :api_license_id}, :presence => true
   
   def name_as_sym #no test for nil
   	#returns a symbol representation of the string

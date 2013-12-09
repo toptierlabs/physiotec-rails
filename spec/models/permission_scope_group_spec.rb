@@ -11,7 +11,7 @@ describe PermissionScopeGroup do
   end
 
   it "should return an error if the permission is empty" do
-    expect( FactoryGirl.build(:permission_scope_group, permission: nil) ).to have(1).error_on(:permission)
+    expect( FactoryGirl.build(:permission_scope_group, permission: nil) ).to have(1).error_on(:permission_id)
   end
     
   it "should have a scope group" do
@@ -19,7 +19,7 @@ describe PermissionScopeGroup do
   end
 
   it "should return an error if the scope group is empty" do
-    expect( FactoryGirl.build(:permission_scope_group, scope_group: nil) ).to have(1).error_on(:scope_group)
+    expect( FactoryGirl.build(:permission_scope_group, scope_group: nil) ).to have(1).error_on(:scope_group_id)
   end
 
   it "should be invalid if we have the same permission and scope group in two records" do

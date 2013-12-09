@@ -7,7 +7,7 @@ class License < ActiveRecord::Base
   validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license_id,
             :presence => true
 
-  validates :email, :uniqueness => true
+  validates :email, :uniqueness => {:scope => :api_license_id}
 
   has_many :exercises, as: :context
   has_many :users, as: :context
