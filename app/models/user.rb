@@ -2,6 +2,10 @@ class User < ActiveRecord::Base
 
   include PermissionHelper
 
+  # After create (the method is executed once) creates the user_scope_permissions
+  # for the user, given the profiles
+  after_create :assign_scopes_permissions
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -16,14 +20,6 @@ class User < ActiveRecord::Base
   # Can be blank
   belongs_to :context, :polymorphic => true
 
-
-  # Setup accessible (or protected) attributes
-  attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :first_name, :last_name, :api_license_id, :session_token,
-                  :session_token_created_at, :profiles,
-                  :user_profiles_attributes, :user_scope_permissions_attributes,
-                  :context_id, :context_type
-
   validates :session_token, :uniqueness => true, :allow_blank => true
 
   has_many :user_scope_permissions
@@ -34,6 +30,18 @@ class User < ActiveRecord::Base
   has_many :user_clinics
   has_many :clinics, :through=>:user_clinics
   accepts_nested_attributes_for :user_clinics, :allow_destroy => true
+
+  #a user may have many profiles
+  has_many :user_profiles
+  has_many :profiles, :through => :user_profiles
+  accepts_nested_attributes_for :user_profiles, :allow_destroy => true
+
+  # Setup accessible (or protected) attributes
+  attr_accessible :email, :password, :password_confirmation, :remember_me,
+                  :first_name, :last_name, :api_license_id, :session_token,
+                  :session_token_created_at, :profiles,
+                  :user_profiles_attributes, :user_scope_permissions_attributes,
+                  :context_id, :context_type
 
   #Set the method to create new session tokens
   def new_session_token
@@ -85,17 +93,6 @@ class User < ActiveRecord::Base
   def datatype
     self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
   end
-
-  #a user may have many profiles
-
-  has_many :user_profiles
-  has_many :profiles, :through => :user_profiles
-
-  accepts_nested_attributes_for :user_profiles, :allow_destroy => true
-
-  # After create (the method is executed once) creates the user_scope_permissions
-  # for the user, given the profiles
-  after_create :assign_scopes_permissions
 
   def assign_scopes_permissions
     self.profiles.each do | profile |
@@ -163,29 +160,5 @@ class User < ActiveRecord::Base
     end
     result
   end
-
-
-  # Returns an array of arrays witch each one contains the
-  # following information about a permission and its scopes:
-  # result = [[permission.name, action.name, *scopes]]
-
-  # def relevant_rules_for_match
-  #   result = []
-  #   auxiliar = []
-  #   user_scope_permissions.each do | usp |
-  #     #First push the permission and then the action
-  #     auxiliar << usp.scope_permission.permission.name
-  #     auxiliar << usp.scope_permission.action.name
-  #     #Pushes the name of the linked scopes
-  #     usp.scope_permission.scopes.each do | scope |
-  #       auxiliar << scope.name
-  #     end
-  #     result << auxiliar
-  #     auxiliar = []
-  #   end
-  #   result
-  # end
-
-
 
 end

@@ -1,6 +1,4 @@
 class Permission < ActiveRecord::Base
-  attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
-                  :api_license_id, :model_name
 
   belongs_to :api_license
 
@@ -16,6 +14,9 @@ class Permission < ActiveRecord::Base
   accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
 
   validates :name, :uniqueness => {:scope => :api_license_id}, :presence => true
+
+  attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
+                  :api_license_id, :model_name
   
   def name_as_sym #no test for nil
   	#returns a symbol representation of the string

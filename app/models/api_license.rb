@@ -5,15 +5,14 @@ class ApiLicense < ActiveRecord::Base
 
   attr_accessible :description, :name, :public_api_key, :secret_api_key, :licenses
 
+  has_many :users, :dependent => :destroy
+  has_many :licenses, :dependent => :destroy
+
   #Set the attributes validations
   validates :name, :description,
             :public_api_key, :secret_api_key, :presence => true
 
   validates :name, :public_api_key, :secret_api_key, :uniqueness => true
-
-
-  has_many :users, :dependent => :destroy
-  has_many :licenses, :dependent => :destroy
 
 
 
