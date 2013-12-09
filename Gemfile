@@ -13,7 +13,8 @@ gem 'thin', '~> 1.6.1'
 #gem 'sqlite3'
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-  gem 'factory_girl_rails', '~> 4.2.0'
+  gem 'factory_girl_rails', '~> 4.2.0', :require => false
+  gem 'database_cleaner', '~> 0.9.1'
 end
 
 

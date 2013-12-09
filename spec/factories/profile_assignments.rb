@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :profile_assignment do
-    profile nil
-    destination_profile nil
+    profile 
+    association :destination_profile
   end
 end

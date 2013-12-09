@@ -1,8 +1,14 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :scope_group do
-    name "MyString"
-    description "MyText"
+  sequence :name do |n|
+    "Group_#{n}"
   end
+
+  factory :scope_group do
+    name 
+    description "The description of my scope group"
+  end
+
+
 end

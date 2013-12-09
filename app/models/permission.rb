@@ -4,6 +4,8 @@ class Permission < ActiveRecord::Base
 
   belongs_to :api_license
 
+  belongs_to :api_license
+  
   #has many scope_permissions
   has_many :scope_permissions, :dependent => :destroy
 

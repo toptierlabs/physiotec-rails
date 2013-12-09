@@ -2,6 +2,6 @@
 
 FactoryGirl.define do
   factory :action do
-    name "MyString"
+    name "My Action"
   end
 end

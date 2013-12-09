@@ -16,14 +16,12 @@ class ApiLicense < ActiveRecord::Base
   has_many :licenses, :dependent => :destroy
 
 
+
   def generate_api_keys
   	self.public_api_key = SecureRandom.urlsafe_base64
   	self.secret_api_key = SecureRandom.urlsafe_base64 + SecureRandom.urlsafe_base64
   end
-
-  #multiple associations with exercises
-  has_many :exercises, as: :context
-
+  
   def api_license
     self
   end

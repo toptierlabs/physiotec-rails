@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :permission do
-    name "MyString"
+    api_license
+    name "Permission name"
   end
 end

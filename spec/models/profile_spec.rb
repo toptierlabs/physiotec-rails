@@ -1,5 +1,44 @@
 require 'spec_helper'
 
 describe Profile do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "has a valid factory" do
+    expect { FactoryGirl.build(:profile).valid? }.to be_true
+  end
+
+  it "should have a name" do
+    expect(FactoryGirl.build(:profile, name: '').valid?).to be_false
+  end
+
+  it "should return an error if the name is empty" do
+    expect(FactoryGirl.build(:profile, name: '')).to have(1).error_on(:name)
+  end
+
+  it "should have a api license" do
+    expect(FactoryGirl.build(:profile, api_license: nil).valid?).to be_false
+  end
+
+  it "should return an error if the api_license is empty" do
+    expect(FactoryGirl.build(:profile, api_license: nil)).to have(1).error_on(:api_license)
+  end
+  
+  it "should not be valid if we have another profile with the same name for the same api license" do
+    prof = FactoryGirl.create(:profile)
+    new_prof = prof.dup
+
+    expect(new_prof.valid?).to be_false
+  end
+
+  it "can exist two permissions with the same name on different api licenses" do
+    prof = FactoryGirl.create(:profile)
+    new_prof = prof.dup
+    new_prof.api_license = FactoryGirl.create(:api_license, name: 'New API')
+
+    expect(new_prof.valid?).to be_true
+  end
+
+
+  
 end
+
+
+
