@@ -28,14 +28,14 @@ module Api
 	protected
 
 				def authorize_request(permission, action, scopes=nil)
-					@current_user.can?(@api_license, permission, action, scopes) || AUTH_CONFIG['super_user']
+					AUTH_CONFIG['super_user'] || @current_user.can?(@api_license, permission, action, scopes)
 				end
 
 				def authorize_request!(permission, action, scopes=nil)
 					if !authorize_request(permission, action, scopes)
 						raise PermissionsHelper::ForbiddenAccess.new
 					end
-					auth
+					true
 				end
 
 				def render_forbidden_access(exception)
