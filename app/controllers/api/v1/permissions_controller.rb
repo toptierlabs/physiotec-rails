@@ -7,7 +7,7 @@ module Api
       # GET /permissions
       # GET /permissions.json
       def index
-        if authorize_request(:permission, :read)
+        if authorize_request!(:permission, :read)
           @permissions = Permission.where(:api_license_id => @api_license.id)
           respond_to do | format |
               format.json { render json: {permissions: @permissions.as_json(:include => :scope_groups)} }
@@ -18,7 +18,7 @@ module Api
       # GET /permissions/1
       # GET /permissions/1.json
       def show
-        if authorize_request(:permission, :read)
+        if authorize_request!(:permission, :read)
           @permission = Permission.includes(:scope_groups).find(params[:id])
           respond_to do | format |
             format.json { render json: @permission.as_json(:include=>:scope_groups) }
@@ -29,7 +29,7 @@ module Api
       # POST /permissions
       # POST /permissions.json
       def create
-        if authorize_request(:permission, :create)        
+        if authorize_request!(:permission, :create)        
           #what happens if a scope_permission is created and then the permission's scopes are updated?
           respond_to do |format|
             #fix for api explorer compatibility
@@ -64,7 +64,7 @@ module Api
       # DELETE /permissions/1
       # DELETE /permissions/1.json
       def destroy
-        if authorize_request(:permission, :delete)
+        if authorize_request!(:permission, :delete)
           @permission = Permission.find(params[:id])
           @permission.destroy
 

@@ -7,7 +7,7 @@ module Api
       # GET /licenses
       # GET /licenses.json
       def index
-        if authorize_request(:license, :read)
+        if authorize_request!(:license, :read)
           @licenses = License.where(api_license_id: @api_license.id)
           respond_to do | format |
               format.json { render json: { licenses: @licenses.as_json } }
@@ -18,7 +18,7 @@ module Api
       # GET /licenses/1
       # GET /licenses/1.json
       def show
-        if authorize_request(:license, :read)
+        if authorize_request!(:license, :read)
           @license = License.find(params[:id])
           respond_to do | format |
             format.json { render json: @license }
@@ -30,7 +30,7 @@ module Api
       # POST /licenses.json
       # Recieves #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone as params
       def create
-        if authorize_request(:license, :create)
+        if authorize_request!(:license, :create)
           license = License.new(params[:license])
           license.api_license_id = @api_license.id
          
@@ -49,7 +49,7 @@ module Api
       # PUT /licenses/1.json
       def update
         
-        if authorize_request(:license, :modify)
+        if authorize_request!(:license, :modify)
           license = License.where(id: params[:id]).first
           respond_to do |format|
 
@@ -69,7 +69,7 @@ module Api
       # DELETE /licenses/1
       # DELETE /licenses/1.json
       def destroy
-        if authorize_request(:license, :delete)
+        if authorize_request!(:license, :delete)
           @license = License.find(params[:id])
           @license.destroy
 

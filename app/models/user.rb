@@ -14,14 +14,15 @@ class User < ActiveRecord::Base
   belongs_to :api_license
 
   # Can be blank
-  belongs_to :license
+  belongs_to :context, :polymorphic => true
 
 
   # Setup accessible (or protected) attributes
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :first_name, :last_name, :api_license_id, :session_token,
                   :session_token_created_at, :profiles,
-                  :user_profiles_attributes, :user_scope_permissions_attributes
+                  :user_profiles_attributes, :user_scope_permissions_attributes,
+                  :context_id, :context_type
 
   validates :session_token, :uniqueness => true, :allow_blank => true
 
@@ -148,6 +149,19 @@ class User < ActiveRecord::Base
     end
     #remove duplicate elements with uniq
     res.uniq
+  end
+
+  def scope_permission_for_read(permission, action)
+    # Get the permission for the given class_name
+    result = nil
+    self.scope_permissions.includes(:permission,:action).each do |v|
+      if (v.permission.name_as_sym == permission) && (v.action.name_as_sym == action)
+        puts 'entra'
+        result = v
+      end
+      break if result
+    end
+    result
   end
 
 

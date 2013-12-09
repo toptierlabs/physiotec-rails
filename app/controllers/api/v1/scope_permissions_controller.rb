@@ -8,7 +8,7 @@ module Api
 
 			# List all the scope_permissions
 			def index
-				authorize_request(:permission, :read)
+				authorize_request!(:permission, :read)
 					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes).group(:permission_id,:action_id)
 					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 										permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}})
@@ -20,7 +20,7 @@ module Api
 			# Shows the permission for @selected_user
 			# PRECONDITIONS: The given scope permission must exist in the system.
 			def show
-				if authorize_request(:permission, :read)
+				if authorize_request!(:permission, :read)
 					@scope_permission = ScopePermission.includes(:action,:permission,:scopes).where(id: params[:id]).first
 					respond_to do | format |
 						if @scope_permission.nil?
@@ -39,7 +39,7 @@ module Api
 			# PRECONDITIONS: The given action, permission and scopes must exist in the system.
 			# PARAMS => {:action_id=>'', :permission_id=>'', scopes=>[:scope_id]}
 			def create
-				authorize_request(:permission, :create)
+				authorize_request!(:permission, :create)
 				respond_to do |format|
 					#If action does not exists
 					if Action.find_by_id(params[:scope_permission][:action_id]).nil?
@@ -82,7 +82,7 @@ module Api
 					elsif (params[:scope_permission][:scopes].length != Scope.where(:id => params[:scope_permission][:scopes]).length)
 						format.json { render json: { :error => "Scopes not found." }, status: :unprocessable_entity }
 
-					elsif authorize_request(:permission, :modify, @scope_permission) #when false it renders not authorized
+					elsif authorize_request!(:permission, :modify, @scope_permission) #when false it renders not authorized
 											
 						#Array with the id of scopes linked with @scope_permission
 						current_scopes = []
@@ -135,7 +135,7 @@ module Api
 				respond_to do |format|
 					if @scope_permission.nil?
 						format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
-					elsif authorize_request(:permission, :delete, @scope_permission) #when false it renders not authorized
+					elsif authorize_request!(:permission, :delete, @scope_permission) #when false it renders not authorized
 						if @scope_permission.destroy
 							format.json { render status: :no_content }
 						else

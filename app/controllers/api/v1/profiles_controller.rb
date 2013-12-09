@@ -6,7 +6,7 @@ module Api
 
       # GET /profiles
       def index
-        authorize_request(:profiles, :read) #give also api_license?
+        authorize_request!(:profiles, :read) #give also api_license?
         @profiles = Profile.includes(:scope_permissions).all #add context to permission, api_license or null (generic)
         respond_to do | format |
           format.json { render json: @profiles.as_json(:include=>:scope_permissions) }
@@ -15,7 +15,7 @@ module Api
 
       # GET /profiles/1
       def show
-        authorize_request(:permission, :read)
+        authorize_request!(:permission, :read)
         @profile = Profile.includes(:scope_permissions).find(params[:id])
         respond_to do | format |
           format.json { render json: @profile.as_json(:include=>:scope_permissions) }
@@ -29,7 +29,7 @@ module Api
       #   { profile: { :scope_permissions=>[scope_permission_id],
       #                   :name => Sring} }
 
-        authorize_request(:permission, :create)
+        authorize_request!(:permission, :create)
         respond_to do |format|
           if (ScopePermission.where(id: params[:profile][:scope_permissions]).length != params[:profile][:scope_permissions].length)
             format.json { render json: { :error => "Could not find all the given scope permissions." }, status: :unprocessable_entity }
@@ -58,7 +58,7 @@ module Api
 
       # DELETE /profiles/1
       def destroy
-        if authorize_request(:permission, :delete)
+        if authorize_request!(:permission, :delete)
           @profile = Profile.find(params[:id])
           @profile.destroy
 
@@ -72,7 +72,7 @@ module Api
       def assign_ability
       # Creates a link between the profile and the scope_permission with id permission_id given by the parameters.
       # PRECONDITIONS: The given scope_permission and the given user must exist in the system.
-        authorize_request(:permission, :create)
+        authorize_request!(:permission, :create)
         @profile = Profile.find(params[:id])
         formatted_params = {}
         formatted_params[:profile_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
@@ -91,7 +91,7 @@ module Api
       # Disposes an existing link between the profile and a scope_permission.
       # The profile and the permission will remain in the system
       # PRECONDITIONS: The given permission and the given user must exist in the system.
-        authorize_request(:permission, :create)
+        authorize_request!(:permission, :create)
         @profile = Profile.find(params[:id])
         
         respond_to do |format|

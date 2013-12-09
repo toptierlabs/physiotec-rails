@@ -55,14 +55,14 @@ module Api
 			def create
 				#if user can create another user
 				#new user from parameters
-				authorize_request(:user, :create)
+				authorize_request!(:user, :create)
 				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
 					format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
 				else
 					params[:user][:user_profiles] ||= []
 					profiles_to_add=[]
 					params[:user][:user_profiles].each_with_index do |s, i|
-						authorize_request(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
+						authorize_request!(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
 						profiles_to_add[i] = {profile_id: s}
 					end 
 					#creates the formatted_params for correct profile assignation
@@ -83,7 +83,7 @@ module Api
 			# PUT /users/1
 			# PUT /users/1.json
 			def update
-				authorize_request(:user, :modify)
+				authorize_request!(:user, :modify)
 				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
 					render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity
 				else
@@ -142,9 +142,9 @@ module Api
 
 			#users/:id/assign_profile?profile_id=9
 			def assign_profile
-				authorize_request(:profile, :assign)
+				authorize_request!(:profile, :assign)
 				@profile = Profile.find(params[:profile_id])
-				authorize_request(:profile, :assign, {:scopes=>[@profile]} )        
+				authorize_request!(:profile, :assign, {:scopes=>[@profile]} )        
 				@selected_user.profiles << @profile
 				if @selected_user.save
 					render json: @selected_user.as_json(:include => [:profiles]) , status: :created
@@ -155,9 +155,9 @@ module Api
 
 			#users/:id/unassign_profile?profile_id=9
 			def unassign_profile
-				authorize_request(:profile, :unassign)
+				authorize_request!(:profile, :unassign)
 				@profile = @selected_user.user_profiles.find_by_profile_id(params[:profile_id])
-				authorize_request(:profile, :unassign, {:scopes=>[@profile]} )
+				authorize_request!(:profile, :unassign, {:scopes=>[@profile]} )
 
 				if @profile.nil?
 					render json: {:error => "404"}, status: 404 
@@ -172,7 +172,7 @@ module Api
 			# users/:id/assign_ability?scope_permission_id=9
 			# Creates a link between the selected_user and the scope_permission with id scope_permission_id given by the parameters.
 			# PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
-				authorize_request(:permission, :create)
+				authorize_request!(:permission, :create)
 				formatted_params = {}
 				formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
 				if @selected_user.update_attributes(formatted_params)
@@ -187,7 +187,7 @@ module Api
 			# Disposes an existing link between the user and a scope_permission.
 			# The user and the permission will remain in the system
 			# PRECONDITIONS: The given permission and the given user must exist in the system.
-				authorize_request(:permission, :delete)
+				authorize_request!(:permission, :delete)
 		
 				@scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
 				if @scope_permission.nil?

@@ -7,4 +7,9 @@ class Scope < ActiveRecord::Base
 
   attr_accessible :name, :scope_group_id
 
+  def name_as_sym #no test for nil
+  	#returns a symbol representation of the string
+  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  end
+
 end

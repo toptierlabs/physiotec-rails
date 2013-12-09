@@ -15,6 +15,7 @@ class ApiLicense < ActiveRecord::Base
   has_many :users, :dependent => :destroy
   has_many :licenses, :dependent => :destroy
 
+
   def generate_api_keys
   	self.public_api_key = SecureRandom.urlsafe_base64
   	self.secret_api_key = SecureRandom.urlsafe_base64 + SecureRandom.urlsafe_base64
