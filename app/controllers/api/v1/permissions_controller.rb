@@ -10,7 +10,7 @@ module Api
         if authorize_request(:permission, :read)
           @permissions = Permission.where(:api_license_id => @api_license.id)
           respond_to do | format |
-              format.json { render json: @permissions }
+              format.json { render json: {permissions: @permissions.as_json(:include => :scope_groups)} }
           end
         end
       end
