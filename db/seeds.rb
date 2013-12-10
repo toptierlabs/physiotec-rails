@@ -32,7 +32,7 @@ end
 
 # Creates the scope groups
 scope_groups = [["Languages", "A Group of different languages."],
-								["Clinic", "Privileges over the clinic."]]
+								["Context", "Privileges over the clinic."]]
 
 scope_groups.each do | name, description |
 	ScopeGroup.create(name: name, description: description, api_license_id: ApiLicense.first.id)
@@ -40,35 +40,21 @@ end
 
 # Creates the scopes
 scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
-				 ["Spanish", "Languages"], ["Own", "Clinic"], ["Clinic", "Clinic"],
-				 ["License", "Clinic"], ["Api License", "Clinic"]]
+				 ["Spanish", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
+				 ["License", "Context"], ["Api License", "Context"]]
 
 scopes.each do | name, scope_group |
 	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
 end
 
 #Links the permissions and the scope groups
-permission_scope_group = [["Translate", "Languages"], ["Translate", "Clinic"], ["Clinic", "Clinic"],
-												 ["Exercise", "Clinic"], ["License", "Clinic"], ["User", "Clinic"], ["Permission", "Clinic"], ["Profile", "Clinic"]]
+permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
+												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Permission", "Context"], ["Profile", "Context"]]
 
 permission_scope_group.each do | permission, scope_group |
 	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
 															scope_group_id: ScopeGroup.find_by_name(scope_group).id )
 end
-
-#Relation between scopes and permissions
-#First the languages and the translate group
-# scope_permission = [["Translate", "English"], ["Translate", "French"], ["Translate", "Portuguese"],
-#                    ["Translate", "Spanish"],
-#                    ["Exercise", "Create"], ["Exercise", "Read"], ["Exercise", "Modify"], ["Exercise", "Delete"],
-#                    ["Clinic", "Own"], ["Clinic", "Clinic"], ["Clinic", "License"],
-#                    ["License", "Create"], ["License", "Read"], ["License", "Modify"], ["License", "Delete"],
-#                    ["User", "Create"], ["User", "Read"], ["User", "Modify"], ["User", "Delete"]]
-
-# scope_permission.each do | permission, scope |
-#   ScopePermission.create(permission_id: Permission.find_by_name(permission).id,
-#                               scope_id: Scope.find_by_name(scope).id )
-# end
 
 #Creation of profiles
 profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
@@ -104,12 +90,17 @@ profile_scope_permission = [["Author", "Exercise", "Create", ["Clinic"]],
 													 ["License administrator", "Permission", "Delete", ["Clinic"]],
 													 ["License administrator", "Permission", "Read", ["Clinic"]],
 
+													 ["License administrator", "Clinic", "Create", ["License"]],
+													 ["License administrator", "Clinic", "Delete", ["Clinic"]],
+													 ["License administrator", "Clinic", "Read", ["Clinic"]],
+													 ["License administrator", "Clinic", "Modify", ["License"]],
+
 													 ["License administrator", "Profile", "Assign", ["License"]],
 													 ["License administrator", "Profile", "Unassign", ["License"]],
 
 													 ["License administrator", "Exercise", "Create", ["Own"]],
 													 ["License administrator", "Exercise", "Read", ["Clinic"]],
-													 ["License administrator", "Exercise", "Modify", ["Clinic"]],
+													 ["License administrator", "Exercise", "Modify", ["License"]],
 													 ["License administrator", "Exercise", "Delete", ["Api License"]]
 													 ]
 
@@ -157,17 +148,23 @@ l2.api_license = ApiLicense.first
 l2.save
 
 #Create a clinic
-c1 = Clinic.create(name: 'test clinic 1', license_id: l.id)
-c2 = Clinic.create(name: 'test clinic 2', license_id: l.id)
+c1 = Clinic.new(name: 'test clinic 1', license_id: l.id)
+c1.api_license = ApiLicense.first
+c1.save
 
-c3 = Clinic.create(name: 'test clinic 3', license_id: l2.id)
+c2 = Clinic.new(name: 'test clinic 2', license_id: l.id)
+c2.api_license = ApiLicense.first
+c2.save
 
+c3 = Clinic.new(name: 'test clinic 3', license_id: l2.id)
+c3.api_license = ApiLicense.first
+c3.save
 #Creates a default user
 
 users = []
 contexts = [c1,c2,c3, l, l2, ApiLicense.first]
 for i in 0..5
-	u = User.create(:email => "dev-test#{i+1}@physiotec.org",:api_license_id=>1, :first_name=> "Test User #{i+1}", :last_name=>'Dev')
+	u = User.create(:email => "test-#{i+1}@toptierlabs.com",:api_license_id=>1, :first_name=> "Test User #{i+1}", :last_name=>'Dev')
 	u.password = 'pepepepe'
 	u.password_confirmation = 'pepepepe'
 	u.confirm!
@@ -180,8 +177,9 @@ end
 
 
 #Create exercises
-for i in 0..19
+for i in 0..20
 	e = Exercise.new(title: "test exercise #{i+1}", description: 'test description', owner_id: users[i%5].id)
+	e.api_license =  ApiLicense.first
 	e.context = contexts[i%6]
 	e.save
 end

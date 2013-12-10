@@ -75,6 +75,7 @@ PhysiotecV3::Application.routes.draw do
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
       resources :licenses
+      resources :clinics
       resources :scope_permissions
       resources :permissions, :except => :update
       resources :profiles do

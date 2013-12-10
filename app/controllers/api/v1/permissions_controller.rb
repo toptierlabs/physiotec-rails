@@ -7,23 +7,17 @@ module Api
       # GET /permissions
       # GET /permissions.json
       def index
-        if authorize_request!(:permission, :read)
-          @permissions = Permission.where(:api_license_id => @api_license.id)
-          respond_to do | format |
-              format.json { render json: {permissions: @permissions.as_json(:include => :scope_groups)} }
-          end
-        end
+        authorize_request!(:permission, :read)
+        @permissions = Permission.where(:api_license_id => @api_license.id)
+        render json: {permissions: @permissions.as_json(:include => :scope_groups)}
       end
 
       # GET /permissions/1
       # GET /permissions/1.json
       def show
-        if authorize_request!(:permission, :read)
-          @permission = Permission.includes(:scope_groups).find(params[:id])
-          respond_to do | format |
-            format.json { render json: @permission.as_json(:include=>:scope_groups) }
-          end
-        end
+        authorize_request!(:permission, :read)
+        @permission = Permission.includes(:scope_groups).find(params[:id])
+        render json: @permission.as_json(:include=>:scope_groups)
       end
 
       # POST /permissions
@@ -63,15 +57,11 @@ module Api
 
       # DELETE /permissions/1
       # DELETE /permissions/1.json
-      def destroy
-        if authorize_request!(:permission, :delete)
-          @permission = Permission.find(params[:id])
-          @permission.destroy
-
-          respond_to do |format|
-            format.json { head :no_content }
-          end
-        end
+      def destroy        
+        @permission = Permission.find(params[:id])
+        authorize_request!(:permission, :delete, :model=>@permission)
+        @permission.destroy
+        format.json { head :no_content }
       end
 
     end

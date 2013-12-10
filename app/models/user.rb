@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
          :recoverable, :trackable, :validatable, :confirmable#, :rememberable
 
   #Set the attributes validations
-  validates :email, :first_name, :last_name, :api_license_id,
+  validates :email, :first_name, :last_name, :api_license_id, :context_id, :context_type,
             :presence => true
 
   belongs_to :api_license

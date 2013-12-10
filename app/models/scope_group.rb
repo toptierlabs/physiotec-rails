@@ -11,6 +11,6 @@ class ScopeGroup < ActiveRecord::Base
   
 
   def self.group_clinic_id
-  	self.find_by_name("Clinic").id
+  	self.find_by_name("Context").id
   end
 end

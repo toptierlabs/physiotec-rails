@@ -40,6 +40,17 @@ class ScopePermission < ActiveRecord::Base
       end      
     end
   end
+
+    class ClinicScopeValidator < ActiveModel::Validator
+    def validate(record)
+      context_scope = record.context_scope_as_sym
+      if (context_scope != nil)
+        record.errors[:base] << "user alredy has a clinic scope"
+      end
+    end
+  end
+  
+  validates_with ClinicScopeValidator
   validates_with ScopesInScopeGroupsValidator
 
   #display name for ActiveAdmin
@@ -83,5 +94,17 @@ class ScopePermission < ActiveRecord::Base
     result
   end
 
+  def context_scope
+    self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
+  end
+
+  def context_scope_as_sym
+    result = self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
+    if result.present?
+      result.name_as_sym
+    else
+      nil
+    end
+  end
 
 end

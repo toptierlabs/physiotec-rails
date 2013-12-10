@@ -5,27 +5,42 @@ module AssignableHelper
 	module ClassMethods
 		def accessible_by(user, permission, action)
 			scope_permission = user.scope_permission_for_read(permission, action)
-			context = scope_permission.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id).name_as_sym
+			context = scope_permission.context_scope_as_sym
 			where_condition = nil
 			puts context
 			puts '-'*80
 			if (context == :own)
 				where_condition = {owner_id: user.id}
 
-			elsif (context == :clinic)
+			elsif (context == :clinic)				
+				sql_where = "(context_type = ? and context_id = ?) or (owner_id = ?) or (context_type = ? and context_id = ?)"
 				#get the clinics of the user
-				sql_where = "(context_type = ? and context_id = ?) or (owner_id = ?)"
-				where_condition = [sql_where, Clinic.name, user.context_id, user.id]
+				users_clinic = user.context.users.map{ |v| v.id }
+				where_condition = [sql_where, Clinic.name, user.context_id, users_clinic, ApiLicense.name, user.api_license_id]
 
 			elsif (context == :license)
-				sql_where = "(context_type = ? and context_id = ?) or (context_type = ? and context_id IN (?))"
-				clinics = []
+				sql_where = "(context_type = ? and context_id IN (?)) or (context_type = ? and context_id IN (?)) or owner_id IN (?) or (context_type = ? and context_id = ?)"
+				clinics_id = []
+				user_clinics = []
 				if (user.context.respond_to?(:clinic))
-					clinics = user.context.license.clinics.map{ |v| v.id }
-				else #responds to :license
-					clinics = user.context.clinics.map{ |v| v.id }
+					clinics = user.context.license.clinics
+					user_context_id = 0
+				else
+					clinics = user.context.clinics
+					if user.context.respond_to?(:license)
+						user_context_id = user.context.id
+					else #responds to api_license
+						user_context_id = user.context.licenses.map { |v| v.id }
+					end
 				end
-				where_condition = [sql_where, License.name, user.context_id, Clinic.name, clinics]
+				
+				clinics.each do |v|
+					clinics_id << v.id
+					v.users.each do |u|
+					  user_clinics << u.id
+					end
+				end
+				where_condition = [sql_where, License.name, user_context_id, Clinic.name, clinics_id, user_clinics, ApiLicense.name, user.api_license_id]
 
 			else #api_license
 				where_condition = { api_license_id: user.api_license_id }
@@ -65,7 +80,7 @@ module AssignableHelper
 
 	def clinic_scopes(user)
 		list_scopes = []
-		#user is owner
+		#user is the owner
 		if self.owner == user
 			list_scopes <<  :own << :clinic << :license << :api_license
 		#user belongs to the same clilic
@@ -80,25 +95,5 @@ module AssignableHelper
 		end
 		list_scopes
 	end
-
-
-
-
-
-		#select scopes and scope groups associated with this model
-		# self_scope_groups = self.scopes.map{ |v| v.scope_group_id }.uniq!
-		# puts self_scope_groups
-		# #create array with the scope groups of the given parameters
-		# param_scope_groups = Scope.includes(:scope_groups).where(scope_id: scopes).map{ |v| v.scope_group_id }.uniq!#???
-		# if ( (self_scope_groups - param_scope_groups).length != 0 )
-		# 	return false
-		# #check context
-
-
-		#!!!!!!////----//// remove clinic scope group from the created array
-		#!!!!!!////----//// check the Clinic scope of the permission and the context of the object match
-
-		#check if the arrays are equal
-		#compare arrays and if they match
 
 end

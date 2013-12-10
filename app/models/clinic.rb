@@ -3,24 +3,20 @@ class Clinic < ActiveRecord::Base
 	include AssignableHelper
 
 	belongs_to :license
-
+	belongs_to :api_license
 	#multiple associations with exercises
 	has_many :exercises, as: :context
-
 	has_many :users, as: :context
 
 	validates :name, :uniqueness => {:scope => :license_id}
-	validates :name, :presence => true
+	validates :name, :license_id, :api_license_id, :presence => true
 
-	attr_accessible :name, :license_id
+	attr_accessible :name, :license_id	 
+	attr_protected :api_license_id
 	
 
 	def clinic
 		self
-	end
-
-	def api_license
-		self.license.api_license
 	end
 
 end

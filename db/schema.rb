@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131206144723) do
+ActiveRecord::Schema.define(:version => 20131210202813) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -77,22 +77,23 @@ ActiveRecord::Schema.define(:version => 20131206144723) do
 
   create_table "clinics", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.integer  "license_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "api_license_id"
   end
 
-  add_index "clinics", ["license_id"], :name => "index_clinics_on_license_id"
+  add_index "clinics", ["api_license_id"], :name => "index_clinics_on_api_license_id"
 
   create_table "exercises", :force => true do |t|
     t.string   "title"
     t.string   "description"
     t.integer  "context_id"
     t.string   "context_type"
-    t.integer  "license_id"
     t.integer  "owner_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "api_license_id"
   end
 
   add_index "exercises", ["owner_id"], :name => "index_exercises_on_owner_id"
