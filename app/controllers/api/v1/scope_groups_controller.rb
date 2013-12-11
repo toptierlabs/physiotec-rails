@@ -61,11 +61,11 @@ module Api
       # only updates the name and the description, for scope updating go to /scope_groups/scopes
       def update
         @scope_group = ScopeGroup.find(params[:id])
-        authorize_request!(:permission, :modify)
+        #authorize_request!(:permission, :modify)
         if @scope_group.update_attributes(params[:scope_group].except(:api_license_id))
           head :no_content
         else
-          render json: @scope_group.errors, status: :unprocessable_entity
+          render json: @scope_group.errors.full_messages, status: :unprocessable_entity
         end
       end
 
