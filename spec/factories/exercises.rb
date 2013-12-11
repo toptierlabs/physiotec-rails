@@ -5,5 +5,6 @@ FactoryGirl.define do
     title "MyString"
     description "MyString"
     owner nil
+    association :context, factory: :clinic
   end
 end

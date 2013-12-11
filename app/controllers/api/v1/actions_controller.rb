@@ -8,18 +8,14 @@ module Api
       def index
         if authorize_request!(:permission, :read)
           @actions = Action.all #add context to permission, api_license or null (generic)
-          respond_to do | format |
-              format.json { render json: @actions }
-          end
+          render json: @actions
         end
       end
 
       def show
         if authorize_request!(:permission, :read)
           @action = Action.find(params[:id])
-          respond_to do | format |
-            format.json { render json: @action }
-          end
+          render json: @action
         end
       end
 

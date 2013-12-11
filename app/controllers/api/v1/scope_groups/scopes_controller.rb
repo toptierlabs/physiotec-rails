@@ -53,15 +53,12 @@ module Api
 				# Updates an existing link between the selected_user and a scope_permission.
 				def update
 					@scope = @scope_group.scopes.find(params[:id])
-
-					if authorize_request!(:permission, :modify) #when false it renders not authorized
-						respond_to do |format|
-							if @scope.update_attributes(name: params[:scope][:name])
-								format.json { render json: @scope, status: :updated }
-							else
-								format.json { render json: @scope.errors, status: :unprocessable_entity }
-							end
-						end
+					 #when it fails renders not authorized
+					authorize_request!(:permission, :modify)
+					if @scope.update_attributes(name: params[:scope][:name])
+						render json: @scope, status: :updated
+					else
+						render json: @scope.errors, status: :unprocessable_entity
 					end
 				end
 

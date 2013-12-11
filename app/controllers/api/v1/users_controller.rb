@@ -15,10 +15,7 @@ module Api
 			# GET /users.json
 			def index
 				@users = User.where(api_license_id: @api_license.id)
-
-				respond_to do |format|
-					format.json { render json:  { users: @users.as_json }  }
-				end
+				render json:  { users: @users.as_json }
 			end
 
 			# GET /users/1
