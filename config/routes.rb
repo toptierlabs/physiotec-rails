@@ -86,7 +86,7 @@ PhysiotecV3::Application.routes.draw do
       end
       resources :actions, :only => [:index, :show]
 
-      resources :scope_groups, :except => :update do
+      resources :scope_groups do
         resources :scopes, :controller => 'scope_groups/scopes'
       end
 

@@ -60,15 +60,12 @@ module Api
       #PUT /scope_groups/1.json
       # only updates the name and the description, for scope updating go to /scope_groups/scopes
       def update
-        @scope_group = ScopeGroup.find(id: params[:id])
-        if authorize_request!(:permission, :modify)
-          respond_to do |format|
-            if @scope_group.update_attributes(name: params[:scope_group].name, description: params[:scope_group].description)
-              format.json { render json: @scope_group, status: :updated }
-            else
-              format.json { render json: @scope_group.errors, status: :unprocessable_entity }
-            end
-          end
+        @scope_group = ScopeGroup.find(params[:id])
+        authorize_request!(:permission, :modify)
+        if @scope_group.update_attributes(params[:scope_group].except(:api_license_id))
+          head :no_content
+        else
+          render json: @scope_group.errors, status: :unprocessable_entity
         end
       end
 
