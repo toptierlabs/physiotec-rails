@@ -4,5 +4,5 @@ class UserClinic < ActiveRecord::Base
   attr_accessible :user_id, :clinic_id
 
   validates :clinic_id, :uniqueness => {:scope => :user_id}, :presence => true
-  validates :user_id, :presence => true
+  validates :user, :clinic, :presence => true
 end

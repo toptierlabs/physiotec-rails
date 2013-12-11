@@ -1,8 +1,6 @@
 class Permission < ActiveRecord::Base
 
   belongs_to :api_license
-
-  belongs_to :api_license
   
   #has many scope_permissions
   has_many :scope_permissions, :dependent => :destroy
@@ -13,7 +11,8 @@ class Permission < ActiveRecord::Base
   #nested attributes
   accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
 
-  validates :name, :uniqueness => {:scope => :api_license_id}, :presence => true
+  validates :name, :uniqueness => {:scope => :api_license_id}
+  validates :name, :api_license, :presence => true
 
   attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
                   :api_license_id, :model_name

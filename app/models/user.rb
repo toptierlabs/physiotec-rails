@@ -12,15 +12,15 @@ class User < ActiveRecord::Base
          :recoverable, :trackable, :validatable, :confirmable#, :rememberable
 
   #Set the attributes validations
-  validates :email, :first_name, :last_name, :api_license_id, :context_id, :context_type,
+  validates :email, :first_name, :last_name, :api_license, :context,
             :presence => true
 
-  belongs_to :api_license
-
-  # Can be blank
-  belongs_to :context, :polymorphic => true
-
   validates :session_token, :uniqueness => true, :allow_blank => true
+
+  validates :email, :email => true
+
+  belongs_to :api_license
+  belongs_to :context, :polymorphic => true  
 
   has_many :user_scope_permissions
   has_many :scope_permissions, :through=>:user_scope_permissions
@@ -52,24 +52,10 @@ class User < ActiveRecord::Base
     self.session_token
   end
 
-
   #An user inserts his password after he recieves a email confirmation
   def password_required?
     super if self.confirmed?
   end
-
-  #ad role to an user
-  def add_role(role)
-  end
-
-  #sets profile for current user
-  def set_profile(profile)
-    #profile ||= Profile::default
-    #load profile roles
-    #for each role self.add_role "admin"
-  end
-
-
 
   def password_match?
     self.errors[:password] << "can't be blank" if password.blank?
@@ -98,14 +84,12 @@ class User < ActiveRecord::Base
     self.profiles.each do | profile |
       #gets the permissions and  scopes for the current profile
       profile.scope_permissions.each do | scope_permission |
-        #creates the relation unless it alredy exists
-        if UserScopePermission.where(user_id: self.id, scope_permission_id: scope_permission.id).empty?
-          UserScopePermission.create(user_id: self.id, scope_permission_id: scope_permission.id)
-        end
+        UserScopePermission.create(user_id: self.id, scope_permission_id: scope_permission.id)
       end
     end
   end
 
+  #used for active admin
   def permissions_pretty_list
     ppl = []
     self.user_scope_permissions.each do |psp|
@@ -116,43 +100,21 @@ class User < ActiveRecord::Base
     ppl
   end
 
-  def hash_formatter(permission, action, s)
-    {:permission => permission, :action => action, :scopes => s }
-  end
 
-  def scope_permissions_list
-    #creates a list with the scope_permissions linked with the user
-    res = []
-    scope_permissions.joins(:permission,:action).includes(:scopes,:action, :permission).each do |p|
-      scope_list = p.scopes.map{ |s| s.name.parameterize.underscore.to_sym }
-      res << hash_formatter(p.permission.name.parameterize.underscore.to_sym, p.action.name.parameterize.underscore.to_sym, scope_list)
-    end
-    puts res
-    puts '-'*100
-
-    #creates a list with the scope_permissions related to profile assignment linked with the profiles
-    profiles.each do |p|
-      p.permission_scopes_list.each do |s|
-        res << s
-      end
-    end
-    res
-  end
-
-  def assignable_profiles_datatype
+  def assignable_profiles
     res = []
     self.profiles.each do |p|
-        res.concat(p.assignable_profiles_datatype)
+        res.concat(p.assignable_profiles)
     end
     #remove duplicate elements with uniq
     res.uniq
   end
 
-  def scope_permission_for_read(permission, action)
+  def scope_permission_for_read(permission)
     # Get the permission for the given class_name
     result = nil
     self.scope_permissions.includes(:permission,:action).each do |v|
-      if (v.permission.name_as_sym == permission) && (v.action.name_as_sym == action)
+      if (v.permission.name_as_sym == permission) && (v.action.name_as_sym == Action.read_action)
         puts 'entra'
         result = v
       end

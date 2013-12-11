@@ -34,9 +34,7 @@ module Api
 				if (user !=nil) && (user.valid_password?(params[:password]))
 					#creates a session token
 					session_token = user.new_session_token
-					respond_to do |format|
-						format.json { render json: {token: session_token, user_id: user.id}, status: :created}
-					end
+					render json: {token: session_token, user_id: user.id}, status: :created
 				else
 					render json: {:error => "Wrong user or password"}, status: 401 #nuauthorized
 				end
@@ -146,7 +144,7 @@ module Api
 				if @selected_user.save
 					render json: @selected_user.as_json(:include => [:profiles]) , status: :created
 				else
-					render json: @selected_user.errors.to_json, status: :unprocessable_entity
+					render json: @selected_user.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -171,7 +169,7 @@ module Api
 			# PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
 				authorize_request!(:permission, :create)
 				formatted_params = {}
-				formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id] }]
+				formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id]}]
 				if @selected_user.update_attributes(formatted_params)
 					render json: @selected_user.as_json(:include=>:scope_permissions), status: :created
 				else
@@ -198,7 +196,7 @@ module Api
 
 			def assignable_profiles
 				# List all the profiles that the selected_user user can assign to other users
-				result = @selected_user.assignable_profiles_datatype
+				result = @selected_user.assignable_profiles
 				render json: { assignable_profiles: result }
 			end
 

@@ -5,7 +5,7 @@ class ProfileScopePermission < ActiveRecord::Base
   attr_accessible :profile_id, :scope_permission_id
   # uniqueness of the permission inside the same scope
   validates :scope_permission_id, :uniqueness => {:scope => :profile_id}
-  validates :scope_permission_id, :profile_id, :presence => true
+  validates :scope_permission, :profile, :presence => true
   #other validations
   #validates :profile_id, :scope_permission, :presence => true, :allow_blank => false
 

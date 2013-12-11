@@ -10,4 +10,10 @@ class Action < ActiveRecord::Base
   	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
   end
 
+  def self.read_action #no test for nil
+  	#returns a symbol representation of the string
+  	action = Self.find_by_name("Read")
+  	action.name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  end
+
 end

@@ -23,7 +23,7 @@ class Profile < ActiveRecord::Base
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
   
-  validates :name, :api_license_id, :presence => true
+  validates :name, :api_license, :presence => true
   validates :name, :uniqueness => {:scope => :api_license_id}
 
   accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true
@@ -58,10 +58,10 @@ class Profile < ActiveRecord::Base
   end
 
 
-  def assignable_profiles_datatype
+  def assignable_profiles
     res = []
-    self.destination_profiles.each do | p |
-      res << p.as_json(:only=>[:id, :name])
+    self.destination_profiles.each do | v |
+      res << v
     end
     res.uniq
   end
