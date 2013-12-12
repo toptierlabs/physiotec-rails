@@ -68,15 +68,6 @@ module AssignableHelper
 	end
 
 
-	def check_scopes(scopes)
-		result = self.scopes.blank?
-		puts self.scopes.nil?
-		self.scopes.each do | v |			
-			result = v.can_manipulate?(scopes)
-			break if result
-		end
-		result
-	end
 
 	def clinic_scopes(user)
 		list_scopes = []

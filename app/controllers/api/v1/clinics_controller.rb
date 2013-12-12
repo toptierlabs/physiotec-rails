@@ -15,15 +15,15 @@ module Api
       # GET /clinics/1
       # GET /clinics/1.json
       def show
-        authorize_request!(:clinic, :read)
         @clinic = Clinic.find(params[:id])
+        authorize_request!(:clinic, :read, :model=>@clinic)        
         render json: @clinic
       end
 
       # POST /clinics
       # POST /clinics.json
       def create
-        authorize_request!(:clinic, :create)        
+        authorize_request!(:clinic, :create)       
         @clinic = Clinic.new(params[:clinic])
         @clinic.api_license_id = @api_license.id
         if @clinic.save

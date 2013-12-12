@@ -22,6 +22,7 @@ module Api
 			# GET /users/1.json
 			def show
 				@user = User.includes(:profiles).find(params[:id])
+				authorize_request!(:user, :read, :model=>@scope_group)
 				render json: @user.as_json(:include=>{profiles:{only:[:id, :name]} })
 			end
 
@@ -78,7 +79,7 @@ module Api
 			# PUT /users/1
 			# PUT /users/1.json
 			def update
-				authorize_request!(:user, :modify)
+				authorize_request!(:user, :read, :model=>@selected_user)
 				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
 					render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity
 				else
@@ -127,7 +128,7 @@ module Api
 			# DELETE /users/1
 			# DELETE /users/1.json
 			def destroy
-				@selected_user = User.find(params[:id])
+				authorize_request!(:user, :delete, :model=>@selected_user)
 				if @selected_user.destroy
 					head :no_content
 				else
@@ -167,7 +168,7 @@ module Api
 			# users/:id/assign_ability?scope_permission_id=9
 			# Creates a link between the selected_user and the scope_permission with id scope_permission_id given by the parameters.
 			# PRECONDITIONS: The given scope_permission and the given user must exist in the system.      
-				authorize_request!(:permission, :create)
+				authorize_request!(:permission, :assign)
 				formatted_params = {}
 				formatted_params[:user_scope_permissions_attributes] = [{scope_permission_id: params[:scope_permission_id]}]
 				if @selected_user.update_attributes(formatted_params)
@@ -182,7 +183,7 @@ module Api
 			# Disposes an existing link between the user and a scope_permission.
 			# The user and the permission will remain in the system
 			# PRECONDITIONS: The given permission and the given user must exist in the system.
-				authorize_request!(:permission, :delete)
+				authorize_request!(:permission, :unassign)
 		
 				@scope_permission = @selected_user.user_scope_permissions.find_by_scope_permission_id(params[:scope_permission_id])
 				if @scope_permission.nil?

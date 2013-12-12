@@ -15,8 +15,8 @@ module Api
 			# GET /licenses/1
 			# GET /licenses/1.json
 			def show
-				authorize_request!(:license, :read)
 				@license = License.find(params[:id])
+				authorize_request!(:license, :read, :model=>@license)				
 				render json: @license
 			end
 
@@ -37,8 +37,8 @@ module Api
 			# PUT /licenses/1
 			# PUT /licenses/1.json
 			def update				
-				authorize_request!(:license, :modify)
 				license = License.find(params[:id])
+				authorize_request!(:license, :modify, :model=>license)
 				if license.update_attributes(params[:license].except(:api_license_id))
 					render json: license, status: :updated
 				else
@@ -49,10 +49,13 @@ module Api
 			# DELETE /licenses/1
 			# DELETE /licenses/1.json
 			def destroy
-				authorize_request!(:license, :delete)
 				@license = License.find(params[:id])
-				@license.destroy
-				head :no_content
+				authorize_request!(:license, :delete, :model=>@license)
+				if @license.destroy
+					head :no_content
+				else
+					render json: @scope.errors, status: :unprocessable_entity
+				end
 			end
 
 		end

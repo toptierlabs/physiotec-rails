@@ -4,7 +4,7 @@ class Scope < ActiveRecord::Base
 
   #uniqueness of the name inside a scope group
   validates :name, :uniqueness => { :scope => :scope_group_id }, :presence => true
-  validates :name, :scope_group, :presence => true
+  validates :name, :presence => true
 
   attr_accessible :name, :scope_group_id
 

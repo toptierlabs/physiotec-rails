@@ -15,21 +15,21 @@ module Api
 
 				#List all the scopes
 				def index
-					authorize_request!(:permission, :read)
+					authorize_request!(:scope, :read)
 					@scopes = @scope_group.scopes.all
 					render json:  { scopes: @scopes.as_json }
 				end
 
 				# Shows the scope_permission for @selected_user
 				def show
-					authorize_request!(:permission, :read)
 					@scopes = @scope_group.scopes.find(params[:id])
+					authorize_request!(:scope, :read, :model=>@scopes)
 					render json:  { users: @scopes.as_json }
 				end
 
 				# Creates a new scope for the holded scope_group
 				def create
-					authorize_request!(:permission, :create)
+					authorize_request!(:scope, :create)
 					#:name, :scope_group
 					@scope = Scope.new( name: params[:scope][:name])
 					@scope_group.scopes << @scope
@@ -44,7 +44,7 @@ module Api
 				def update
 					@scope = @scope_group.scopes.find(params[:id])
 					 #when it fails renders not authorized
-					authorize_request!(:permission, :modify)
+					authorize_request!(:scope, :modify, :model=>@scopes)
 					if @scope.update_attributes(name: params[:scope][:name])
 						head :no_content
 					else
@@ -55,7 +55,7 @@ module Api
 				# Disposes an existing scope.
 				def destroy
 					@scope = @scope_group.scopes.find(params[:id])
-					authorize_request!(:permission, :delete) #when false it renders not authorized
+					authorize_request!(:scope, :delete, :model=>@scopes)
 					if @scope.destroy
 						head :no_content
 					else

@@ -72,12 +72,6 @@ class ScopePermission < ActiveRecord::Base
     self.action.name + ' ' + self.permission.name + ' (' + display_scopes[0..-3] + ')'
   end
 
-
-  def permission_json
-    { :action=>self.action.as_json, :permission => self.permission.as_json, 
-      :scopes=> self.scope_permission_group_scopes.map{|spgs| spgs.permission_json } }
-  end
-
   def check_scopes(scopes)
     result = false
     # check the scopes: at least one scope of each scope_group must be in both sp from params and self
@@ -98,13 +92,12 @@ class ScopePermission < ActiveRecord::Base
     self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
   end
 
-  def context_scope_as_sym
-    result = self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
-    if result.present?
-      result.name_as_sym
-    else
-      nil
-    end
+  def no_context_scopes
+    self.scopes.where("scope_group_id != ?", scope_group_id: ScopeGroup.group_clinic_id)
   end
 
+  def get_by_permission_and_action(permission, action)
+    scope_permissions.includes(:action,:permission,:scopes)
+    .where(actions:{name: action},permissions:{name: permission})
+  end 
 end

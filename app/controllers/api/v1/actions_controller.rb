@@ -7,7 +7,7 @@ module Api
       #Returns all the actions available in the system
       def index
         authorize_request!(:permission, :read)
-        @actions = Action.all #add context to permission, api_license or null (generic)
+        @actions = Action.all
         render json: @actions
       end
 

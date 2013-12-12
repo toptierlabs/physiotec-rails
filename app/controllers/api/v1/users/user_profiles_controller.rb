@@ -15,13 +15,13 @@ module Api
 
 				# Returns all the profiles linked with the selected user
 				def index
-					authorize_request!(:profile, :read)
+					authorize_request!(:user, :read)
 					profiles = @selected_user.profiles
 					render json: profiles
 			 	end
 
 				def show
-					authorize_request!(:profile, :read, @selected_user) #returns if request is not authorized
+					authorize_request!(:user, :read, @selected_user) #returns if request is not authorized
 					@profile = @selected_user.profiles.find(params[:id])
 					render json:  { users: @profile.as_json }
 				end

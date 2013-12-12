@@ -15,8 +15,8 @@ module Api
 			# GET /permissions/1
 			# GET /permissions/1.json
 			def show
-				authorize_request!(:permission, :read)
 				@permission = Permission.includes(:scope_groups).find(params[:id])
+				authorize_request!(:permission, :read, :model=>@permission)
 				render json: @permission.as_json(:include=>:scope_groups)
 			end
 
@@ -57,8 +57,11 @@ module Api
 			def destroy        
 				@permission = Permission.find(params[:id])
 				authorize_request!(:permission, :delete, :model=>@permission)
-				@permission.destroy
-				head :no_content
+				if @permission.destroy
+					head :no_content
+				else
+					render json: @scope.errors, status: :unprocessable_entity
+				end
 			end
 
 		end

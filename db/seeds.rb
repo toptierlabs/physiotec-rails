@@ -51,7 +51,7 @@ end
 
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
-												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Permission", "Context"], ["Profile", "Context"]]
+												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"]]
 
 permission_scope_group.each do | permission, scope_group |
 	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
@@ -60,7 +60,7 @@ end
 
 #Creation of profiles
 profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
-								 "Patient", "License administrator", "Clinic Administrator"]
+				"Patient", "License administrator", "Clinic Administrator"]
 
 profiles_list.each do | name |
 	Profile.create(name: name, api_license_id: ApiLicense.first.id)
@@ -88,9 +88,23 @@ profile_scope_permission = [["Author", "Exercise", "Create", ["Clinic"]],
 													 ["License administrator", "User", "Modify", ["Clinic"]],
 													 ["License administrator", "User", "Delete", ["Clinic"]],
 
-													 ["License administrator", "Permission", "Create", ["License"]],
-													 ["License administrator", "Permission", "Delete", ["Clinic"]],
-													 ["License administrator", "Permission", "Read", ["Clinic"]],
+													 ["License administrator", "Permission", "Create"],
+													 ["License administrator", "Permission", "Delete"],
+													 ["License administrator", "Permission", "Read"],
+													 ["License administrator", "Permission", "Modify"],
+
+													 ["License administrator", "Permission", "Assign"],
+													 ["License administrator", "Permission", "Unassign"],
+
+													 ["License administrator", "Scope Group", "Create"],
+													 ["License administrator", "Scope Group", "Delete"],
+													 ["License administrator", "Scope Group", "Read"],
+													 ["License administrator", "Scope Group", "Modify"],
+
+													 ["License administrator", "Scope", "Create"],
+													 ["License administrator", "Scope", "Delete"],
+													 ["License administrator", "Scope", "Read"],
+													 ["License administrator", "Scope", "Modify"],
 
 													 ["License administrator", "Clinic", "Create", ["License"]],
 													 ["License administrator", "Clinic", "Delete", ["Clinic"]],
@@ -113,8 +127,8 @@ profile_scope_permission.each do | profile, permission, action, profile_scopes |
 															 action_id: Action.find_by_name( action ).id )# if sp.nil?
 	profile_scopes.each do | scope |
 		ScopePermissionGroupScope.create( scope_permission_id: sp.id,
-																			scope_id: Scope.find_by_name(scope).id )
-	end
+		scope_id: Scope.find_by_name(scope).id )
+	end unless profile_scopes.nil?
 
 	ProfileScopePermission.create(profile_id: Profile.find_by_name(profile).id,
 																scope_permission_id: sp.id)
@@ -128,6 +142,7 @@ profile_assignment = [["License administrator", "Clinic Administrator"],
 										 ["License administrator", "Physiotherapist"],
 										 ["License administrator", "Media"],
 										 ["License administrator", "Patient"],
+										 ["License administrator", "License administrator"],
 										 ["Clinic Administrator", "Author"],
 										 ["Clinic Administrator", "Translator"],
 										 ["Clinic Administrator", "Physiotherapist"],
