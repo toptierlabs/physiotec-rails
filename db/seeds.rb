@@ -43,7 +43,8 @@ end
 # Creates the scopes
 scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
 				 ["Spanish", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
-				 ["License", "Context"], ["Api License", "Context"]]
+				 ["License", "Context"], ["Api License", "Context"], ["Scope Group", "Context"],
+				 ["Scope", "Scope Group"], ["Scope", "Scope Group"]]
 
 scopes.each do | name, scope_group |
 	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)

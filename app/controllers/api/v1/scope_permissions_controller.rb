@@ -43,9 +43,11 @@ module Api
 
 				@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
 				#creates the scope_permission_group_scopes
-				params[:scope_permission][:scopes].each do |v|
-					scope = Scope.find(v)
-					@scope_permission.scopes << scope
+				if params[:scope_permission][:scopes].present?
+					params[:scope_permission][:scopes].each do |v|
+						scope = Scope.find(v)
+						@scope_permission.scopes << scope
+					end
 				end
 
 				if @scope_permission.save
