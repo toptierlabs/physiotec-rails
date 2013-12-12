@@ -5,34 +5,42 @@ module PermissionHelper
 		#sanitize the params
 		permission = permission.to_s.gsub("_", " ")
 		action = action.to_s.gsub("_", " ")
-		scopes = extra_args[:scopes] if extra_args.present?
-		model = extra_args[:model] if extra_args.present?
-		if scopes.nil?
-			if model.nil?
-				scope_permissions.get_by_permission_and_action(permission,action).present?
-				return
-			else
-				false
-				return
-			end
-
-		elsif scopes.present?
-			scope_permission = nil
-			result = false
-			scope_permissions.get_by_permission_and_action(permission,action).each do |v|
-				result = v.check_scopes(scopes)
-			end
-			if result && model.present?
-				clinic_scope = scope_permission.context_scope.name.as_sym
-				if (model.api_license_id == user.api_license_id)
-					resullt = model.clinic_scopes.includes? scope_permission.context_scope.name.as_sym
-				else
-					result = false
-				end		
-			end
-			result
-			return
+		if extra_args.present? && extra_args[:scopes].present?
+			scopes = Scope.where(id: extra_args[:scopes])
 		end
+		model = extra_args[:model] if extra_args.present?
+		result = false
+
+		#preconditions
+		if model.present? && (model.api_license_id != self.api_license_id)
+			return false
+		end
+
+		sp = self.abilities_by_permission_and_action(permission, action)
+		if sp.present?
+			sp.each do |v|
+				result = scopes.blank? || v.check_scopes(scopes)
+				puts result
+				
+				if result && model.blank?	
+					puts 'no2'				
+					return true
+				elsif result && model.present? && (v.permission.model_name == model.class.name)
+					puts 'si2'
+					clinic_scope = v.context_scope.name.as_sym
+					if model.respond_to?(:clinic_scopes)
+						return model.clinic_scopes(self).include? v.context_scope.name.as_sym
+					else
+						puts 'hola'
+						return true
+					end
+				end
+				result = false
+			end
+		else
+			return false
+		end
+		result
 
 	end
 

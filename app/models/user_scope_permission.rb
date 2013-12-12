@@ -29,7 +29,7 @@ class UserScopePermission < ActiveRecord::Base
     def validate(record)
       #it should be a class      
       if (record.scope_permission.present? && record.user.present? && record.user.context.present?)
-        context_scope = UserScopePermission.context_value[record.scope_permission.context_scope_as_sym]
+        context_scope = UserScopePermission.context_value[record.scope_permission.context_scope.name.as_sym]
         context_user = nil
         if record.user.context.respond_to?(:clinic)
           context_user = :clinic
@@ -48,7 +48,7 @@ class UserScopePermission < ActiveRecord::Base
   class ClinicScopeValidator < ActiveModel::Validator
     def validate(record)
       if record.scope_permission.present?
-        context_scope = record.scope_permission.context_scope_as_sym
+        context_scope = record.scope_permission.context_scope.name.as_sym
         if (context_scope != :nil)
           record.errors[:base] << "user alredy has a clinic scope"
         end

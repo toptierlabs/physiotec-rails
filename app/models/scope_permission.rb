@@ -43,14 +43,14 @@ class ScopePermission < ActiveRecord::Base
 
     class ClinicScopeValidator < ActiveModel::Validator
     def validate(record)
-      context_scope = record.context_scope_as_sym
+      context_scope = record.context_scope
       if (context_scope != nil)
         record.errors[:base] << "user alredy has a clinic scope"
       end
     end
   end
   
-  validates_with ClinicScopeValidator
+  #validates_with ClinicScopeValidator
   validates_with ScopesInScopeGroupsValidator
 
   #display name for ActiveAdmin
@@ -75,29 +75,21 @@ class ScopePermission < ActiveRecord::Base
   def check_scopes(scopes)
     result = false
     # check the scopes: at least one scope of each scope_group must be in both sp from params and self
-    self_scope_groups = Hash[self.scopes.map{ |v| {v.id => v.scope_group_id} }]
-    params_scope_groups = Hash[scopes.map{ |v| {v.id => v.scope_group_id} }]
-    if ((self_scope_groups.keys - params_scope_groups.keys).length != 0)
-      result = false
-    else
-      #get the elements that are in both arrays
-      both_scopes = self_scope_groups.keys & params_scope_groups.keys
-      #if both_scopes contains all the scope_groups of params and self then it returns true
-      result = ((self_scope_groups.keys + params_scope_groups.keys) - both_scopes).length == 0
-    end
-    result
+    self_scope_groups = Hash[self.scopes
+      .select!{|v| v.scope_group_id != ScopeGroup.group_clinic_id}.map{ |v| {v.id => v.scope_group_id} }]
+    params_scope_groups = Hash[scopes
+      .select!{|v| v.scope_group_id != ScopeGroup.group_clinic_id}.map{ |v| {v.id => v.scope_group_id} }]
+
+    #params_scope_group must be contained in self_scope_groups
+    (params_scope_groups - self_scope_groups).length == 0
   end
 
   def context_scope
     self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
   end
 
-  def no_context_scopes
-    self.scopes.where("scope_group_id != ?", scope_group_id: ScopeGroup.group_clinic_id)
+  def find_scope_by_scope_group(scope_group)
+    self.scopes.find_by_scope_group_id(scope_group.id)
   end
 
-  def get_by_permission_and_action(permission, action)
-    scope_permissions.includes(:action,:permission,:scopes)
-    .where(actions:{name: action},permissions:{name: permission})
-  end 
 end

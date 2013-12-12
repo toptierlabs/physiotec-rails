@@ -8,7 +8,7 @@ module Api
       def index
         authorize_request!(:permission, :read)
         @actions = Action.all
-        render json: @actions
+        render json: {actions: @actions}
       end
 
       def show

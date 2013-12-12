@@ -123,4 +123,9 @@ class User < ActiveRecord::Base
     result
   end
 
+  def abilities_by_permission_and_action(permission, action)
+    scope_permissions.includes(:action,:permission,:scopes)
+    .where(actions:{name: action},permissions:{name: permission})
+  end
+
 end

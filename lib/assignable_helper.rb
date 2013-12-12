@@ -5,7 +5,7 @@ module AssignableHelper
 	module ClassMethods
 		def accessible_by(user, permission, action)
 			scope_permission = user.scope_permission_for_read(permission)
-			context = scope_permission.context_scope_as_sym
+			context = scope_permission.context_scope.name.as_sym
 			where_condition = nil
 			puts context
 			puts '-'*80
@@ -72,13 +72,15 @@ module AssignableHelper
 	def clinic_scopes(user)
 		list_scopes = []
 		#user is the owner
-		if self.owner == user
+		if !self.respond_to?(:context)
+			list_scopes <<  :own << :clinic << :license << :api_license
+		elsif self.owner == user
 			list_scopes <<  :own << :clinic << :license << :api_license
 		#user belongs to the same clilic
 		elsif (self.context.respond_to?(:clinic)) && (user.clinics.include? self.context.clinic)
 			list_scopes << :clinic << :license << :api_license
 		#user belongs to the same license
-		elsif self.context.respond_to?(:license) && self.context.license == user.license
+		elsif self.context.respond_to?(:license) && self.context.license == user.context.license
 			list_scopes << :license << :api_license
 		#user belongs to the same api_license	
 		elsif self.context.respond_to?(:api_license) && self.context.api_license == user.api_license
