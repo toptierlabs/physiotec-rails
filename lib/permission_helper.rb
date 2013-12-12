@@ -20,27 +20,21 @@ module PermissionHelper
 		if sp.present?
 			sp.each do |v|
 				result = scopes.blank? || v.check_scopes(scopes)
-				puts result
-				
-				if result && model.blank?	
-					puts 'no2'				
+
+				if result && model.blank?			
 					return true
+
 				elsif result && model.present? && (v.permission.model_name == model.class.name)
-					puts 'si2'
 					clinic_scope = v.context_scope.name.as_sym
 					if model.respond_to?(:clinic_scopes)
 						return model.clinic_scopes(self).include? v.context_scope.name.as_sym
-					else
-						puts 'hola'
-						return true
+
 					end
 				end
 				result = false
 			end
-		else
-			return false
 		end
-		result
+		return false
 
 	end
 
