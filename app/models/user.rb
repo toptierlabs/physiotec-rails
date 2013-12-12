@@ -115,7 +115,6 @@ class User < ActiveRecord::Base
     result = nil
     self.scope_permissions.includes(:permission,:action).each do |v|
       if (v.permission.name_as_sym == permission) && (v.action.name_as_sym == Action.read_action)
-        puts 'entra'
         result = v
       end
       break if result
@@ -123,9 +122,19 @@ class User < ActiveRecord::Base
     result
   end
 
-  def abilities_by_permission_and_action(permission, action)
-    scope_permissions.includes(:action,:permission,:scopes)
-    .where(actions:{name: action},permissions:{name: permission})
+  def abilities_by_permission_and_action(perm, act)
+    permission = Permission.find_by_name(perm)
+    action = Action.find_by_name(act)
+    if permission == Permission.profile && ([Action.assign,Action.unassign].include? action)
+      sp = ScopePermission.new(permission_id: permission.id, action_id: action.id)
+      assignable_profiles.each do |v|
+        sp.scopes << Scope.new(name: v.name)
+      end
+      sp
+    else
+      scope_permissions.includes(:action,:permission,:scopes)
+      .where(actions:{name: action.name},permissions:{name: permission.name})
+    end
   end
 
 end

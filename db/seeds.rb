@@ -24,7 +24,7 @@ permissions = [ ["Translate", Exercise.name],
 								["License", License.name],
 								["User", User.name], 
 								["Permission", Permission.name],
-								["Scope Group", ScopeGroup.name],
+								["ScopeGroup", ScopeGroup.name],
 								["Scope", Scope.name],
 								["Profile", Profile.name]]
 
@@ -43,8 +43,8 @@ end
 # Creates the scopes
 scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
 				 ["Spanish", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
-				 ["License", "Context"], ["Api License", "Context"], ["Scope Group", "Context"],
-				 ["Scope", "Scope Group"], ["Scope", "Scope Group"]]
+				 ["License", "Context"], ["Api License", "Context"], ["ScopeGroup", "Context"],
+				 ["Scope", "Context"], ["Scope", "Context"]]
 
 scopes.each do | name, scope_group |
 	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
@@ -97,10 +97,10 @@ profile_scope_permission = [["Author", "Exercise", "Create", ["Clinic"]],
 													 ["License administrator", "Permission", "Assign", ["Api License"]],
 													 ["License administrator", "Permission", "Unassign", ["Api License"]],
 
-													 ["License administrator", "Scope Group", "Create", ["Api License"]],
-													 ["License administrator", "Scope Group", "Delete", ["Api License"]],
-													 ["License administrator", "Scope Group", "Read", ["Api License"]],
-													 ["License administrator", "Scope Group", "Modify", ["Api License"]],
+													 ["License administrator", "ScopeGroup", "Create", ["Api License"]],
+													 ["License administrator", "ScopeGroup", "Delete", ["Api License"]],
+													 ["License administrator", "ScopeGroup", "Read", ["Api License"]],
+													 ["License administrator", "ScopeGroup", "Modify", ["Api License"]],
 
 													 ["License administrator", "Scope", "Create", ["Api License"]],
 													 ["License administrator", "Scope", "Delete", ["Api License"]],

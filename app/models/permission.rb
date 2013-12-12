@@ -22,6 +22,8 @@ class Permission < ActiveRecord::Base
   	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
   end
 
-
+   def self.profile
+    self.find_by_name("Profile")
+   end
 
 end
