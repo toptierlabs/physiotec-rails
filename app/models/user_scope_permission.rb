@@ -12,6 +12,9 @@ class UserScopePermission < ActiveRecord::Base
   # uniqueness of the permission inside the same scope
   # validates :scope_permission_id, :uniqueness => {:scope => :user_id}
 
+  validates :scope_permission_id, :uniqueness => {:scope => :user_id}
+  validates :scope_permission, :user, :presence => true
+
   class SameApiLicenseValidator < ActiveModel::Validator
     def validate(record)
       if (record.scope_permission.present? && record.user.present?)
@@ -52,12 +55,9 @@ class UserScopePermission < ActiveRecord::Base
       end
     end
   end
-  
+
   validates_with SameApiLicenseValidator
   validates_with ScopeInContextValidator
-
-  validates :scope_permission_id, :uniqueness => {:scope => :user_id}
-  validates :scope_permission_id, :user_id, :presence => true
 
   def datatype
     result = {}

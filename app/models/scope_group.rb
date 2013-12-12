@@ -3,9 +3,10 @@ class ScopeGroup < ActiveRecord::Base
   has_many :scopes, :dependent => :destroy
 
   #has_many :permission_scope_groups
-  has_many :scope_permissions, :dependent => :destroy
+  has_many :permission_scope_group, :dependent => :destroy
 
   validates :name, :uniqueness => {:scope => :api_license_id}, :presence => true
+  validates :name, :api_license, :presence => true
 
   attr_accessible :description, :name, :api_license_id
   

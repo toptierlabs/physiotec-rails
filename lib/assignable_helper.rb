@@ -4,7 +4,7 @@ module AssignableHelper
 	#models:
 	module ClassMethods
 		def accessible_by(user, permission, action)
-			scope_permission = user.scope_permission_for_read(permission, action)
+			scope_permission = user.scope_permission_for_read(permission)
 			context = scope_permission.context_scope_as_sym
 			where_condition = nil
 			puts context

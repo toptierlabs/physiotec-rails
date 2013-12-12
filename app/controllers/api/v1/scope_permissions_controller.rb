@@ -37,35 +37,22 @@ module Api
 			# PRECONDITIONS: The given action, permission and scopes must exist in the system.
 			# PARAMS => {:action_id=>'', :permission_id=>'', scopes=>[:scope_id]}
 			def create
-				authorize_request!(:permission, :create)
+				authorize_request!(:permission, :create)				
+				#validates the scopes
+				perm = Permission.find_by_id(params[:scope_permission][:permission_id])
 
-				#If action does not exists
-				if Action.find_by_id(params[:scope_permission][:action_id]).nil?
-					render json: { :error => "Could not find the given action." }, status: :unprocessable_entity
-				#If permission does not exists
-				elsif Permission.find_by_id(params[:scope_permission][:permission_id]).nil?
-					render json: { :error => "Could not find the given permission." }, status: :unprocessable_entity
-				else
-					#validates the scopes
-					perm = Permission.find_by_id(params[:scope_permission][:permission_id])
-					if ( perm.scope_groups.joins(:scopes).where(scopes:{id: params[:scope_permission][:scopes]}).length != params[:scope_permission][:scopes].length )
-						render json: { :error => "Could not find all the given scopes." }, status: :unprocessable_entity
-					else
-						@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
-						#creates the scope_permission_group_scopes
-						params[:scope_permission][:scopes].each do | scope_id |
-							scope = Scope.where(id: scope_id).first
-							@scope_permission.scopes << scope
-						end				
-						if @scope_permission.save
-							render json: @scope_permission, status: :created
-						else
-							response_error = @scope_permission.errors
-							render json: response_error, status: :unprocessable_entity
-						end
-					end
+				@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
+				#creates the scope_permission_group_scopes
+				params[:scope_permission][:scopes].each do |v|
+					scope = Scope.find(v)
+					@scope_permission.scopes << scope
 				end
-				
+
+				if @scope_permission.save
+					render json: @scope_permission, status: :created
+				else
+					render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
+				end				
 			end
 
 			# Updates a permission, it updates the name, the action and the scopes
@@ -123,18 +110,13 @@ module Api
 			# PRECONDITIONS: The given permission must exist in the system.
 
 			def destroy					
-				@scope_permission =ScopePermission.where(id: params[:id]).first
+				@scope_permission =ScopePermission.find(params[:id])
 				authorize_request!(:permission, :delete, @scope_permission)
-				if @scope_permission.nil?
-					render json: { :error => "Permission not found." }, status: :unprocessable_entity
-				elsif authorize_request!(:permission, :delete, @scope_permission) #when false it renders not authorized
-					if @scope_permission.destroy
-						render status: :no_content
-					else
-						render json: @scope_permission.errors, status: :unprocessable_entity
-					end
+				if @scope_permission.destroy
+					render status: :no_content
+				else
+					render json: @scope_permission.errors, status: :unprocessable_entity
 				end
-
 			end
 
 

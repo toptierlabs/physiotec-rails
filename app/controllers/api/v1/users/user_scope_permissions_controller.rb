@@ -15,9 +15,9 @@ module Api
 				#List all the scope_permissions
 				def index
 					authorize_request!(:permission, :read)
-						@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
+					@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 
-						render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
+					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}) }
 
 				end
@@ -25,16 +25,9 @@ module Api
 				# Shows the scope_permission for @selected_user
 				# PRECONDITIONS: The given permission and the given user must exist in the system.
 				def show
-					if authorize_request!(:permission, :read, @selected_user)
-						@permission = @selected_user.scope_permissions.find(params[:id])
-						respond_to do |format|
-							if @permission.nil?
-								format.json { render json: { :error => "Permission not found." }, status: :unprocessable_entity }
-							else
-								format.json { render json:  { users: @permission.as_json }  }
-							end
-						end
-					end
+					authorize_request!(:permission, :read, @selected_user)
+					@permission = @selected_user.scope_permissions.find(params[:id])
+					render json:  { users: @permission.as_json }
 				end			
 
 			end

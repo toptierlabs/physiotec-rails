@@ -1,5 +1,8 @@
 class License < ActiveRecord::Base
 
+  attr_accessible :email, :first_name, :last_name, :maximum_clinics, :maximum_users,
+                  :phone, :api_license_id
+
   belongs_to :api_license
   
   has_many :exercises, as: :context
@@ -7,13 +10,13 @@ class License < ActiveRecord::Base
   has_many :clinics
 
   #model validations
-  validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license_id,
+  validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license,
             :presence => true
 
   validates :email, :uniqueness => {:scope => :api_license_id}
+  validates :email, :email => true
 
-  attr_accessible :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license_id
-
+  
 
   def license
   	self

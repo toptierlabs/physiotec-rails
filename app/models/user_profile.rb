@@ -5,7 +5,7 @@ class UserProfile < ActiveRecord::Base
   attr_accessible :user_id, :profile_id
   
   validates :profile_id, :uniqueness => {:scope => :user_id}
-  validates :profile_id, :user_id, :presence => true
+  validates :profile_id, :user_id, :presence => true  
 
   class SameApiLicenseValidator < ActiveModel::Validator
     def validate(record)

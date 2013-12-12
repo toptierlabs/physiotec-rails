@@ -6,17 +6,15 @@ module Api
 
       #Returns all the actions available in the system
       def index
-        if authorize_request!(:permission, :read)
-          @actions = Action.all #add context to permission, api_license or null (generic)
-          render json: @actions
-        end
+        authorize_request!(:permission, :read)
+        @actions = Action.all #add context to permission, api_license or null (generic)
+        render json: @actions
       end
 
       def show
-        if authorize_request!(:permission, :read)
-          @action = Action.find(params[:id])
-          render json: @action
-        end
+        authorize_request!(:permission, :read)
+        @action = Action.find(params[:id])
+        render json: @action
       end
 
     end

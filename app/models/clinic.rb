@@ -9,7 +9,7 @@ class Clinic < ActiveRecord::Base
 	has_many :users, as: :context
 
 	validates :name, :uniqueness => {:scope => :license_id}
-	validates :name, :license_id, :api_license_id, :presence => true
+	validates :name, :license, :api_license, :presence => true
 
 	attr_accessible :name, :license_id	 
 	attr_protected :api_license_id

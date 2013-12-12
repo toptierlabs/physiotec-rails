@@ -24,6 +24,8 @@ permissions = [ ["Translate", Exercise.name],
 								["License", License.name],
 								["User", User.name], 
 								["Permission", Permission.name],
+								["Scope Group", ScopeGroup.name],
+								["Scope", Scope.name],
 								["Profile", Profile.name]]
 
 permissions.each do | name, model |
