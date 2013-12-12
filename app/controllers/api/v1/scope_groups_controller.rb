@@ -38,7 +38,7 @@ module Api
 				if @scope_group.save
 					render json: @scope_group, status: :created
 				else
-					render json: @scope_group.errors, status: :unprocessable_entity
+					render json: @scope_group.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -63,7 +63,7 @@ module Api
 				if @scope_group.destroy
 					head :no_content
 				else
-					render json: @scope_group.errors, status: :unprocessable_entity
+					render json: @scope_group.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
