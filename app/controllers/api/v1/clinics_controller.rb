@@ -38,7 +38,7 @@ module Api
       def update        
         clinic = Clinic.find(params[:id])
         authorize_request!(:clinic, :modify, :model=>clinic)
-        if clinic.update_attributes(params[:clinic].except(:api_license_id, :license_id))
+        if clinic.update_attributes(params[:clinic].except(:api_license_id))
           head :no_content
         else
           render json: clinic.errors, status: :unprocessable_entity
