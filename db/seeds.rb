@@ -191,6 +191,7 @@ for i in 0..5
 	u.password = 'pepepepe'
 	u.password_confirmation = 'pepepepe'
 	u.confirm!
+	u.api_license = ApiLicense.first
 	u.profiles << Profile.find_by_name('License administrator')
 	u.context = contexts[i%6]
 	u.assign_scopes_permissions

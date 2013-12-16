@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :exercise do
+    api_license
     title "MyString"
     description "MyString"
     owner nil
