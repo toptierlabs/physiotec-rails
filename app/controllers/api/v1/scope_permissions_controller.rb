@@ -9,7 +9,7 @@ module Api
 			# List all the scope_permissions
 			def index
 				authorize_request!(:permission, :read)
-					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes).group(:permission_id,:action_id)
+					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes)#.group(:permission_id,:action_id)
 					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 										permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}})
 						}
@@ -65,6 +65,7 @@ module Api
 				#The given scopes exists in the system
 				if (params[:scope_permission][:scopes].length != Scope.where(:id => params[:scope_permission][:scopes]).length)
 					render json: { :error => "Scopes not found." }, status: :unprocessable_entity
+				else
 					#Array with the id of scopes linked with @scope_permission
 					current_scopes = []
 					scope_permission_link = {}
@@ -92,14 +93,13 @@ module Api
 					end
 					add_scopes.each_with_index do |s, i|
 						update_scopes[i] = {scope_id: s}
-					end	
-
+					end
 					#{"0"=>{"scope_id"=>"", "_destroy"=>"0", "id"=>"66"}
 					formatted_params = params[:scope_permission].except(:scopes)
 					formatted_params[:scope_permission_group_scopes_attributes] = update_scopes
 
 					if @scope_permission.update_attributes( formatted_params )
-						render json: @scope_permission, status: :updated
+						head :no_content
 					else
 						render json: @scope_permission.errors, status: :unprocessable_entity
 					end
@@ -111,11 +111,11 @@ module Api
 			# The user and the permission will remain in the system
 			# PRECONDITIONS: The given permission must exist in the system.
 
-			def destroy					
+			def destroy
 				@scope_permission =ScopePermission.find(params[:id])
 				authorize_request!(:permission, :delete, @scope_permission)
 				if @scope_permission.destroy
-					render status: :no_content
+					head :no_content
 				else
 					render json: @scope_permission.errors, status: :unprocessable_entity
 				end
