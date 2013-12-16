@@ -3,7 +3,7 @@ class Scope < ActiveRecord::Base
   has_many :scope_permission_group_scopes, :dependent => :destroy
 
   #uniqueness of the name inside a scope group
-  validates :name, :uniqueness => { :scope => :scope_group_id }, :presence => true
+  validates :name, :uniqueness => { :scope => :scope_group_id }
   validates :name, :presence => true
 
   attr_accessible :name, :scope_group_id

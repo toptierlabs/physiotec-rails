@@ -33,6 +33,18 @@ module Api
         end
       end
 
+      # PUT /clinics/1
+      # PUT /clinics/1.json
+      def update        
+        clinic = Clinic.find(params[:id])
+        authorize_request!(:clinic, :modify, :model=>clinic)
+        if clinic.update_attributes(params[:clinic].except(:api_license_id, :license_id))
+          head :no_content
+        else
+          render json: clinic.errors, status: :unprocessable_entity
+        end
+      end
+
       # DELETE /clinics/1
       # DELETE /clinics/1.json
       def destroy        

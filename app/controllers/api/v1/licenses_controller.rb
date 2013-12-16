@@ -40,7 +40,7 @@ module Api
 				license = License.find(params[:id])
 				authorize_request!(:license, :modify, :model=>license)
 				if license.update_attributes(params[:license].except(:api_license_id))
-					render json: license, status: :updated
+					head :no_content
 				else
 					render json: license.errors, status: :unprocessable_entity
 				end

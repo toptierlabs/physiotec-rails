@@ -1,20 +1,17 @@
 class Profile < ActiveRecord::Base
 
 
-  attr_accessible :name, :profile_scope_permissions, :destination_profiles,
-                  #for nested compatibility
-                  :scope_permissions_attributes, :source_profiles, :profile_scope_permissions_attributes, :api_license_id
+  attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
+                  :destination_profiles_attributes, :scope_permissions_attributes, :source_profiles,
+                  :profile_scope_permissions_attributes, :api_license_id, :destination_profiles,
+                  :scope_permissions
 
   belongs_to :api_license
 
   has_many :profile_scope_permissions, :dependent => :destroy
   has_many :scope_permissions, :through => :profile_scope_permissions
-  # a profile may have multiple profiles, this relation is used when a
-  # new user is created, or a user wants to assign to another user a profile
 
-  has_many :profile_assignment
-  has_many :destination_profiles, :through => :profile_assignment
-
+  accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true
   # a profile may have multiple profiles, this relation is used when a
   # new user is created, or a user wants to assign to another user a profile
 
@@ -26,7 +23,6 @@ class Profile < ActiveRecord::Base
   validates :name, :api_license, :presence => true
   validates :name, :uniqueness => {:scope => :api_license_id}
 
-  accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true
 
   def permissions_pretty_list
   	ppl = []

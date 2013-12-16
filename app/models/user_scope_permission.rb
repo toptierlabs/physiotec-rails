@@ -32,11 +32,11 @@ class UserScopePermission < ActiveRecord::Base
         context_scope = UserScopePermission.context_value[record.scope_permission.context_scope.name.as_sym]
         context_user = nil
         if record.user.context.respond_to?(:clinic)
-          context_user = :clinic
+          context_user = UserScopePermission.context_value[:clinic]
         elsif record.user.context.respond_to?(:license)
-          context_user = :license
+          context_user = UserScopePermission.context_value[:license]
         elsif record.user.context.respond_to?(:api_license)
-          context_user = :api_licence
+          context_user = UserScopePermission.context_value[:api_licence]
         end
         if (context_scope != :own) && (context_scope < context_user)
           record.errors[:base] << "clinic scope must be greater than user's context"

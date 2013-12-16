@@ -115,6 +115,11 @@ profile_scope_permission = [["Author", "Exercise", "Create", ["Clinic"]],
 													 ["License administrator", "Profile", "Assign", ["License"]],
 													 ["License administrator", "Profile", "Unassign", ["License"]],
 
+													 ["License administrator", "Profile", "Create", ["Api License"]],
+													 ["License administrator", "Profile", "Read", ["Api License"]],
+													 ["License administrator", "Profile", "Modify", ["Api License"]],
+													 ["License administrator", "Profile", "Delete", ["Api License"]],
+
 													 ["License administrator", "Exercise", "Create", ["Own"]],
 													 ["License administrator", "Exercise", "Read", ["Clinic"]],
 													 ["License administrator", "Exercise", "Modify", ["License"]],

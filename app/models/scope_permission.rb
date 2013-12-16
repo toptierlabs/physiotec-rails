@@ -25,8 +25,6 @@ class ScopePermission < ActiveRecord::Base
 
   accepts_nested_attributes_for :scope_permission_group_scopes, :allow_destroy => true
 
-  #validates :permission_id, :uniqueness => {:scope => :scope_id}
-
   #can't be undefined
   validates :permission, :action, :presence => true
 
