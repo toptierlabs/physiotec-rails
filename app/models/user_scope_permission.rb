@@ -36,7 +36,7 @@ class UserScopePermission < ActiveRecord::Base
         elsif record.user.context.respond_to?(:license)
           context_user = UserScopePermission.context_value[:license]
         elsif record.user.context.respond_to?(:api_license)
-          context_user = UserScopePermission.context_value[:api_licence]
+          context_user = UserScopePermission.context_value[:api_license]
         end
         if (context_scope != :own) && (context_scope < context_user)
           record.errors[:base] << "clinic scope must be greater than user's context"

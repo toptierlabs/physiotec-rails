@@ -57,16 +57,16 @@ module Api
 				else
 					params[:user][:user_profiles] ||= []
 					profiles_to_add=[]
+					@user = User.new(params[:user].except(:user_profiles, :profiles))
+					@user.context = @api_license
+					@user.api_license = @api_license
+
 					params[:user][:user_profiles].each_with_index do |s, i|
-						authorize_request!(:profile, :assign, {:scopes=>[Profile.find_by_id(s).name.parameterize.underscore.to_sym]} )
-						profiles_to_add[i] = {profile_id: s}
+						profile = Profile.find(s)
+						authorize_request!(:profile, :assign, :scopes=>[profile.name.parameterize.underscore.to_sym] )
+						@user.profiles << profile
 					end 
 					#creates the formatted_params for correct profile assignation
-					formatted_params = params[:user].except(:user_profiles).except(:profiles)
-					formatted_params[:api_license_id] = @api_license.id
-					formatted_params[:user_profiles_attributes] = profiles_to_add
-
-					@user = User.new(formatted_params)
 					if @user.save
 						render json: @user, status: :created
 					else

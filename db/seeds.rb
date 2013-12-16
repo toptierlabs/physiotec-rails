@@ -43,8 +43,7 @@ end
 # Creates the scopes
 scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
 				 ["Spanish", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
-				 ["License", "Context"], ["Api License", "Context"], ["ScopeGroup", "Context"],
-				 ["Scope", "Context"], ["Scope", "Context"]]
+				 ["License", "Context"], ["Api License", "Context"]]
 
 scopes.each do | name, scope_group |
 	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
@@ -52,7 +51,8 @@ end
 
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
-												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"]]
+												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"],
+												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"]]
 
 permission_scope_group.each do | permission, scope_group |
 	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,

@@ -126,9 +126,9 @@ class User < ActiveRecord::Base
     permission = Permission.find_by_name(perm)
     action = Action.find_by_name(act)
     if permission == Permission.profile && ([Action.assign,Action.unassign].include? action)
-      sp = ScopePermission.new(permission_id: permission.id, action_id: action.id)
+      sp = []
       assignable_profiles.each do |v|
-        sp.scopes << Scope.new(name: v.name)
+        sp << Scope.new(name: v.name)
       end
       sp
     else

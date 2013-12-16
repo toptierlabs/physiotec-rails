@@ -8,7 +8,7 @@ class Scope < ActiveRecord::Base
 
   attr_accessible :name, :scope_group_id
 
-  before_destroy :clean_scope_group
+  after_destroy :clean_scope_group
 
   def name_as_sym #no test for nil
   	#returns a symbol representation of the string
@@ -18,7 +18,7 @@ class Scope < ActiveRecord::Base
   private
 
     def clean_scope_group
-      if self.scope_group.scopes.length == 1
+      if self.scope_group.scopes.length == 0
         self.scope_group.destroy
       end
     end
