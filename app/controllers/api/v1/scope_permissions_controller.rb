@@ -87,12 +87,15 @@ module Api
 					add_scopes = params[:scope_permission][:scopes] - current_scopes
 
 					update_scopes = {}
-					scope_permission_remove.each_with_index do |k, i|
+					i = 0
+					scope_permission_remove.each do |k|
 					#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
 						update_scopes[i] = {scope_id: k[0], _destroy: true, id: k[1]}
+						i = i + 1
 					end
-					add_scopes.each_with_index do |s, i|
+					add_scopes.each do |s|
 						update_scopes[i] = {scope_id: s}
+						i = i + 1
 					end
 					#{"0"=>{"scope_id"=>"", "_destroy"=>"0", "id"=>"66"}
 					formatted_params = params[:scope_permission].except(:scopes)

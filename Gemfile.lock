@@ -85,6 +85,13 @@ GEM
       railties (>= 3.0.0)
     formtastic (2.2.1)
       actionpack (>= 3.0)
+    haml (4.0.4)
+      tilt
+    haml-rails (0.4)
+      actionpack (>= 3.1, < 4.1)
+      activesupport (>= 3.1, < 4.1)
+      haml (>= 3.1, < 4.1)
+      railties (>= 3.1, < 4.1)
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -195,6 +202,7 @@ DEPENDENCIES
   devise (~> 3.1.1)
   factory_girl-seeds (~> 1.0.1)
   factory_girl_rails (~> 4.2.0)
+  haml-rails (~> 0.4)
   jquery-rails
   mysql2
   rails (= 3.2.13)

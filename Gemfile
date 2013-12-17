@@ -58,7 +58,7 @@ gem "activeadmin", "~> 0.6.2"
 gem "devise", "~> 3.1.1"
 
 #haml for views
-#gem "haml-rails", "~> 0.4"
+gem "haml-rails", "~> 0.4"
 
 
 #cancan for user permissions

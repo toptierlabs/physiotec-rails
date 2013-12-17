@@ -48,7 +48,7 @@ module Api
       # DELETE /clinics/1
       # DELETE /clinics/1.json
       def destroy        
-        @clinic = Permission.find(params[:id])
+        @clinic = Clinic.find(params[:id])
         authorize_request!(:clinic, :delete, :model=>@clinic)
         @clinic.destroy
         head :no_content
