@@ -31,7 +31,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-
+gem "orm_adapter", "~> 0.5.0"
 
 
 gem 'jquery-rails'
@@ -59,7 +59,7 @@ gem "activeadmin", "~> 0.6.2"
 gem "devise", "~> 3.1.1"
 
 #haml for views
-gem "haml-rails", "~> 0.4"
+#gem "haml-rails", "~> 0.4"
 
 
 #cancan for user permissions
