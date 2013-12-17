@@ -46,6 +46,6 @@ PhysiotecV3::Application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default :charset => "utf-8"
 
-  #config.threadsafe! unless $rails_rake_task
+  config.threadsafe! #unless $rails_rake_task
 
 end
