@@ -52,7 +52,7 @@ module Api
 					if @profile.save
 						render json: @profile, status: :created
 					else
-						render json: @profile.errors, status: :unprocessable_entity
+						render json: @profile.errors.full_messages, status: :unprocessable_entity
 					end
 				end
 			end
@@ -163,7 +163,7 @@ module Api
 				if @profile.update_attributes(formatted_params)
 					render json: @profile.as_json(:include=>:scope_permissions), status: :created
 				else
-					render json: @profile.errors.to_json, status: :unprocessable_entity
+					render json: @profile.errors.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -180,7 +180,7 @@ module Api
 				if @scope_permission.delete
 					head :no_content
 				else
-					render json: @scope_permission.errors, status: :unprocessable_entity
+					render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 

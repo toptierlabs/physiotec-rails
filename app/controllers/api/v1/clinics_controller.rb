@@ -29,7 +29,7 @@ module Api
         if @clinic.save
           render json: @clinic, status: :created
         else
-          render json: @clinic.errors, status: :unprocessable_entity
+          render json: @clinic.errors.full_messages, status: :unprocessable_entity
         end
       end
 
@@ -41,7 +41,7 @@ module Api
         if clinic.update_attributes(params[:clinic].except(:api_license_id))
           head :no_content
         else
-          render json: clinic.errors, status: :unprocessable_entity
+          render json: clinic.errors.full_messages, status: :unprocessable_entity
         end
       end
 

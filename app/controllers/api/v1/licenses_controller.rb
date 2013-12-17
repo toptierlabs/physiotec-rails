@@ -30,7 +30,7 @@ module Api
 				if license.save
 					render json: license, status: :created
 				else
-					render json: license.errors.to_json, status: :unprocessable_entity
+					render json: license.errors.full_messages, status: :unprocessable_entity
 				end        
 			end
 
@@ -42,7 +42,7 @@ module Api
 				if license.update_attributes(params[:license].except(:api_license_id))
 					head :no_content
 				else
-					render json: license.errors, status: :unprocessable_entity
+					render json: license.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -54,7 +54,7 @@ module Api
 				if @license.destroy
 					head :no_content
 				else
-					render json: @scope.errors, status: :unprocessable_entity
+					render json: @scope.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 

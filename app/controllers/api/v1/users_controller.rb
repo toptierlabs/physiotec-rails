@@ -132,7 +132,7 @@ module Api
 				if @selected_user.destroy
 					head :no_content
 				else
-					render json: @selected_user.errors, status: :unprocessable_entity
+					render json: @selected_user.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -160,7 +160,7 @@ module Api
 				elsif @profile.delete
 					head :no_content
 				else
-					render json: @profile.errors, status: :unprocessable_entity
+					render json: @profile.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -174,7 +174,7 @@ module Api
 				if @selected_user.update_attributes(formatted_params)
 					render json: @selected_user.as_json(:include=>:scope_permissions), status: :created
 				else
-					render json: @selected_user.errors.to_json, status: :unprocessable_entity
+					render json: @selected_user.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -191,7 +191,7 @@ module Api
 				elsif @scope_permission.delete
 					head :no_content
 				else
-					render json: @scope_permission.errors, status: :unprocessable_entity
+					render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 

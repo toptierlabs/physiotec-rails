@@ -47,7 +47,7 @@ module Api
 					if @permission.save
 						render json: @permission, status: :created
 					else
-						render json: @permission.errors, status: :unprocessable_entity
+						render json: @permission.errors.full_messages, status: :unprocessable_entity
 					end
 				end
 			end
@@ -60,7 +60,7 @@ module Api
 				if @permission.destroy
 					head :no_content
 				else
-					render json: @scope.errors, status: :unprocessable_entity
+					render json: @scope.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 

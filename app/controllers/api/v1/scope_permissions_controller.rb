@@ -101,7 +101,7 @@ module Api
 					if @scope_permission.update_attributes( formatted_params )
 						head :no_content
 					else
-						render json: @scope_permission.errors, status: :unprocessable_entity
+						render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
 					end
 				end
 
@@ -117,7 +117,7 @@ module Api
 				if @scope_permission.destroy
 					head :no_content
 				else
-					render json: @scope_permission.errors, status: :unprocessable_entity
+					render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
