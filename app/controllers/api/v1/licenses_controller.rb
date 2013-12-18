@@ -22,7 +22,7 @@ module Api
 
 			# POST /licenses
 			# POST /licenses.json
-			# Recieves #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone as params
+			# Recieves #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone as params, :company_name
 			def create
 				authorize_request!(:license, :create)
 				license = License.new(params[:license])
