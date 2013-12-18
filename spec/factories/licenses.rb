@@ -12,7 +12,7 @@ FactoryGirl.define do
     last_name "LastName"
     email { FactoryGirl.generate(:license_email) }
     phone "123321-3213123"
-    api_license
+    api_license ApiLicense.find_by_name('API test name')
   end
 end
 

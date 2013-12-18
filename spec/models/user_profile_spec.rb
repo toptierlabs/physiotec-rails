@@ -11,7 +11,7 @@ describe UserProfile do
   end
 
   it "should return an error if the profile is empty" do
-    expect( FactoryGirl.build(:user_profile, profile: nil) ).to have(1).error_on(:profile_id)
+    expect( FactoryGirl.build(:user_profile, profile: nil) ).to have(1).error_on(:profile)
   end
     
   it "should have a user" do
@@ -19,7 +19,7 @@ describe UserProfile do
   end
 
   it "should return an error if the scope group is empty" do
-    expect( FactoryGirl.build(:user_profile, user: nil) ).to have(1).error_on(:user_id)
+    expect( FactoryGirl.build(:user_profile, user: nil) ).to have(1).error_on(:user)
   end
 
   it "should be invalid if we have the same profile and user in two records" do

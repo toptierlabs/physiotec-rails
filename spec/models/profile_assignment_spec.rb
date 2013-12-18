@@ -11,7 +11,7 @@ describe ProfileAssignment do
   end
 
   it "should return an error if the profile is empty" do
-    expect( FactoryGirl.build(:profile_assignment, profile: nil) ).to have(1).error_on(:profile_id)
+    expect( FactoryGirl.build(:profile_assignment, profile: nil) ).to have(1).error_on(:profile)
   end
     
   it "should have a destinaton profile" do
@@ -19,6 +19,6 @@ describe ProfileAssignment do
   end
 
   it "should return an error if the destination profile is empty" do
-    expect( FactoryGirl.build(:profile_assignment, destination_profile: nil) ).to have(1).error_on(:destination_profile_id)
+    expect( FactoryGirl.build(:profile_assignment, destination_profile: nil) ).to have(1).error_on(:destination_profile)
   end
 end 

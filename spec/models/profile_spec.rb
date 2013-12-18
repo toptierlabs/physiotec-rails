@@ -18,7 +18,7 @@ describe Profile do
   end
 
   it "should return an error if the api_license is empty" do
-    expect(FactoryGirl.build(:profile, api_license: nil)).to have(1).error_on(:api_license_id)
+    expect(FactoryGirl.build(:profile, api_license: nil)).to have(1).error_on(:api_license)
   end
   
   it "should not be valid if we have another profile with the same name for the same api license" do

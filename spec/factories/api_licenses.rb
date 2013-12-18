@@ -4,7 +4,7 @@ FactoryGirl.define do
   end
 
   factory :api_license do
-    name { FactoryGirl.generate(:api_name) }
+    name "API test name" # { FactoryGirl.generate(:api_name) }
     description "Desc" 
   end 
 end 

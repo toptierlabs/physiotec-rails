@@ -19,7 +19,7 @@ describe UserScopePermission do
   end
 
   it "should return an error if the scope group is empty" do
-    expect( FactoryGirl.build(:user_scope_permission, user: nil) ).to have(1).error_on(:user_id)
+    expect( FactoryGirl.build(:user_scope_permission, user: nil) ).to have(1).error_on(:user)
   end
 
   it "should be invalid if we have the same profile and scope permission in two records" do

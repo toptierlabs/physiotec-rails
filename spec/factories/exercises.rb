@@ -2,10 +2,10 @@
 
 FactoryGirl.define do
   factory :exercise do
-    api_license
+    api_license ApiLicense.find_by_name('API test name')
+    context ApiLicense.find_by_name('API test name')
     title "MyString"
     description "MyString"
-    owner nil
-    association :context, factory: :clinic
+    association :owner, factory: :user
   end
 end

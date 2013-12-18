@@ -8,7 +8,8 @@ FactoryGirl.define do
 
   factory :clinic do
     name { FactoryGirl.generate(:clinic_name) }
-    api_license
     license
+    api_license ApiLicense.find_by_name('API test name')
+    
   end
 end

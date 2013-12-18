@@ -2,12 +2,13 @@
 
 FactoryGirl.define do
   factory :profile do
-  	api_license
     name "MyString"
+
+    api_license ApiLicense.find_by_name('API test name')
   end
 
   factory :destination_profile, class: Profile do
-  	api_license
     name "Other profile"
+    api_license ApiLicense.find_by_name('API test name')
   end
 end
