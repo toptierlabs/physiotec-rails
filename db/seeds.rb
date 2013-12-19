@@ -194,7 +194,6 @@ for i in 0..5
 	u.api_license = ApiLicense.first
 	u.profiles << Profile.find_by_name('License administrator')
 	u.context = contexts[i%6]
-	u.assign_scopes_permissions
 	u.save
 	users << u
 end

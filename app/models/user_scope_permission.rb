@@ -28,8 +28,10 @@ class UserScopePermission < ActiveRecord::Base
   class ScopeInContextValidator < ActiveModel::Validator
     def validate(record)
       #it should be a class      
-      if (record.scope_permission.present? && record.user.present? && record.user.context.present?)
+      if (record.scope_permission.present? && record.scope_permission.context_scope.present? &&
+        record.user.present? && record.user.context.present?)
         context_scope = UserScopePermission.context_value[record.scope_permission.context_scope.name.as_sym]
+        puts context_scope
         context_user = nil
         if record.user.context.respond_to?(:clinic)
           context_user = UserScopePermission.context_value[:clinic]
@@ -38,7 +40,8 @@ class UserScopePermission < ActiveRecord::Base
         elsif record.user.context.respond_to?(:api_license)
           context_user = UserScopePermission.context_value[:api_license]
         end
-        if (context_scope != :own) && (context_scope < context_user)
+        puts context_user
+        if (context_user < context_scope)
           record.errors[:base] << "clinic scope must be greater than user's context"
         end
       end
