@@ -2,6 +2,15 @@ ActiveAdmin.register ScopePermission do
   #menu :label => "Permissions"
   #navigation_menu :scope_permission
   #customization on new and edit profile pages
+
+  filter :permission
+  filter :action
+  filter :profiles
+  filter :user
+  filter :scopes
+  filter :created_at
+  filter :updated_at
+
   form do |f|
     f.inputs "Permission and Action" do
       f.input :permission    

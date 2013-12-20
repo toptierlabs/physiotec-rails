@@ -1,5 +1,10 @@
 ActiveAdmin.register Permission do
-  #menu :parent => "2. Permissions", :label => "Permissions"
+  filter :api_license
+  filter :scope_groups
+  filter :name
+  filter :model_name
+  filter :created_at
+  filter :updated_at
     
     #returns the scopes linked with the permission via the scope groups
     member_action :scopes, :method => :get do

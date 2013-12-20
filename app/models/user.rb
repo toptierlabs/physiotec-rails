@@ -72,6 +72,11 @@ class User < ActiveRecord::Base
 		confirmable
 	end
 
+	#name for activeadmin
+	def name
+		self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
+	end
+
 	#display name for ActiveAdmin
 	def datatype
 		self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
