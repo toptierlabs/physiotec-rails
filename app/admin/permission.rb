@@ -16,7 +16,9 @@ ActiveAdmin.register Permission do
   #customization on new and edit profile pages
   form do |f|
     f.inputs "Permission Attributes" do
-      f.input :name      
+      f.input :api_license
+      f.input :name
+      f.input :model_name
     end
 
     f.inputs "Permissions Scope Groups" do

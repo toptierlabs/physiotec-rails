@@ -61,7 +61,7 @@ end
 
 #Creation of profiles
 profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
-				"Patient", "License administrator", "Clinic Administrator"]
+				"Patient", "License administrator", "Clinic Administrator", "API Administrator"]
 
 profiles_list.each do | name |
 	Profile.create(name: name, api_license_id: ApiLicense.first.id)
@@ -70,61 +70,66 @@ end
 #Link scopes and permissions with a profile
 #[ Profile, Permission, Action, [ *Scope ] ]
 
-profile_scope_permission = [["Author", "Exercise", "Create", ["Clinic"]],
-													 ["Author", "Exercise", "Modify", ["Clinic"]],
-													 ["Author", "Exercise", "Delete", ["Own"]],
-													 ["Author", "Exercise", "Read", ["Clinic"]],
+profile_scope_permission = [
+														["Author", "Exercise", "Create", ["Clinic"]],
+														["Author", "Exercise", "Modify", ["Clinic"]],
+														["Author", "Exercise", "Delete", ["Own"]],
+														["Author", "Exercise", "Read", ["Clinic"]],
 
-													 ["Translator", "Translate", "Create", ["English", "French", "Own"]],
-													 ["Translator", "Translate", "Create", ["Portuguese", "Clinic"]],
-													 ["Translator", "Translate", "Create", ["Spanish", "License"]],
+														["Translator", "Translate", "Create", ["English", "French", "Own"]],
+														["Translator", "Translate", "Create", ["Portuguese", "Clinic"]],
+														["Translator", "Translate", "Create", ["Spanish", "License"]],
 
-													 ["License administrator", "License", "Create", ["Own"]],
-													 ["License administrator", "License", "Read", ["API License"]],
-													 ["License administrator", "License", "Modify", ["Own"]],
-													 ["License administrator", "License", "Delete", ["License"]],
+														["License administrator", "User", "Create", ["License"]],
+														["License administrator", "User", "Read", ["License"]],
+														["License administrator", "User", "Modify", ["License"]],
+														["License administrator", "User", "Delete", ["License"]],
+														["License administrator", "Clinic", "Create", ["License"]],
+														["License administrator", "Clinic", "Delete", ["License"]],
+														["License administrator", "Clinic", "Read", ["License"]],
+														["License administrator", "Clinic", "Modify", ["License"]],
+														["License administrator", "Profile", "Assign", ["License"]],
+														["License administrator", "Profile", "Unassign", ["License"]],
 
-													 ["License administrator", "User", "Create", ["License"]],
-													 ["License administrator", "User", "Read", ["Clinic"]],
-													 ["License administrator", "User", "Modify", ["Clinic"]],
-													 ["License administrator", "User", "Delete", ["Clinic"]],
+														["License administrator", "Exercise", "Create", ["License"]],
+														["License administrator", "Exercise", "Read", ["License"]],
+														["License administrator", "Exercise", "Modify", ["License"]],
+														["License administrator", "Exercise", "Delete", ["License"]],
 
-													 ["License administrator", "Permission", "Create", ["Api License"]],
-													 ["License administrator", "Permission", "Delete", ["Api License"]],
-													 ["License administrator", "Permission", "Read", ["Api License"]],
-													 ["License administrator", "Permission", "Modify", ["Api License"]],
+														["API Administrator", "License", "Create", ["API License"]],
+														["API Administrator", "License", "Read", ["API License"]],
+														["API Administrator", "License", "Modify", ["API License"]],
+														["API Administrator", "License", "Delete", ["API License"]],
+														["API Administrator", "Clinic", "Create", ["Api License"]],
+														["API Administrator", "Clinic", "Delete", ["Api License"]],
+														["API Administrator", "Clinic", "Read", ["Api License"]],
+														["API Administrator", "Clinic", "Modify", ["Api License"]],
+														["API Administrator", "User", "Create", ["Api License"]],
+														["API Administrator", "User", "Read", ["Api License"]],
+														["API Administrator", "User", "Modify", ["Api License"]],
+														["API Administrator", "User", "Delete", ["Api License"]],
+														["API Administrator", "Permission", "Create", ["Api License"]],
+														["API Administrator", "Permission", "Delete", ["Api License"]],
+														["API Administrator", "Permission", "Read", ["Api License"]],
+														["API Administrator", "Permission", "Modify", ["Api License"]],
+														["API Administrator", "Permission", "Assign", ["Api License"]],
+														["API Administrator", "Permission", "Unassign", ["Api License"]],
+														["API Administrator", "ScopeGroup", "Create", ["Api License"]],
+														["API Administrator", "ScopeGroup", "Delete", ["Api License"]],
+														["API Administrator", "ScopeGroup", "Read", ["Api License"]],
+														["API Administrator", "ScopeGroup", "Modify", ["Api License"]],
+														["API Administrator", "Scope", "Create", ["Api License"]],
+														["API Administrator", "Scope", "Delete", ["Api License"]],
+														["API Administrator", "Scope", "Read", ["Api License"]],
+														["API Administrator", "Scope", "Modify", ["Api License"]],
+														["API Administrator", "Profile", "Assign", ["License"]],
+														["API Administrator", "Profile", "Unassign", ["License"]],
+														["API Administrator", "Profile", "Create", ["Api License"]],
+														["API Administrator", "Profile", "Read", ["Api License"]],
+														["API Administrator", "Profile", "Modify", ["Api License"]],
+														["API Administrator", "Profile", "Delete", ["Api License"]]
+														]
 
-													 ["License administrator", "Permission", "Assign", ["Api License"]],
-													 ["License administrator", "Permission", "Unassign", ["Api License"]],
-
-													 ["License administrator", "ScopeGroup", "Create", ["Api License"]],
-													 ["License administrator", "ScopeGroup", "Delete", ["Api License"]],
-													 ["License administrator", "ScopeGroup", "Read", ["Api License"]],
-													 ["License administrator", "ScopeGroup", "Modify", ["Api License"]],
-
-													 ["License administrator", "Scope", "Create", ["Api License"]],
-													 ["License administrator", "Scope", "Delete", ["Api License"]],
-													 ["License administrator", "Scope", "Read", ["Api License"]],
-													 ["License administrator", "Scope", "Modify", ["Api License"]],
-
-													 ["License administrator", "Clinic", "Create", ["License"]],
-													 ["License administrator", "Clinic", "Delete", ["Clinic"]],
-													 ["License administrator", "Clinic", "Read", ["Clinic"]],
-													 ["License administrator", "Clinic", "Modify", ["License"]],
-
-													 ["License administrator", "Profile", "Assign", ["License"]],
-													 ["License administrator", "Profile", "Unassign", ["License"]],
-
-													 ["License administrator", "Profile", "Create", ["Api License"]],
-													 ["License administrator", "Profile", "Read", ["Api License"]],
-													 ["License administrator", "Profile", "Modify", ["Api License"]],
-													 ["License administrator", "Profile", "Delete", ["Api License"]],
-
-													 ["License administrator", "Exercise", "Create", ["Own"]],
-													 ["License administrator", "Exercise", "Read", ["Clinic"]],
-													 ["License administrator", "Exercise", "Modify", ["License"]],
-													 ["License administrator", "Exercise", "Delete", ["Api License"]]
-													 ]
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
 	#sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,
@@ -142,17 +147,22 @@ end
 
 #Creates the relationship between a profile and his destination profiles (profile assignment)
 
-profile_assignment = [["License administrator", "Clinic Administrator"],
-										 ["License administrator", "Author"],
-										 ["License administrator", "Translator"],
-										 ["License administrator", "Physiotherapist"],
-										 ["License administrator", "Media"],
-										 ["License administrator", "Patient"],
-										 ["License administrator", "License administrator"],
-										 ["Clinic Administrator", "Author"],
-										 ["Clinic Administrator", "Translator"],
-										 ["Clinic Administrator", "Physiotherapist"],
-										 ["Clinic Administrator", "Media"]]
+profile_assignment = [
+											["License administrator", "Clinic Administrator"],
+											["License administrator", "Author"],
+											["License administrator", "Translator"],
+											["License administrator", "Physiotherapist"],
+											["License administrator", "Media"],
+											["License administrator", "Patient"],
+											["License administrator", "License administrator"],
+											["Clinic Administrator", "Author"],
+											["Clinic Administrator", "Translator"],
+											["Clinic Administrator", "Physiotherapist"],
+											["Clinic Administrator", "Media"],
+											["API Administrator", "Clinic Administrator"],
+											["API Administrator", "License administrator"],
+											["API Administrator", "API Administrator"]
+										]
 
 profile_assignment.each do | profile, destination_profile |
 	ProfileAssignment.create(profile_id: Profile.find_by_name(profile).id,
@@ -161,12 +171,12 @@ end
 
 #Create a license
 l = License.new(maximum_clinics: 10, maximum_users: 100, first_name: 'test first name',
-	last_name: 'test name', email: 'mdehorta@toptierlabs.com', phone: '+59898335787')
+	last_name: 'test name', email: 'mdehorta@toptierlabs.com', phone: '+59898335787',company_name: "Company 1")
 l.api_license = ApiLicense.first
 l.save
 
 l2 = License.new(maximum_clinics: 10, maximum_users: 100, first_name: 'test first name 2',
-	last_name: 'test name 2', email: 'mdehorta2@toptierlabs.com', phone: '+59898335787')
+	last_name: 'test name 2', email: 'mdehorta2@toptierlabs.com', phone: '+59898335787',company_name: "Company 2")
 l2.api_license = ApiLicense.first
 l2.save
 
@@ -185,20 +195,29 @@ c3.save
 #Creates a default user
 
 users = []
-contexts = [c1,c2,c3, l, l2, ApiLicense.first]
+clinics = [c1,c2,c3, l, l2, ApiLicense.first]
+licenses = [l, l2]
 for i in 0..5
 	u = User.create(:email => "test-#{i+1}@toptierlabs.com",:api_license_id=>1, :first_name=> "Test User #{i+1}", :last_name=>'Dev')
 	u.password = 'pepepepe'
 	u.password_confirmation = 'pepepepe'
 	u.confirm!
 	u.api_license = ApiLicense.first
-	u.profiles << Profile.find_by_name('License administrator')
-	u.context = contexts[i%6]
+	if (i%3==0)
+		u.profiles << Profile.find_by_name('API Administrator')
+		u.context = ApiLicense.first
+	elsif (i%3==1)
+		u.profiles << Profile.find_by_name('License administrator')
+		u.context = licenses[i%licenses.length]
+	else
+		u.profiles << Profile.find_by_name('Clinic administrator')
+		u.context = clinics[i%clinics.length]
+	end
 	u.save
 	users << u
 end
 
-
+contexts = [c1,c2,c3, l, l2, ApiLicense.first]
 #Create exercises
 for i in 0..20
 	e = Exercise.new(title: "test exercise #{i+1}", description: 'test description', owner_id: users[i%5].id)

@@ -62,4 +62,8 @@ class Profile < ActiveRecord::Base
     res.uniq
   end
 
+  def self.api_license_administrator_profile
+    self.find_by_name("API Administrator")
+  end
+
 end

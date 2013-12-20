@@ -89,7 +89,7 @@ module Api
 					unauthorized = false
 
 					if !api_key.nil? && (!hash.nil? || AUTH_CONFIG['bypass_api_key_verification'])
-						api_license = ApiLicense.find_by_public_api_key(api_key)
+						api_license = ApiLicense.find_by_public_api_key(api_key.strip)
 						
 						# Check if bypass api verification is enabled
 						# check config/auth_config.yml and config/initializers/authentication.rb

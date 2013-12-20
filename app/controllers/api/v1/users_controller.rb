@@ -30,7 +30,7 @@ module Api
 			#POST /users/login
 			def login
 				#search the user by email
-				user = User.find_by_email(params[:email])
+				user = User.find_by_email(params[:email].strip)
 				#check if the recieved password matches the user password
 				if (user !=nil) && (user.valid_password?(params[:password]))
 					#creates a session token

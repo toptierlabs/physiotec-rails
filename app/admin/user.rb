@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-
+  menu :label => "API License Administrators"
   index do
     column :email
     column :api_license
@@ -59,16 +59,12 @@ ActiveAdmin.register User do
   #custom controller that creates the user with admin roles on the selected api_license
   controller do
 
-#     def create
-#      super do |format|
-#        user_profile = UserProfile.create(user: @user,
-#                                   profile: Profile.license_administrator_profile)
-#      end
-#    end
-#
+    def create
+      params[:user].merge!({context_id: params[:user][:api_license_id], context_type: ApiLicense.class.name})
+      params[:user].merge!({profile_ids: [Profile.api_license_administrator_profile.id]})
+      super
+    end
+
   end
 
 end
-
-  #belongs_to :api_license
-  #navigation_menu :api_license
