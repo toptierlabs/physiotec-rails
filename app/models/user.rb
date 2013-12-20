@@ -138,7 +138,6 @@ class User < ActiveRecord::Base
 
 		#called when a profile is removed from the user
 		def remove_scope_permissions(profile)
-			puts "entra"
 			p_sp = profile.scope_permission_ids
 			#scope_permissions associated with the user except those linked with the deleted profile
 			u_sp = self.profiles.where("scope_permission_id NOT IN (?)", p_sp).joins(:profile_scope_permissions)

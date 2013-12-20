@@ -52,7 +52,7 @@ end
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
 												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"],
-												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"]]
+												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"],["Permission", "Context"]]
 
 permission_scope_group.each do | permission, scope_group |
 	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,

@@ -38,15 +38,6 @@ class ScopePermission < ActiveRecord::Base
       end      
     end
   end
-
-    class ClinicScopeValidator < ActiveModel::Validator
-    def validate(record)
-      context_scope = record.context_scope
-      if (context_scope != nil)
-        record.errors[:base] << "user alredy has a clinic scope"
-      end
-    end
-  end
   
   #validates_with ClinicScopeValidator
   validates_with ScopesInScopeGroupsValidator

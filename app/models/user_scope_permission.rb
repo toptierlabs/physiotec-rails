@@ -12,8 +12,8 @@ class UserScopePermission < ActiveRecord::Base
   # uniqueness of the permission inside the same scope
   # validates :scope_permission_id, :uniqueness => {:scope => :user_id}
 
-  validates :scope_permission_id, :uniqueness => {:scope => :user_id}
-  validates :scope_permission, :user, :presence => true
+  #validates :scope_permission_id, :uniqueness => {:scope => :user_id}
+  #validates :scope_permission, :user, :presence => true
 
   class SameApiLicenseValidator < ActiveModel::Validator
     def validate(record)
@@ -31,6 +31,7 @@ class UserScopePermission < ActiveRecord::Base
       if (record.scope_permission.present? && record.scope_permission.context_scope.present? &&
         record.user.present? && record.user.context.present?)
         context_scope = UserScopePermission.context_value[record.scope_permission.context_scope.name.as_sym]
+        puts '-'*80
         puts context_scope
         context_user = nil
         if record.user.context.respond_to?(:clinic)
@@ -41,6 +42,7 @@ class UserScopePermission < ActiveRecord::Base
           context_user = UserScopePermission.context_value[:api_license]
         end
         puts context_user
+
         if (context_user < context_scope)
           record.errors[:base] << "clinic scope must be greater than user's context"
         end
@@ -48,19 +50,9 @@ class UserScopePermission < ActiveRecord::Base
     end
   end
 
-  class ClinicScopeValidator < ActiveModel::Validator
-    def validate(record)
-      if record.scope_permission.present?
-        context_scope = record.scope_permission.context_scope.name.as_sym
-        if (context_scope != :nil)
-          record.errors[:base] << "user alredy has a clinic scope"
-        end
-      end
-    end
-  end
 
-  validates_with SameApiLicenseValidator
-  validates_with ScopeInContextValidator
+  #validates_with SameApiLicenseValidator
+  #validates_with ScopeInContextValidator
 
   def datatype
     result = {}

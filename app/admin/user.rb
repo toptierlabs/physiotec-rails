@@ -3,7 +3,6 @@ ActiveAdmin.register User do
   index do
     column :email
     column :api_license
-    #column :name
     column 'Profiles' do |obj|
       ul do
         obj.profiles.each do | p |
@@ -41,18 +40,6 @@ ActiveAdmin.register User do
       f.input :last_name
     end
 
-    f.inputs "Profiles" do
-      f.has_many :user_profiles, :allow_destroy => true, :heading => 'Current Profiles', :new_record => true do |cf|
-        cf.input :profile
-      end
-    end
-
-    f.inputs "Permissions" do
-      f.has_many :user_scope_permissions, :allow_destroy => true, :heading => 'Permissions', :new_record => true do |cf|
-        cf.input :scope_permission
-      end
-    end
-
     f.actions
   end
 
@@ -60,9 +47,12 @@ ActiveAdmin.register User do
   controller do
 
     def create
-      params[:user].merge!({context_id: params[:user][:api_license_id], context_type: ApiLicense.class.name})
+      params[:user].merge!({context_id: params[:user][:api_license_id], context_type: ApiLicense.name})
       params[:user].merge!({profile_ids: [Profile.api_license_administrator_profile.id]})
-      super
+      super do |format|
+        puts '*'*80
+        puts @user.errors.to_json
+      end
     end
 
   end
