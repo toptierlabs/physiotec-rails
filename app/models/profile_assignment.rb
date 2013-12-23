@@ -5,6 +5,6 @@ class ProfileAssignment < ActiveRecord::Base
   attr_accessible :profile_id, :destination_profile_id
 
   validates :destination_profile_id, :uniqueness => {:scope => :profile_id}
-  #validates :profile, :destination_profile_id, :presence => true
+  validates :profile, :destination_profile_id, :presence => true
 
 end
