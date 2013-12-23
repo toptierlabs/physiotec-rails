@@ -2,7 +2,7 @@ class Exercise < ActiveRecord::Base
 	
   include AssignableHelper
 
-  translates :title, :short_title
+  translates :title, :short_title, :description
 
   has_many :assignments, :as => :assignable, dependent: :destroy
   has_many :exercise_illustrations, dependent: :destroy

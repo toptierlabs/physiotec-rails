@@ -104,16 +104,26 @@ ActiveRecord::Schema.define(:version => 20131223184134) do
 
   add_index "exercise_images", ["exercise_id"], :name => "index_exercise_images_on_exercise_id"
 
-  create_table "exercises", :force => true do |t|
+  create_table "exercise_translations", :force => true do |t|
+    t.integer  "exercise_id"
+    t.string   "locale",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "title"
+    t.string   "short_title"
     t.string   "description"
+  end
+
+  add_index "exercise_translations", ["exercise_id"], :name => "index_exercise_translations_on_exercise_id"
+  add_index "exercise_translations", ["locale"], :name => "index_exercise_translations_on_locale"
+
+  create_table "exercises", :force => true do |t|
     t.integer  "context_id"
     t.string   "context_type"
     t.integer  "owner_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.integer  "api_license_id"
-    t.string   "short_title"
     t.string   "code"
   end
 
