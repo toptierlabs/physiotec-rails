@@ -1,0 +1,59 @@
+module Api
+  module V1
+    
+    class ExercisesController < Api::V1::ApiController
+      before_filter :identify_user
+
+      # GET /exercises
+      # GET /exercises.json
+      def index
+        authorize_request!(:exercise, :read)
+        @exercises = Exercise.where(:api_license_id => @api_license.id)
+        render json: { exercises: @exercises.as_json }
+      end
+
+      # GET /exercises/1
+      # GET /exercises/1.json
+      def show
+        @exercise = Exercise.find(params[:id])
+        authorize_request!(:exercise, :read, :model=>@exercise)        
+        render json: @exercise
+      end
+
+      # POST /exercise
+      # POST /exercise.json
+      def create
+        authorize_request!(:exercise, :create)       
+        @exercise = Exercise.new(params[:exercise])
+        @exercise.api_license_id = @api_license.id
+        if @exercise.save
+          render json: @exercise, status: :created
+        else
+          render json: @exercise.errors.full_messages, status: :unprocessable_entity
+        end
+      end
+
+      # PUT /clinics/1
+      # PUT /clinics/1.json
+      def update        
+        clinic = Clinic.find(params[:id])
+        authorize_request!(:clinic, :modify, :model=>clinic)
+        if clinic.update_attributes(params[:clinic].except(:api_license_id))
+          head :no_content
+        else
+          render json: clinic.errors.full_messages, status: :unprocessable_entity
+        end
+      end
+
+      # DELETE /clinics/1
+      # DELETE /clinics/1.json
+      def destroy        
+        @clinic = Clinic.find(params[:id])
+        authorize_request!(:clinic, :delete, :model=>@clinic)
+        @clinic.destroy
+        head :no_content
+      end
+
+    end
+  end
+end

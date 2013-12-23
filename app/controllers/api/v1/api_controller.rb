@@ -62,6 +62,7 @@ module Api
 
 				def check_api_token(secret_key, string_to_convert, hash)
 					hash_verification = Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), secret_key, string_to_convert)).strip
+					Logger.info hash_verification
 					hash == hash_verification
 				end
 
