@@ -5,8 +5,8 @@ class Clinic < ActiveRecord::Base
 	belongs_to :license
 	belongs_to :api_license
 	#multiple associations with exercises
-	has_many :exercises, as: :context
-	has_many :users, as: :context
+	has_many :exercises, as: :context, :dependent => :destroy
+	has_many :users, as: :context, :dependent => :destroy
 
 	validates :name, :uniqueness => {:scope => :license_id}
 	validates :name, :license, :api_license, :presence => true

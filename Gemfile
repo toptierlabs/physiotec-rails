@@ -66,3 +66,5 @@ gem "haml-rails", "~> 0.4"
 
 # Amazon SES
 gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'
+
+gem 'globalize', '~> 3.0.2'

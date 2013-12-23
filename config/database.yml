@@ -2,7 +2,7 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: physiotec-develop
+  database: physiotec-develop-2
   pool: 5
   username: root
   password:

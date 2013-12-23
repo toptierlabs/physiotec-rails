@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131218160216) do
+ActiveRecord::Schema.define(:version => 20131223184134) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -77,13 +77,32 @@ ActiveRecord::Schema.define(:version => 20131218160216) do
 
   create_table "clinics", :force => true do |t|
     t.string   "name"
+    t.integer  "license_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
-    t.integer  "license_id"
     t.integer  "api_license_id"
   end
 
   add_index "clinics", ["api_license_id"], :name => "index_clinics_on_api_license_id"
+  add_index "clinics", ["license_id"], :name => "index_clinics_on_license_id"
+
+  create_table "exercise_illustrations", :force => true do |t|
+    t.integer  "exercise_id"
+    t.string   "illustration"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "exercise_illustrations", ["exercise_id"], :name => "index_exercise_illustrations_on_exercise_id"
+
+  create_table "exercise_images", :force => true do |t|
+    t.integer  "exercise_id"
+    t.string   "image"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "exercise_images", ["exercise_id"], :name => "index_exercise_images_on_exercise_id"
 
   create_table "exercises", :force => true do |t|
     t.string   "title"
@@ -94,8 +113,11 @@ ActiveRecord::Schema.define(:version => 20131218160216) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.integer  "api_license_id"
+    t.string   "short_title"
+    t.string   "code"
   end
 
+  add_index "exercises", ["api_license_id"], :name => "index_exercises_on_api_license_id"
   add_index "exercises", ["owner_id"], :name => "index_exercises_on_owner_id"
 
   create_table "licenses", :force => true do |t|

@@ -5,9 +5,9 @@ class License < ActiveRecord::Base
 
   belongs_to :api_license
   
-  has_many :exercises, as: :context
-  has_many :users, as: :context
-  has_many :clinics
+  has_many :exercises, as: :context, :dependent => :destroy
+  has_many :users, as: :context, :dependent => :destroy
+  has_many :clinics, :dependent => :destroy
 
   #model validations
   validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license,
