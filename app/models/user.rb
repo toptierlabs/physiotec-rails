@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
 		#called when a profile is added to the user
 		def set_scope_permissions(profile)
 			p_sp = profile.scope_permission_ids
-			u_sp = self.user_scope_permissions.where(scope_permission_id: p_sp).map{ |v| v.scope_permission_id}
+			u_sp = self.user_scope_permissions.where("scope_permission_id != ?", p_sp).map{ |v| v.scope_permission_id}
 			#scope_permisssions that it has to add
 			add_scope_permission_ids = p_sp - u_sp
 			self.scope_permissions << ScopePermission.where(id:add_scope_permission_ids)
