@@ -19,5 +19,10 @@ class Exercise < ActiveRecord::Base
   validates :title, :uniqueness => { :scope => :api_license_id }
   validates :code, :uniqueness => { :scope => :api_license_id }
 
+  def as_json(options={})
+    aux = super(options)
+    aux[:translations] = self.translations.as_json(except:[:id,:exercise_id,:created_at,:updated_at])
+    aux
+  end
 
 end
