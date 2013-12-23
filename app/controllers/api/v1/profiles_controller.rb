@@ -61,80 +61,18 @@ module Api
 			def update
 			# Creates a profile with the given params.
 			# The params must be in the following format:
-			#   { profile: { :scope_permissions=>[scope_permission_id],
+			#   { profile: { :abilities=>[ability_id],
 			#								 :destination_profiles:=>[:profile_id]
 			#                   :name => Sring} }
 				@profile = Profile.find(params[:id])
-				#authorize_request!(:profile, :modify, @profile)
-
-				current_profiles = []
-				current_link = {}
-				@profile.profile_assignment.each do | p |
-					current_profiles << p.destination_profile_id
-					current_link[p.destination_profile_id] = p.id
+				authorize_request!(:profile, :modify, @profile)
+				formatted_params = params[:profile].except(:abilities, :destination_profiles)
+				if params[:profile][:scope_permissions].present?
+					formatted_params[:scope_permission_ids] = params[:profile][:scope_permissions]
 				end
-
-				#get the profiles that must add
-				add_profiles = params[:profile][:destination_profiles] - current_profiles
-
-				#get the profiles that must delete
-				remove_profiles = current_profiles - params[:profile][:destination_profiles]
-
-				#profiles to remove
-				profiles_remove = {}
-				remove_profiles.each do | rp |
-					profiles_remove[rp] = current_link[rp] 
+				if params[:profile][:destination_profiles].present?
+					formatted_params[:destination_profile_ids] = params[:profile][:destination_profiles]
 				end
-				#create pretty params
-				update_profiles = {}
-				i = 0
-				profiles_remove.each do |k|
-					#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
-					update_profiles[i] = {destination_profile_id: k[0], _destroy: true, id: k[1]}
-					i += 1
-				end
-				add_profiles.each do |s|
-					update_profiles[i] = {destination_profile_id: s}
-					i += 1
-				end
-
-				current_scope_permissions = []
-				current_link_scope_permissions = {}
-				@profile.profile_scope_permissions.each do | p |
-					current_scope_permissions << p.scope_permission_id
-					current_link_scope_permissions[p.scope_permission_id] = p.id
-				end
-
-				#get the scope_permissions that must add
-				add_scope_permissions = params[:profile][:scope_permissions] - current_scope_permissions
-
-				#get the scope_permissions that must delete
-				remove_scope_permissions = current_scope_permissions - params[:profile][:scope_permissions]
-				#scope_permissions to remove
-				scope_permissions_remove = {}
-				remove_scope_permissions.each do | rp |
-					scope_permissions_remove[rp] = current_link_scope_permissions[rp] 
-				end
-				#create pretty params
-				update_scope_permissions = {}
-				i = 0
-				scope_permissions_remove.each do |k|
-				#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
-					update_scope_permissions[i] = {scope_permission_id: k[0], _destroy: true, id: k[1]}
-					i += 1
-				end
-				add_scope_permissions.each_with_index do |s|
-					update_scope_permissions[i] = {scope_permission_id: s}
-					i += 1
-				end
-
-				formatted_params = params[:profile].except(:scope_permissions,:destination_profiles)
-				formatted_params[:profile_assignment_attributes] = update_profiles
-				formatted_params[:profile_scope_permissions_attributes] = update_scope_permissions
-
-				puts formatted_params.to_json
-				puts current_profiles
-				puts '*'*80
 
 				if @profile.update_attributes(formatted_params)
 					head :no_content
@@ -142,6 +80,7 @@ module Api
 					render json: @profile.errors.full_messages, status: :unprocessable_entity
 				end
 			end
+
 
 			# DELETE /profiles/1
 			def destroy
