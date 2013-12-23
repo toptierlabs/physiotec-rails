@@ -33,24 +33,24 @@ module Api
         end
       end
 
-      # PUT /clinics/1
-      # PUT /clinics/1.json
+      # PUT /exercise/1
+      # PUT /exercise/1.json
       def update        
-        clinic = Clinic.find(params[:id])
-        authorize_request!(:clinic, :modify, :model=>clinic)
-        if clinic.update_attributes(params[:clinic].except(:api_license_id))
+        @exercise = Exercise.find(params[:id])
+        authorize_request!(:exercise, :modify, :model=>@exercise)
+        if @exercise.update_attributes(params[:exercise].except(:api_license_id))
           head :no_content
         else
-          render json: clinic.errors.full_messages, status: :unprocessable_entity
+          render json: @exercise.errors.full_messages, status: :unprocessable_entity
         end
       end
 
-      # DELETE /clinics/1
-      # DELETE /clinics/1.json
+      # DELETE /exercise/1
+      # DELETE /exercise/1.json
       def destroy        
-        @clinic = Clinic.find(params[:id])
-        authorize_request!(:clinic, :delete, :model=>@clinic)
-        @clinic.destroy
+        @exercise = Exercise.find(params[:id])
+        authorize_request!(:exercise, :delete, :model=>@exercise)
+        @exercise.destroy
         head :no_content
       end
 
