@@ -67,12 +67,8 @@ module Api
 				@profile = Profile.find(params[:id])
 				authorize_request!(:profile, :modify, @profile)
 				formatted_params = params[:profile].except(:abilities, :destination_profiles)
-				if params[:profile][:scope_permissions].present?
-					formatted_params[:scope_permission_ids] = params[:profile][:scope_permissions]
-				end
-				if params[:profile][:destination_profiles].present?
-					formatted_params[:destination_profile_ids] = params[:profile][:destination_profiles]
-				end
+				formatted_params[:scope_permission_ids] = [] || params[:profile][:scope_permissions]
+				formatted_params[:destination_profile_ids] = [] || params[:profile][:destination_profiles]
 
 				if @profile.update_attributes(formatted_params)
 					head :no_content
