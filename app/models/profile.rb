@@ -4,7 +4,7 @@ class Profile < ActiveRecord::Base
   attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
                   :destination_profiles_attributes, :scope_permissions_attributes, :source_profiles,
                   :profile_scope_permissions_attributes, :api_license_id, :destination_profiles,
-                  :scope_permissions
+                  :scope_permissions, :destination_profile_ids, :scope_permission_ids
 
   belongs_to :api_license
 

@@ -8,7 +8,7 @@ module Api
 			# GET /scope_groups.json
 			def index
 				authorize_request!(:scopegroup, :read)
-				@scope_groups = ScopeGroup.all(:include => :scopes)
+				@scope_groups = ScopeGroup.includes(:scopes).where(api_license_id: @api_license.id)
 				render json: {scope_groups: @scope_groups.as_json(:include => {:scopes=>{:only=>[:id,:name]}})}
 			end
 

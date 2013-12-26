@@ -9,7 +9,7 @@ module Api
 			# List all the scope_permissions
 			def index
 				authorize_request!(:permission, :read)
-					@scope_permissions = ScopePermission.includes(:action,:permission,:scopes)#.group(:permission_id,:action_id)
+					@scope_permissions = ScopePermission.joins(:action,:permission).where(:permissions=>{api_license_id: @api_license.id})
 					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 										permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}})
 						}
