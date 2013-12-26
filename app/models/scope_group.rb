@@ -19,7 +19,7 @@ class ScopeGroup < ActiveRecord::Base
   private
 
     def confirm_relation_with_permissions
-      if (self.permission_scope_group.length > 0)        
+      if self.permission_scope_group.blank?
         self.errors[:base] << "Can't delete a Scope Group unless it is not associated with any Permission"
         false
       end

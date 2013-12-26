@@ -129,7 +129,7 @@ module Api
 			# DELETE /users/1.json
 			def destroy
 				authorize_request!(:user, :delete, :model=>@selected_user)
-				if @current_user != @selected_user
+				if @current_user == @selected_user
 					render json: {error: "User cannot delete to himself"}, status: :unprocessable_entity
 				elsif @selected_user.destroy
 					head :no_content

@@ -39,4 +39,6 @@ ActiveAdmin.register ScopePermission do
     column :updated_at
     default_actions
   end
+
+
 end

@@ -1,5 +1,12 @@
 ActiveAdmin.register Profile do
 
+  filter :api_license
+  filter :profile_scope_permissions
+  filter :destination_profiles
+  filter :name
+  filter :created_at
+  filter :updated_at
+
     show do |profile|
       attributes_table do
         row :id
@@ -47,6 +54,7 @@ ActiveAdmin.register Profile do
   form do |f|
     f.inputs "Details" do
       f.input :name, :label => "Profile Name"
+      f.input :api_license
     end
     f.inputs "Profile Scopes" do
       f.has_many :profile_scope_permissions, :allow_destroy => true, :heading => 'Profile Scopes', :new_record => true do |cf|

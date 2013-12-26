@@ -1,4 +1,26 @@
 ActiveAdmin.register User do
+  filter :context_type
+  filter :context_id
+  filter :api_license
+  filter :scope_permissions
+  filter :clinics
+  filter :profiles
+  filter :first_name
+  filter :last_name
+  filter :email
+  filter :unconfirmed_email
+  filter :reset_password_sent_at
+  filter :current_sign_in_at
+  filter :last_sign_in_at
+  filter :reset_password_sent_at
+  filter :current_sign_in_ip
+  filter :last_sign_in_ip
+  filter :confirmed_at
+  filter :confirmation_sent_at
+  filter :session_token_created_at
+  filter :created_at
+  filter :updated_at
+
   menu :label => "API License Administrators"
   index do
     column :email
