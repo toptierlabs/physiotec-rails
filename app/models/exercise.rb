@@ -25,4 +25,13 @@ class Exercise < ActiveRecord::Base
     aux
   end
 
+  def translations=(val)
+    if val.first.class == Translation.class
+      super(val)
+    else
+      formatted_values = val.map{ |v| Translation.new(v) }
+      super(formatted_values)
+    end
+  end
+
 end
