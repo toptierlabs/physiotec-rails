@@ -27,33 +27,16 @@ module Api
 			#                   :name => Sring} }
 
 				authorize_request!(:profile, :create)
-				if (ScopePermission.where(id: params[:profile][:scope_permissions]).length != params[:profile][:scope_permissions].length)
-					render json: { :error => "Could not find all the given scope permissions." }, status: :unprocessable_entity
-				 else
-					scopes_to_add = []
-					params[:profile][:scope_permissions].each do |s|
-						scopes_to_add << {scope_permission_id: s}
-					end
+				formatted_params = params[:profile].except(:scope_permissions, :destination_profiles)
+				formatted_params[:scope_permission_ids] = []|| params[:profile][:scope_permissions]
+				formatted_params[:destination_profile_ids] = []|| params[:profile][:destination_profiles]
 
-					profiles_to_add = []
-					params[:profile][:destination_profiles].each do |v|
-						profiles_to_add << {destination_profile_id: v}
-					end 
-
-
-					#creates the formatted_params for correct creation of nested scope permissions
-					formatted_params = params[:profile].except(:scope_permissions,:destination_profiles)
-					formatted_params[:profile_scope_permissions_attributes] = scopes_to_add
-					formatted_params[:profile_assignment_attributes] = profiles_to_add
-					formatted_params[:api_license_id] = @api_license.id
-
-					@profile = Profile.new(formatted_params)
-					@profile.api_license_id = @api_license.id
-					if @profile.save
-						render json: @profile, status: :created
-					else
-						render json: @profile.errors.full_messages, status: :unprocessable_entity
-					end
+				@profile = Profile.new(formatted_params)
+				@profile.api_license_id = @api_license.id
+				if @profile.save
+					render json: @profile, status: :created
+				else
+					render json: @profile.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
@@ -66,7 +49,7 @@ module Api
 			#                   :name => Sring} }
 				@profile = Profile.find(params[:id])
 				authorize_request!(:profile, :modify, @profile)
-				formatted_params = params[:profile].except(:abilities, :destination_profiles)
+				formatted_params = params[:profile].except(:scope_permissions, :destination_profiles)
 				formatted_params[:scope_permission_ids] = []|| params[:profile][:scope_permissions]
 				formatted_params[:destination_profile_ids] = []|| params[:profile][:destination_profiles]
 
