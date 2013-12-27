@@ -26,6 +26,11 @@ class License < ActiveRecord::Base
     self
   end
 
+  #returns object class name, required for returning user's context
+  def entity
+    self.class.name
+  end
+
   private
 
     def validate_clinics

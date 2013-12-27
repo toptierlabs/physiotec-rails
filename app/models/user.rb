@@ -118,6 +118,18 @@ class User < ActiveRecord::Base
 		result
 	end
 
+	# returns all the contexts related to the user
+	def contexts
+		if self.context.class == Clinic
+			self.context
+		elsif self.context.class == License
+			[] << self.context.clinics << self.context
+		elsif self.context.class == ApiLicense
+			response = self.context.licenses.includes(:clinics)
+			response << response.map{ |v| v.clinics } << self.context
+		end
+	end
+
 	def abilities_by_permission_and_action(perm, act)
 		permission = Permission.find_by_name(perm)
 		action = Action.find_by_name(act)

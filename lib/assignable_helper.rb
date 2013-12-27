@@ -7,8 +7,6 @@ module AssignableHelper
 			scope_permission = user.scope_permission_for_read(permission)
 			context = scope_permission.context_scope.name.as_sym
 			where_condition = nil
-			puts context
-			puts '-'*80
 			if (context == :own)
 				where_condition = {owner_id: user.id}
 

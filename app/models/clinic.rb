@@ -23,4 +23,9 @@ class Clinic < ActiveRecord::Base
 		self.license
 	end
 
+  #returns object class name, required for returning user's context
+  def entity
+    self.class.name
+  end
+
 end

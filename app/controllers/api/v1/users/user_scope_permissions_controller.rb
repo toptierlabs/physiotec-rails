@@ -15,10 +15,14 @@ module Api
 				#List all the scope_permissions
 				def index
 					authorize_request!(:user, :read)
-					@scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
+					scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 
-					render json:  { scope_permissions: @scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
-													permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}) }
+					formatted_response = {scope_permissions: scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
+																permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}),
+																
+																user_context: @selected_user.contexts.as_json(only:[:id],:methods => :entity)}
+
+					render json: formatted_response
 
 				end
 

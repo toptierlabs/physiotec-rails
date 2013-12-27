@@ -15,19 +15,19 @@ class Exercise < ActiveRecord::Base
   attr_protected :owner, :api_license_id, :code
 
 
-  validates :title, :short_title, :api_license, :owner, :code, :presence => true
+  validates :title, :short_title, :api_license, :owner, :code, :description, :presence => true
   validates :title, :uniqueness => { :scope => :api_license_id }
   validates :code, :uniqueness => { :scope => :api_license_id }
 
   def as_json(options={})
-    aux = super(options)
+    aux = super(options).slice(:title, :short_title, :description)
     aux[:translations] = self.translations.as_json(except:[:id,:exercise_id,:created_at,:updated_at])
     aux[:translated_locales] = self.translated_locales
     aux
   end
 
   def translations=(val)
-    if val.first.class == Translation.class
+    if val.first.class == Translation
       super(val)
     else
       formatted_values = val.map{ |v| Translation.new(v) }
@@ -36,19 +36,19 @@ class Exercise < ActiveRecord::Base
   end
 
   def exercise_illustrations=(val)
-    if val.first.class == ExerciseIllustration.class
+    if val.first.class == ExerciseIllustration
       super(val)
     else
-      formatted_values = val.map{ |v| ExerciseIllustration.new(v.slice(:exercise_id), exercise: self) }
+      formatted_values = val.map{ |v| ExerciseIllustration.new(v.slice) }
       super(formatted_values)
     end
   end
 
   def exercise_images=(val)
-    if val.first.class == ExerciseImage.class
+    if val.first.class == ExerciseImage
       super(val)
     else
-      formatted_values = val.map{ |v| ExerciseImage.new(v.slice(:exercise_id), exercise: self) }
+      formatted_values = val.map{ |v| ExerciseImage.new(v) }
       super(formatted_values)
     end
   end
