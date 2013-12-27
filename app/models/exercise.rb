@@ -11,7 +11,8 @@ class Exercise < ActiveRecord::Base
   belongs_to :owner, :class_name => "User"
   belongs_to :context, :polymorphic=>true
 
-  attr_accessible :title, :short_title, :description, :exercise_illustrations, :exercise_images
+  attr_accessible :title, :short_title, :description, :exercise_illustrations, :exercise_images,
+                  :context_id, :context_type
   attr_protected :owner, :api_license_id, :code
 
 

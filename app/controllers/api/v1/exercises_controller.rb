@@ -26,6 +26,7 @@ module Api
         authorize_request!(:exercise, :create)       
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
+        @exercise.owner = @current_user
         if @exercise.save
           render json: @exercise, status: :created
         else
