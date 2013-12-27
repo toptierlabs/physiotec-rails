@@ -4,5 +4,6 @@ class ExerciseImage < ActiveRecord::Base
 	validates :exercise, :image, presence: :true
 
 	attr_accessible :exercise_id, :image
+	mount_uploader :image, ImageUploader
 
 end
