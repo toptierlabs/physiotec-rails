@@ -12,8 +12,8 @@ class Exercise < ActiveRecord::Base
   belongs_to :context, :polymorphic=>true
 
   attr_accessible :title, :short_title, :description, :exercise_illustrations, :exercise_images,
-                  :context_id, :context_type
-  attr_protected :owner, :api_license_id, :code
+                  :context_id, :context_type, :code
+  attr_protected :owner, :api_license_id
 
 
   validates :title, :short_title, :api_license, :owner, :code, :description, :presence => true
@@ -21,7 +21,7 @@ class Exercise < ActiveRecord::Base
   validates :code, :uniqueness => { :scope => :api_license_id }
 
   def as_json(options={})
-    aux = super(options).slice(:title, :short_title, :description)
+    aux = super(options).except(:title, :short_title, :description)
     aux[:translations] = self.translations.as_json(except:[:id,:exercise_id,:created_at,:updated_at])
     aux[:translated_locales] = self.translated_locales
     aux
@@ -31,7 +31,7 @@ class Exercise < ActiveRecord::Base
     if val.first.class == Translation
       super(val)
     else
-      formatted_values = val.map{ |v| Translation.new(v) }
+      formatted_values = val.map{ |v| self.translations.new(v.except(:exercise_id), exercise: self) }
       super(formatted_values)
     end
   end
