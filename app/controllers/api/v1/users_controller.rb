@@ -52,27 +52,21 @@ module Api
 				#if user can create another user
 				#new user from parameters
 				authorize_request!(:user, :create)
-				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
-					format.json { render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity }
-				else
-					params[:user][:user_profiles] ||= []
-					profiles_to_add=[]
-					@user = User.new(params[:user].except(:user_profiles, :profiles))
-					@user.context = @api_license
-					@user.api_license = @api_license
 
-					params[:user][:user_profiles].each_with_index do |s, i|
-						profile = Profile.find(s)
-						authorize_request!(:profile, :assign, :scopes=>[profile.name.parameterize.underscore.to_sym] )
-						@user.profiles << profile
-					end 
-					#creates the formatted_params for correct profile assignation
-					if @user.save
-						render json: @user, status: :created
-					else
-						render json: @user.errors.full_messages, status: :unprocessable_entity
-					end
+				formatted_params = params[:user].except(:user_profiles, :profiles)
+				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+				@user = User.new(formatted_params)
+				@user.api_license = @api_license
+				@user.context = @api_license
+
+				if @user.save
+					render json: @user, status: :created
+				else
+					puts '*'*80
+					puts 
+					render json: @user.errors.full_messages, status: :unprocessable_entity
 				end
+
 			end
 
 
@@ -80,48 +74,14 @@ module Api
 			# PUT /users/1.json
 			def update
 				authorize_request!(:user, :read, :model=>@selected_user)
-				if ((!params[:user][:user_profiles].nil?) && Profile.where(id: params[:user][:user_profiles]).length != params[:user][:user_profiles].length)
-					render json: { :error => "Could not find all the given profiles." }, status: :unprocessable_entity
+
+				formatted_params = params[:user].except(:user_profiles, :profiles)
+				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+
+				if @selected_user.update_attributes(formatted_params)
+					head :no_content
 				else
-					params[:user][:user_profiles] ||= []
-					current_profiles = []
-					current_link = {}
-
-					@selected_user.user_profiles.each do | p |
-						current_profiles << p.profile_id
-						current_link[p.profile_id] = p.id
-					end
-
-					#get the profiles that must add
-					#Scopes to add
-					add_profiles = params[:user][:user_profiles] - current_profiles
-
-					#get the profiles that must delete
-					remove_profiles = current_profiles - params[:user][:user_profiles]
-
-					#Scope_permission_group_scopes to remove
-					profiles_remove = {}
-					remove_profiles.each do | rp |
-						profiles_remove[rp] = current_link[rp] 
-					end
-					#create pretty params
-					update_profiles = {}
-					profiles_remove.each_with_index do |k, i|
-					#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
-						update_profiles[i] = {profile_id: k[0], _destroy: true, id: k[1]}
-					end
-					add_profiles.each_with_index do |s, i|
-						update_profiles[i] = {profile_id: s}
-					end	
-
-					formatted_params = params[:user].except(:user_profiles,:id)
-					formatted_params[:user_profiles_attributes] = update_profiles
-
-					if @selected_user.update_attributes(formatted_params)
-						head :no_content
-					else
-						render json: @selected_user.errors.full_messages, status: :unprocessable_entity
-					end
+					render json: @selected_user.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 

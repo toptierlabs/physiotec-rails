@@ -33,7 +33,8 @@ class User < ActiveRecord::Base
 	#a user may have many profiles, also it creates the user_scope_permissions
 	# for the user, given the profiles
 	has_many :user_profiles
-	has_many :profiles, :through => :user_profiles, before_add: :set_scope_permissions, before_remove: :remove_scope_permissions
+	has_many :profiles, :through => :user_profiles, before_add: :set_scope_permissions,
+																									before_remove: :remove_scope_permissions
 	accepts_nested_attributes_for :user_profiles, :allow_destroy => true
 
 	# Setup accessible (or protected) attributes
@@ -41,7 +42,7 @@ class User < ActiveRecord::Base
 									:first_name, :last_name, :api_license_id, :session_token,
 									:session_token_created_at, :profiles,
 									:user_profiles_attributes, :user_scope_permissions_attributes,
-									:context_id, :context_type, :profile_ids
+									:context_id, :context_type, :profile_ids, :user_profiles
 
 	#Set the method to create new session tokens
 	def new_session_token
@@ -166,6 +167,7 @@ class User < ActiveRecord::Base
 
 		#called when a profile is removed from the user
 		def remove_scope_permissions(profile)
+			puts profile
 			p_sp = profile.scope_permission_ids
 			#scope_permissions associated with the user except those linked with the deleted profile
 			u_sp = self.profiles.where("scope_permission_id NOT IN (?)", p_sp).joins(:profile_scope_permissions)
