@@ -20,7 +20,9 @@ module Api
 					formatted_response = {scope_permissions: scope_permissions.as_json(:include=>{action:{only:[:id, :name]},
 																permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}),
 																
-																user_context: @selected_user.contexts.as_json(only:[:id],:methods => :entity)}
+																user_context: { clinics: @selected_user.contexts(only: :clinic).as_json(only:[:id],:methods => :entity),
+																								licenses: @selected_user.contexts(only: :license).as_json(only:[:id],:methods => :entity),
+																								api_licenses: @selected_user.contexts(only: :api_license).as_json(only:[:id],:methods => :entity) }}
 
 					render json: formatted_response
 

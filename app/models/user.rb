@@ -91,8 +91,6 @@ class User < ActiveRecord::Base
 		self.user_scope_permissions.each do |psp|
 			ppl <<  psp.datatype
 		end
-		puts '/'*100
-		puts ppl.to_json
 		ppl
 	end
 
@@ -119,14 +117,24 @@ class User < ActiveRecord::Base
 	end
 
 	# returns all the contexts related to the user
-	def contexts
+	def contexts(params = nil)
 		if self.context.class == Clinic
-			self.context
+
+			[self.context] if params.blank? || (params[:only] == Clinic.name.as_sym)
 		elsif self.context.class == License
-			[] << self.context.clinics << self.context
+
+			response = []
+			response += self.context.clinics 	if params.blank? || (params[:only] == Clinic.name.as_sym)
+			response << self.context 					if params.blank? || (params[:only] == License.name.as_sym)
+			response
 		elsif self.context.class == ApiLicense
-			response = self.context.licenses.includes(:clinics)
-			response << response.map{ |v| v.clinics } << self.context
+
+			auxiliar = self.context.licenses.includes(:clinics)
+			response = []
+			response += auxiliar											if params.blank? || (params[:only] == License.name.as_sym)
+			response += auxiliar.map{ |v| v.clinics } if params.blank? || (params[:only] == Clinic.name.as_sym)
+			response << self.context 									if params.blank? || (params[:only] == ApiLicense.name.as_sym)
+			response
 		end
 	end
 
