@@ -17,18 +17,24 @@ class License < ActiveRecord::Base
   validates :email, :email => true
   validates :maximum_clinics, :maximum_users, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 
-  validate :validate_clinics
-  def validate_clinics
-    errors.add(:clinics, "too much") if clinics.length > maximum_clinics
-  end
+
+  validate :validate_clinics, :on => :update
 
   validate :validate_users
-  def validate_users
-    errors.add(:users, "too much") if users.length > maximum_users
-  end
-  
+
   def license
-  	self
+    self
   end
+
+  private
+
+    def validate_clinics
+      errors.add(:clinics, "too much") if (clinics.size + 1) > maximum_clinics
+    end
+
+    
+    def validate_users
+      errors.add(:users, "too much") if users.size > maximum_users
+    end
   
 end

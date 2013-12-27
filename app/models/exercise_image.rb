@@ -1,3 +1,8 @@
 class ExerciseImage < ActiveRecord::Base
-  attr_accessible :exercise_id, :image
+
+	belongs_to :exercise
+	validates :exercise, :image, presence: :true
+
+	attr_accessible :exercise_id, :image
+
 end
