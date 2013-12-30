@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 	validates :email, :email => true
 
 	validates :context, :associated => { :message => "reached maximum clinics" },
-											:if => lambda { (self.context_type == License.name) && self.license_id_changed? }
+											:if => lambda { (self.context_type == License.name) && (self.context_id_changed? && self.context_type_changed?) }
 
 	belongs_to :api_license
 	belongs_to :context, :polymorphic => true  

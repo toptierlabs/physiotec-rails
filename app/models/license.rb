@@ -1,4 +1,5 @@
 class License < ActiveRecord::Base
+  before_destroy :confirm_relation_with_clinics
 
   attr_accessible :email, :first_name, :last_name, :maximum_clinics, :maximum_users,
                   :phone, :company_name, :api_license_id
@@ -40,6 +41,13 @@ class License < ActiveRecord::Base
     
     def validate_users
       errors.add(:users, "too much") if users.size > maximum_users
+    end
+
+    def confirm_relation_with_clinics
+      if (self.clinics.length > 0)        
+        self.errors[:base] << "Can't delete a License unless it is not associated with any clinic"
+        false
+      end
     end
   
 end

@@ -54,7 +54,7 @@ module Api
 				if @license.destroy
 					head :no_content
 				else
-					render json: @scope.errors.full_messages, status: :unprocessable_entity
+					render json: @license.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
