@@ -31,7 +31,7 @@ class Exercise < ActiveRecord::Base
     if val.first.class == Translation
       super(val)
     else
-      formatted_values = val.map{ |v| self.translations.new(v.except(:exercise_id), exercise: self) }
+      formatted_values = val.map{ |v| Translation.new(v) }
       super(formatted_values)
     end
   end
@@ -40,7 +40,7 @@ class Exercise < ActiveRecord::Base
     if val.first.class == ExerciseIllustration
       super(val)
     else
-      formatted_values = val.map{ |v| ExerciseIllustration.new(v.slice) }
+      formatted_values = val.map{ |v| self.exercise_illustrations.new(v) }
       super(formatted_values)
     end
   end
@@ -49,8 +49,16 @@ class Exercise < ActiveRecord::Base
     if val.first.class == ExerciseImage
       super(val)
     else
-      formatted_values = val.map{ |v| ExerciseImage.new(v) }
+      formatted_values = val.map{ |v| self.exercise_images.new(v) }
       super(formatted_values)
+    end
+  end
+
+  def save
+    super
+    self.translations.each do |v|
+      v.exercise_id = self.id
+      v.save
     end
   end
 
