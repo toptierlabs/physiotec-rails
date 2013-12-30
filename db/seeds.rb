@@ -227,5 +227,12 @@ for i in 0..20
 	e.save
 end
 
+languages = [ ['en', 'English'], ['fr', 'French'], ['pt', 'Portuguese'], ['es', 'Spanish'] ] 
+
+languages.each do |v|
+	l = Language.new(locale: v[0], description: v[1] )
+	l.api_license = ApiLicense.first
+end
+
 
 # id, title, description, context_id, context_type, license_id, owner_id, created_at, updated_at
