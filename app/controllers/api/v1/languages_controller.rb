@@ -7,7 +7,7 @@ module Api
       # GET /languages
       # GET /languages.json
       def index
-        @languages = Language.where(:api_license_id => @api_license.id)
+        @languages = Language.on_api_license(@api_license.id)
         render json: { languages: @languages.as_json }
       end
 
