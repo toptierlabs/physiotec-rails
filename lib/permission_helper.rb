@@ -27,12 +27,8 @@ module PermissionHelper
 				elsif result && model.present? && (v.permission.model_name == model.class.name)
 					clinic_scope = v.context_scope.name.as_sym
 					if model.respond_to?(:clinic_scopes)
-						puts 'entra'
-						gets.chomp
 						puts model.clinic_scopes(self)
-						gets.chomp
 						puts v.context_scope.name.as_sym
-						gets.chomp
 						return model.clinic_scopes(self).include? v.context_scope.name.as_sym
 					else
 						return true
