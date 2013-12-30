@@ -30,4 +30,10 @@ class Exercise < ActiveRecord::Base
     aux
   end
 
+  class Translation
+    belongs_to :exercise
+    validates :locale, inclusion: { in: proc { |record| Language.locales_on_api_license(record.exercise.api_license) },
+              message: "%{value} is not a valid locale" }
+  end
+
 end

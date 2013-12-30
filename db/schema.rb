@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131223184134) do
+ActiveRecord::Schema.define(:version => 20131230165642) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -129,6 +129,16 @@ ActiveRecord::Schema.define(:version => 20131223184134) do
 
   add_index "exercises", ["api_license_id"], :name => "index_exercises_on_api_license_id"
   add_index "exercises", ["owner_id"], :name => "index_exercises_on_owner_id"
+
+  create_table "languages", :force => true do |t|
+    t.integer  "api_license_id"
+    t.string   "locale"
+    t.string   "description"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "languages", ["api_license_id"], :name => "index_languages_on_api_license_id"
 
   create_table "licenses", :force => true do |t|
     t.integer  "maximum_clinics"
