@@ -43,6 +43,7 @@ RSpec.configure do |config|
       DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
       FactoryGirl::SeedGenerator.create(:api_license)
+
       FactoryGirl::SeedGenerator.create(:scope_group, :name=>'Context')
     end
 
