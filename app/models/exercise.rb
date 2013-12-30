@@ -20,46 +20,14 @@ class Exercise < ActiveRecord::Base
   validates :title, :uniqueness => { :scope => :api_license_id }
   validates :code, :uniqueness => { :scope => :api_license_id }
 
+  attr_accessible :translations_attributes, :exercise_illustrations_attributes, :exercise_images_attributes
+  accepts_nested_attributes_for :translations, :exercise_illustrations, :exercise_images
+
   def as_json(options={})
     aux = super(options).except(:title, :short_title, :description)
     aux[:translations] = self.translations.as_json(except:[:id,:exercise_id,:created_at,:updated_at])
     aux[:translated_locales] = self.translated_locales
     aux
-  end
-
-  def translations=(val)
-    if val.first.class == Translation
-      super(val)
-    else
-      formatted_values = val.map{ |v| Translation.new(v) }
-      super(formatted_values)
-    end
-  end
-
-  def exercise_illustrations=(val)
-    if val.first.class == ExerciseIllustration
-      super(val)
-    else
-      formatted_values = val.map{ |v| self.exercise_illustrations.new(v) }
-      super(formatted_values)
-    end
-  end
-
-  def exercise_images=(val)
-    if val.first.class == ExerciseImage
-      super(val)
-    else
-      formatted_values = val.map{ |v| self.exercise_images.new(v) }
-      super(formatted_values)
-    end
-  end
-
-  def save
-    super
-    self.translations.each do |v|
-      v.exercise_id = self.id
-      v.save
-    end
   end
 
 end
