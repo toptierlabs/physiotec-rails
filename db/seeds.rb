@@ -41,8 +41,8 @@ scope_groups.each do | name, description |
 end
 
 # Creates the scopes
-scopes = [["English","Languages"], ["French", "Languages"], ["Portuguese", "Languages"],
-				 ["Spanish", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
+scopes = [["en","Languages"], ["fr", "Languages"], ["pt", "Languages"],
+				 ["es", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
 				 ["License", "Context"], ["Api License", "Context"]]
 
 scopes.each do | name, scope_group |
@@ -76,9 +76,9 @@ profile_scope_permission = [
 														["Author", "Exercise", "Delete", ["Own"]],
 														["Author", "Exercise", "Read", ["Clinic"]],
 
-														["Translator", "Translate", "Create", ["English", "French", "Own"]],
-														["Translator", "Translate", "Create", ["Portuguese", "Clinic"]],
-														["Translator", "Translate", "Create", ["Spanish", "License"]],
+														["Translator", "Translate", "Create", ["en", "fr", "Own"]],
+														["Translator", "Translate", "Create", ["pt", "Clinic"]],
+														["Translator", "Translate", "Create", ["es", "License"]],
 
 														["License administrator", "User", "Create", ["License"]],
 														["License administrator", "User", "Read", ["License"]],
@@ -205,6 +205,7 @@ for i in 0..5
 	u.api_license = ApiLicense.first
 	if (i%3==0)
 		u.profiles << Profile.find_by_name('API Administrator')
+		u.profiles << Profile.find_by_name('Translator')
 		u.context = ApiLicense.first
 	elsif (i%3==1)
 		u.profiles << Profile.find_by_name('License administrator')
