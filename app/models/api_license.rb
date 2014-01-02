@@ -5,8 +5,12 @@ class ApiLicense < ActiveRecord::Base
 
   attr_accessible :description, :name, :licenses
 
-  has_many :users, :dependent => :destroy
+  has_many :languages, :dependent => :destroy
+  has_many :users, :dependent => :destroy 
+  has_many :profiles, :dependent => :destroy
+  has_many :clinics, :dependent => :destroy
   has_many :licenses, :dependent => :destroy
+  has_many :exercises, :dependent => :destroy
 
   #Set the attributes validations
   validates :name, :description,

@@ -46,7 +46,7 @@ scope_groups = [["Languages", "A Group of different languages."],
 								["Context", "Privileges over the clinic."]]
 
 scope_groups.each do | name, description |
-	ScopeGroup.create(name: name, description: description, api_license_id: ApiLicense.first.id)
+	ScopeGroup.create(name: name, description: description)
 end
 
 # Creates the scopes
@@ -70,11 +70,12 @@ end
 
 #Creation of profiles
 profiles_list = [["Author", ApiLicense.first], ["Translator", ApiLicense.first], ["Physiotherapist", ApiLicense.first], ["Media", ApiLicense.first],
-				["Patient", ApiLicense.first], ["License administrator", nil], ["Clinic Administrator",  nil], ["API Administrator", nil]]
+				["Patient", ApiLicense.first], ["License administrator", nil, true], ["Clinic Administrator",  nil, true], ["API Administrator", nil, true]]
 
 profiles_list.each do | v |
 	p = Profile.new(name: v[0])
 	p.api_license = v[1]
+	p.protected = v[2]
 	p.save
 end
 
@@ -101,11 +102,21 @@ profile_scope_permission = [
 														["License administrator", "Clinic", "Modify", ["License"]],
 														["License administrator", "Profile", "Assign", ["License"]],
 														["License administrator", "Profile", "Unassign", ["License"]],
-
 														["License administrator", "Exercise", "Create", ["License"]],
 														["License administrator", "Exercise", "Read", ["License"]],
 														["License administrator", "Exercise", "Modify", ["License"]],
 														["License administrator", "Exercise", "Delete", ["License"]],
+
+														["Clinic administrator", "User", "Create", ["Clinic"]],
+														["Clinic administrator", "User", "Read", ["Clinic"]],
+														["Clinic administrator", "User", "Modify", ["Clinic"]],
+														["Clinic administrator", "User", "Delete", ["Clinic"]],
+														["Clinic administrator", "Profile", "Assign", ["Clinic"]],
+														["Clinic administrator", "Profile", "Unassign", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Read", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Modify", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
 
 														["API Administrator", "License", "Create", ["API License"]],
 														["API Administrator", "License", "Read", ["API License"]],

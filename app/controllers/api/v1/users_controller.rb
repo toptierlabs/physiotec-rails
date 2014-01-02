@@ -22,7 +22,7 @@ module Api
 			# GET /users/1.json
 			def show
 				@user = User.includes(:profiles).find(params[:id])
-				authorize_request!(:user, :read, :model=>@scope_group)
+				authorize_request!(:user, :read, :model=>@user)
 				render json: @user.as_json(:include=>{profiles:{only:[:id, :name]} })
 			end
 
@@ -37,7 +37,7 @@ module Api
 					session_token = user.new_session_token
 					render json: {token: session_token, user_id: user.id}, status: :created
 				else
-					render json: {:error => "Wrong user or password"}, status: 401 #nuauthorized
+					render json: {:error => "Wrong user or password"}, status: 401 #unauthorized
 				end
 			end
 

@@ -24,7 +24,12 @@ module Api
       # POST /exercise.json
       def create
         authorize_request!(:exercise, :create)
-        I18n.locale = params[:exercise][:translations_attributes].first[:locale]      
+
+        params[:exercise][:translations_attributes]each do |v|
+          authorize_request!(:exercise, :create, :scopes =>{language: v[:locale].as_sym})
+        end
+
+        I18n.locale = params[:exercise][:translations_attributes].first[:locale]
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
         @exercise.owner = @current_user

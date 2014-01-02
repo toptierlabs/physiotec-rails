@@ -17,8 +17,7 @@ class Exercise < ActiveRecord::Base
 
 
   validates :title, :short_title, :api_license, :owner, :code, :description, :presence => true
-  validates :title, :uniqueness => { :scope => :api_license_id }
-  validates :code, :uniqueness => { :scope => :api_license_id }
+  validates :title, :code, :uniqueness => { :scope => :api_license_id }
 
   attr_accessible :translations_attributes, :exercise_illustrations_attributes, :exercise_images_attributes
   accepts_nested_attributes_for :translations, :exercise_illustrations, :exercise_images
@@ -32,12 +31,12 @@ class Exercise < ActiveRecord::Base
 
   class Translation
     belongs_to :exercise
-    validates :locale, inclusion: { in: proc { |record| Language.locales_on_api_license(record.exercise.api_license) },
-              message: "%{value} is not a valid locale" }
+    # validates :locale, inclusion: { in: proc { |record| Language.locales_on_api_license(record.exercise.api_license) },
+    #          message: "%{value} is not a valid locale" }
 
-    def as_json(options={})
-      super(options) if self.id.present? 
-    end
+    # def as_json(options={})
+    #   super(options) if self.id.present? 
+    # end
 
   end
 

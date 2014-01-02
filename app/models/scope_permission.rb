@@ -65,13 +65,23 @@ class ScopePermission < ActiveRecord::Base
   def check_scopes(scopes)
     result = false
     # check the scopes: at least one scope of each scope_group must be in both sp from params and self
-    self_scope_groups = Hash[self.scopes
-      .select!{|v| v.scope_group_id != ScopeGroup.group_clinic_id}.map{ |v| {v.id => v.scope_group_id} }]
-    params_scope_groups = Hash[scopes
-      .select!{|v| v.scope_group_id != ScopeGroup.group_clinic_id}.map{ |v| {v.id => v.scope_group_id} }]
+    aux_self_sg = self.scopes.select!{|v| v.scope_group.id != ScopeGroup.group_clinic_id}
+    aux_params_sg = scopes.select!{|v| v.scope_group.id != ScopeGroup.group_clinic_id}
 
-    #params_scope_group must be contained in self_scope_groups
-    (params_scope_groups - self_scope_groups).length == 0
+    if aux_self_sg.present? && aux_params_sg.present?
+      self_scope_groups = Hash[aux_self_sg.map{ |v| {v.id => v.scope_group_id} }]
+      params_scope_groups = Hash[aux_params_sg.map{ |v| {v.id => v.scope_group_id} }]
+
+      #params_scope_group must be contained in self_scope_groups
+      puts '*'*80
+      puts self_scope_groups.to_yaml
+      puts params_scope_groups.to_yaml
+      gets
+      (params_scope_groups - self_scope_groups).length == 0
+    else
+      gets
+      false
+    end
   end
 
   def context_scope

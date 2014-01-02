@@ -1,5 +1,7 @@
 class Profile < ActiveRecord::Base
 
+  before_destroy :check_protection
+
   scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
 
   attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
@@ -66,5 +68,14 @@ class Profile < ActiveRecord::Base
   def self.api_license_administrator_profile
     self.find_by_name("API Administrator")
   end
+
+  private
+
+    def check_protection
+      if self.protected?
+        self.errors[:base] << "Profile protected against deletion"
+        false
+      end
+    end
 
 end

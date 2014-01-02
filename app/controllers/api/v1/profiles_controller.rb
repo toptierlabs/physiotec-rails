@@ -14,7 +14,7 @@ module Api
 			# GET /profiles/1
 			def show
 				@profile = Profile.includes(:destination_profiles,:scope_permissions=>[:action,:permission,:scopes]).find(params[:id])
-				authorize_request!(:profile, :read)
+				authorize_request!(:profile, :read, :model=>@profile)
 				render json: @profile.as_json(:include=>{:destination_profiles=>{},:scope_permissions=>{:include=>[:action,:permission,:scopes]}})
 			end
 
@@ -65,8 +65,11 @@ module Api
 			def destroy
 				@profile = Profile.find(params[:id])
 				authorize_request!(:profile, :delete)
-				@profile.destroy
-				head :no_content
+				if @profile.destroy
+					head :no_content
+				else
+					render json: @profile.errors.full_messages, status: :unprocessable_entity
+				end
 			end
 
 			# POST profiles/:id/assign_ability?scope_permission_id=9      
