@@ -218,8 +218,11 @@ for i in 0..5
 		u.profiles << Profile.find_by_name('API Administrator')
 		u.profiles << Profile.find_by_name('Translator')
 		u.context = ApiLicense.first
+
+
 	elsif (i%3==1)
 		u.profiles << Profile.find_by_name('License administrator')
+		u.profiles << Profile.find_by_name('Translator')
 		u.context = licenses[i%licenses.length]
 	else
 		u.profiles << Profile.find_by_name('Clinic administrator')

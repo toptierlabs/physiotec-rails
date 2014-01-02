@@ -7,7 +7,7 @@ module Api
 			# GET /profiles
 			def index
 				authorize_request!(:profile, :read)
-				@profiles = Profile.includes(:scope_permissions).on_api_license(@api_license.id)
+				@profiles = Profile.includes(:scope_permissions).on_api_license(@api_license)
 				render json: { profiles: @profiles.as_json(:include=>:scope_permissions) }
 			end
 

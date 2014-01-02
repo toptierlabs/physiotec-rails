@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
 
 	include PermissionHelper
 
+	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
+
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :registerable,

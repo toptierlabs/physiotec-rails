@@ -8,7 +8,7 @@ module Api
 			# GET /permissions.json
 			def index
 				authorize_request!(:permission, :read)
-				@permissions = Permission.where(:api_license_id => @api_license.id)
+				@permissions = Permission.includes(:scope_groups).all
 				render json: {permissions: @permissions.as_json(:include => :scope_groups)}
 			end
 

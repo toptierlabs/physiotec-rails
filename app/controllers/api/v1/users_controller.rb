@@ -14,7 +14,7 @@ module Api
 			# GET /users
 			# GET /users.json
 			def index
-				@users = User.where(api_license_id: @api_license.id)
+				@users = User.on_api_license(@api_license)
 				render json:  { users: @users.as_json }
 			end
 
@@ -29,10 +29,10 @@ module Api
 
 			#POST /users/login
 			def login
-				#search the user by email
-				user = User.find_by_email(params[:email].strip)
+				#search the user by email and api_license
+				user = User.where(email: params[:email], api_license_id: @api_license.id).first
 				#check if the recieved password matches the user password
-				if (user !=nil) && (user.valid_password?(params[:password]))
+				if (user.present?) && (user.valid_password?(params[:password]))
 					#creates a session token
 					session_token = user.new_session_token
 					render json: {token: session_token, user_id: user.id}, status: :created

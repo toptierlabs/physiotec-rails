@@ -1,4 +1,7 @@
 class License < ActiveRecord::Base
+
+  scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
+
   before_destroy :confirm_relation_with_clinics
 
   attr_accessible :email, :first_name, :last_name, :maximum_clinics, :maximum_users,

@@ -8,7 +8,7 @@ module Api
       # GET /clinics.json
       def index
         authorize_request!(:clinic, :read)
-        @clinics = Clinic.where(:api_license_id => @api_license.id)
+        @clinics = Clinic.on_api_license(@api_license)
         render json: { clinics: @clinics.as_json }
       end
 
