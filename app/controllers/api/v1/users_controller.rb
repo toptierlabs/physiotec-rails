@@ -73,7 +73,7 @@ module Api
 			# PUT /users/1
 			# PUT /users/1.json
 			def update
-				authorize_request!(:user, :read, :model=>@selected_user)
+				#authorize_request!(:user, :modify, :model=>@selected_user)
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []

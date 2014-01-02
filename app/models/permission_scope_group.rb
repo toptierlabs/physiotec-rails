@@ -8,4 +8,8 @@ class PermissionScopeGroup < ActiveRecord::Base
   validates :permission_id, :uniqueness => {:scope => :scope_group_id}
   validates :permission, :scope_group, :presence => true, :on => :update
 
+  def to_s
+  	self.class.name
+  end
+
 end

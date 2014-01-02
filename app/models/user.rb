@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :registerable,
-				 :recoverable, :trackable, :validatable, :confirmable#, :rememberable
+				 :recoverable, :trackable, :confirmable,#, :rememberable, :validatable
+				 request_keys: [:api_license_id]
 
 	#Set the attributes validations
 	validates :email, :first_name, :last_name, :api_license, :context,
@@ -14,6 +15,8 @@ class User < ActiveRecord::Base
 	validates :session_token, :uniqueness => true, :allow_blank => true
 
 	validates :email, :email => true
+
+	validates :email, :uniqueness => {:scope => :api_license_id}
 
 	validates :context, :associated => { :message => "reached maximum clinics" },
 											:if => lambda { (self.context_type == License.name) && (self.context_id_changed? && self.context_type_changed?) }
@@ -102,7 +105,7 @@ class User < ActiveRecord::Base
 				res.concat(p.assignable_profiles)
 		end
 		#remove duplicate elements with uniq
-		res.uniq
+		#res.uniq
 	end
 
 	def scope_permission_for_read(permission)
@@ -153,6 +156,10 @@ class User < ActiveRecord::Base
 			.where(actions:{name: action.name},permissions:{name: permission.name})
 		end
 	end
+
+  def self.find_for_authentication(warden_conditions)
+    where(:email => warden_conditions[:email], :api_license_id => warden_conditions[:api_license_id]).first
+  end
 
 	private
 

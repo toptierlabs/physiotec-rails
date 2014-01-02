@@ -7,7 +7,7 @@ module Api
       # GET /languages
       # GET /languages.json
       def index
-        @languages = Language.on_api_license(@api_license.id)
+        @languages = Language.on_api_license(@api_license)
         render json: { languages: @languages.as_json }
       end
 

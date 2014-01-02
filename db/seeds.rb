@@ -4,7 +4,6 @@
 # Create a default user if there isn't any 
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
-
 #Initialize the actions
 actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign"]
 
@@ -15,7 +14,15 @@ end
 #Creates the default api license
 ApiLicense.create(name: "Test API License", description: "Test License")
 
+# Creates languages
 
+languages = [["en","English", nil], ["es","Spanish", ApiLicense.first], ["pt","Portuguese",ApiLicense.first], ["fr","French",ApiLicense.first]]
+
+languages.each do |v|
+	l = Language.new(locale: v[0], description: v[1])
+	l.api_license = v[2]
+	l.save
+end
 
 # Creates the permissions
 permissions = [ ["Translate", Exercise.name],
@@ -29,7 +36,7 @@ permissions = [ ["Translate", Exercise.name],
 								["Profile", Profile.name]]
 
 permissions.each do | name, model |
-	Permission.create(name: name, model_name: model, api_license_id: ApiLicense.first.id,)
+	Permission.create(name: name, model_name: model)
 end
 
 # Creates the scope groups
@@ -60,11 +67,13 @@ permission_scope_group.each do | permission, scope_group |
 end
 
 #Creation of profiles
-profiles_list = ["Author", "Translator", "Physiotherapist", "Media",
-				"Patient", "License administrator", "Clinic Administrator", "API Administrator"]
+profiles_list = [["Author", ApiLicense.first], ["Translator", ApiLicense.first], ["Physiotherapist", ApiLicense.first], ["Media", ApiLicense.first],
+				["Patient", ApiLicense.first], ["License administrator", nil], ["Clinic Administrator",  nil], ["API Administrator", nil]]
 
-profiles_list.each do | name |
-	Profile.create(name: name, api_license_id: ApiLicense.first.id)
+profiles_list.each do | v |
+	p = Profile.new(name: v[0])
+	p.api_license = v[1]
+	p.save
 end
 
 #Link scopes and permissions with a profile
@@ -128,7 +137,7 @@ profile_scope_permission = [
 														["API Administrator", "Profile", "Read", ["Api License"]],
 														["API Administrator", "Profile", "Modify", ["Api License"]],
 														["API Administrator", "Profile", "Delete", ["Api License"]]
-														]
+													]
 
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |

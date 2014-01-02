@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131230165642) do
+ActiveRecord::Schema.define(:version => 20140102165810) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -176,13 +176,10 @@ ActiveRecord::Schema.define(:version => 20131230165642) do
 
   create_table "permissions", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-    t.integer  "api_license_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.string   "model_name"
   end
-
-  add_index "permissions", ["api_license_id"], :name => "index_permissions_on_api_license_id"
 
   create_table "profile_assignments", :force => true do |t|
     t.integer  "profile_id"
@@ -309,7 +306,7 @@ ActiveRecord::Schema.define(:version => 20131230165642) do
   add_index "users", ["confirmation_token"], :name => "index_api_license_admins_on_confirmation_token", :unique => true
   add_index "users", ["context_id"], :name => "index_users_on_context_id"
   add_index "users", ["context_type"], :name => "index_users_on_context_type"
-  add_index "users", ["email"], :name => "index_api_license_admins_on_email", :unique => true
+  add_index "users", ["email", "api_license_id"], :name => "index_users_on_email_and_api_license_id", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_api_license_admins_on_reset_password_token", :unique => true
   add_index "users", ["session_token"], :name => "index_users_on_session_token"
 

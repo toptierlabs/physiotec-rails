@@ -1,5 +1,5 @@
 class String
   def as_sym
-    self.underscore.parameterize.to_sym
+    self.parameterize.underscore.to_sym
   end
 end

@@ -34,6 +34,11 @@ class Exercise < ActiveRecord::Base
     belongs_to :exercise
     validates :locale, inclusion: { in: proc { |record| Language.locales_on_api_license(record.exercise.api_license) },
               message: "%{value} is not a valid locale" }
+
+    def as_json(options={})
+      super(options) if self.id.present? 
+    end
+
   end
 
 end

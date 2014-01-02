@@ -9,7 +9,8 @@ class UserProfile < ActiveRecord::Base
 
   class SameApiLicenseValidator < ActiveModel::Validator
     def validate(record)
-      if (record.profile.present? && record.user.present?)
+      if (record.profile.present? && record.user.present?) &&
+        (record.profile.api_license_id.present? && record.user.api_license_id.present?)
         if record.profile.api_license_id != record.user.api_license_id
           record.errors[:base] << "must be in the same ApiLicense"
         end

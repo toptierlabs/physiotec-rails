@@ -1,12 +1,13 @@
 class Profile < ActiveRecord::Base
 
+  scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
 
   attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
                   :destination_profiles_attributes, :scope_permissions_attributes, :source_profiles,
-                  :profile_scope_permissions_attributes, :api_license_id, :destination_profiles,
+                  :profile_scope_permissions_attributes, :destination_profiles,
                   :scope_permissions, :destination_profile_ids, :scope_permission_ids
 
-  belongs_to :api_license
+  belongs_to :api_license#, :unless => lambda { self.api_license_id.blank? }
 
   has_many :profile_scope_permissions, :dependent => :destroy
   has_many :scope_permissions, :through => :profile_scope_permissions
@@ -20,7 +21,7 @@ class Profile < ActiveRecord::Base
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
   
-  validates :name, :api_license, :presence => true
+  validates :name, :presence => true
   validates :name, :uniqueness => {:scope => :api_license_id}
 
 

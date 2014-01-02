@@ -7,4 +7,10 @@ class AdminUser < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
   # attr_accessible :title, :body
+
+	#active admin, devise authentication_keys issue fix
+	def self.authentication_keys
+		[:email]
+	end
+
 end
