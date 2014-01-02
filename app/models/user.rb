@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
 				res.concat(p.assignable_profiles)
 		end
 		#remove duplicate elements with uniq
-		#res.uniq
+		res.uniq
 	end
 
 	def scope_permission_for_read(permission)
