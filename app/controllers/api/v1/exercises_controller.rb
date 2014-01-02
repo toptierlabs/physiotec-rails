@@ -23,10 +23,12 @@ module Api
       # POST /exercise
       # POST /exercise.json
       def create
-        authorize_request!(:exercise, :create)       
+        authorize_request!(:exercise, :create)
+        I18n.locale = params[:exercise][:translations_attributes].first[:locale]      
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
         @exercise.owner = @current_user
+        I18n.locale = :en
         if @exercise.save
           render json: @exercise, status: :created
         else
