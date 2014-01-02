@@ -12,7 +12,9 @@ actions.each do | action |
 end
 
 #Creates the default api license
-ApiLicense.create(name: "Test API License", description: "Test License")
+api_lic = ApiLicense.create(name: "Test API License", description: "Test License")
+api_lic.public_api_key = "PUBLIC_KEY"
+api_lic.public_api_key = "SECRET_KEY"
 
 # Creates languages
 

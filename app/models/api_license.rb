@@ -3,7 +3,7 @@ class ApiLicense < ActiveRecord::Base
   #Generates api keys before the model is created
   before_validation :generate_api_keys, :on => :create
 
-  attr_accessible :description, :name, :public_api_key, :secret_api_key, :licenses
+  attr_accessible :description, :name, :licenses
 
   has_many :users, :dependent => :destroy
   has_many :licenses, :dependent => :destroy
