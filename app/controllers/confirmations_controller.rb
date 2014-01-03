@@ -4,7 +4,7 @@ class ConfirmationsController < Devise::ConfirmationsController
   def show
     self.resource = resource_class.find_by_unhashed_confirmation_token(params[:confirmation_token]) if params[:confirmation_token].present?
     #super if resource.nil? or resource.confirmed?
-    redirect_to "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html" if resource.nil? or resource.confirmed?
+    redirect_to COMMON_OPTIONS['physiotec-common-url'] if resource.id.nil? or resource.confirmed?
   end
 
   def confirm
