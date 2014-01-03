@@ -49,6 +49,7 @@ module Api
         params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate, :modify, scopes: [v[:locale].as_sym], model: @exercise)
         end
+        @exercise
         if @exercise.update_attributes(params[:exercise].except(:api_license_id))
           head :no_content
         else

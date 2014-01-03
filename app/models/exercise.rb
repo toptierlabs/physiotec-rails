@@ -2,6 +2,8 @@ class Exercise < ActiveRecord::Base
 	
   include AssignableHelper
 
+  before_update :clear_exercise_translations
+
   translates :title, :short_title, :description
 
   has_many :assignments, :as => :assignable, dependent: :destroy
@@ -31,13 +33,12 @@ class Exercise < ActiveRecord::Base
 
   class Translation
     belongs_to :exercise
-    # validates :locale, inclusion: { in: proc { |record| Language.locales_on_api_license(record.exercise.api_license) },
-    #          message: "%{value} is not a valid locale" }
-
-    # def as_json(options={})
-    #   super(options) if self.id.present? 
-    # end
-
   end
+
+  private
+
+    def clear_exercise_translations
+      self.translations.clear
+    end
 
 end

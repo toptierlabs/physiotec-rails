@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
 									:first_name, :last_name, :api_license_id, :session_token,
 									:session_token_created_at, :profiles,
 									:user_profiles_attributes, :user_scope_permissions_attributes,
-									:context_id, :context_type, :profile_ids, :user_profiles
+									:context_id, :context_type, :profile_ids, :user_profiles, :scope_permission_ids
 
 	#Set the method to create new session tokens
 	def new_session_token
