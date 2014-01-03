@@ -7,7 +7,7 @@ class Profile < ActiveRecord::Base
   attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
                   :destination_profiles_attributes, :scope_permissions_attributes, :source_profiles,
                   :profile_scope_permissions_attributes, :destination_profiles,
-                  :scope_permissions, :destination_profile_ids, :scope_permission_ids
+                  :scope_permissions, :destination_profile_ids, :scope_permission_ids, :api_license_id
 
   belongs_to :api_license#, :unless => lambda { self.api_license_id.blank? }
 

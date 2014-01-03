@@ -22,6 +22,7 @@ class ProfileAssignment < ActiveRecord::Base
 
   	def assign_protection
   		self.protected = self.profile.protected?
+      true
   	end
 
 end

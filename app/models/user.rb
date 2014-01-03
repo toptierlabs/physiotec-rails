@@ -100,6 +100,10 @@ class User < ActiveRecord::Base
 		ppl
 	end
 
+	def api_administrator?
+		self.profiles.where(id: Profile.api_license_administrator_profile.id).present?
+	end
+
 
 	def assignable_profiles
 		res = []
@@ -144,9 +148,7 @@ class User < ActiveRecord::Base
 		end
 	end
 
-	def abilities_by_permission_and_action(perm, act)
-		permission = Permission.find_by_name(perm)
-		action = Action.find_by_name(act)
+	def abilities_by_permission_and_action(permission, action)
 		if permission == Permission.profile && ([Action.assign,Action.unassign].include? action)
 			sp = []
 			assignable_profiles.each do |v|

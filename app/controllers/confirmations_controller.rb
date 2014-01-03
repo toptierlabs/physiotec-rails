@@ -20,7 +20,11 @@ class ConfirmationsController < Devise::ConfirmationsController
       # self.resource = resource_class.confirm_by_token(params[resource_name][:confirmation_token])
       set_flash_message :notice, :confirmed
       #sign_in_and_redirect(resource_name, resource)
-      redirect_to "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"
+      if self.resource.api_administrator?
+        redirect_to COMMON_OPTIONS['physiotec-api-administrator-url'] "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"
+      else
+        redirect_to COMMON_OPTIONS['physiotec-common-url'] "http://www.google.com.uy"
+      end
     else
       render :action => "show"
     end

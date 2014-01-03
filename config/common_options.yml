@@ -1,0 +1,11 @@
+development:
+  physiotec-api-administrator-url: "http://localhost:8000/app/login.html"
+  physiotec-common-url: "http://localhost:8000/app/login.html"
+
+test:
+  physiotec-api-administrator-url: "http://localhost:8000/app/login.html"
+  physiotec-common-url: "http://localhost:8000/app/login.html"
+
+production:
+  physiotec-api-administrator-url: "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"
+  physiotec-common-url: "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"

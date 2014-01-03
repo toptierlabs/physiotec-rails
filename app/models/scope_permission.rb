@@ -62,24 +62,31 @@ class ScopePermission < ActiveRecord::Base
     self.action.name + ' ' + self.permission.name + ' (' + display_scopes[0..-3] + ')'
   end
 
-  def check_scopes(scopes)
+  def check_scopes(scopes_p)
     result = false
+    #checks the context scope
+    user_context = self.scopes.find_by_scope_group_id(ScopeGroup.group_clinic_id)
+    scope_context = scopes_p.find_by_scope_group_id(ScopeGroup.group_clinic_id)
+    if user_context.present? && scope_context.present? 
+      if UserScopePermission.context_value[user_context.name.as_sym] < UserScopePermission.context_value[scope_context.name.as_sym]
+        return false
+      end
+    end
     # check the scopes: at least one scope of each scope_group must be in both sp from params and self
-    aux_self_sg = self.scopes.select!{|v| v.scope_group.id != ScopeGroup.group_clinic_id}
-    aux_params_sg = scopes.select!{|v| v.scope_group.id != ScopeGroup.group_clinic_id}
+    aux_self_sg = self.scopes.select{|v| v.scope_group_id != ScopeGroup.group_clinic_id}
+    aux_params_sg = scopes_p.select{|v| v.scope_group_id != ScopeGroup.group_clinic_id}
 
     if aux_self_sg.present? && aux_params_sg.present?
-      self_scope_groups = Hash[aux_self_sg.map{ |v| {v.id => v.scope_group_id} }]
-      params_scope_groups = Hash[aux_params_sg.map{ |v| {v.id => v.scope_group_id} }]
+      self_scope_groups = Hash[aux_self_sg.map{ |v| [v.id, v.scope_group_id] }]
+      params_scope_groups = Hash[aux_params_sg.map{ |v| [v.id, v.scope_group_id] }]
 
       #params_scope_group must be contained in self_scope_groups
-      puts '*'*80
-      puts self_scope_groups.to_yaml
-      puts params_scope_groups.to_yaml
-      gets
-      (params_scope_groups - self_scope_groups).length == 0
+      if (self_scope_groups.keys.uniq & params_scope_groups.keys.uniq).present?
+        return true if (self_scope_groups.values.uniq - params_scope_groups.values.uniq).size == 0
+      else
+        false
+      end
     else
-      gets
       false
     end
   end

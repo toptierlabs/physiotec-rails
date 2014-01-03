@@ -82,7 +82,7 @@ module AssignableHelper
 			if (user.context.respond_to?(:license)) && (self.context.license == user.context.license)
 				list_scopes << :license << :api_license
 			elsif (user.context.respond_to?(:api_license)) && (self.context.api_license == user.context.api_license)
-				list_scopes << :api_license << :license
+				list_scopes << :api_license
 			end
 		#user belongs to the same api_license	
 		elsif self.context.respond_to?(:api_license) && self.context.api_license == user.api_license

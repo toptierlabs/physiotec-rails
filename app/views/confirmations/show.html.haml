@@ -1,20 +1,26 @@
 .container
   .jumbotron
     .row
-      .col-md-6.col-md-offset-1
-        %h2 You're almost done!
-        %p Now create a password to securely access your account.
-      .col-md-4
-        = semantic_form_for(resource, :as => resource_name, :url => confirm_path) do |form|
-          -#
-            .alert.alert-danger
-              = devise_error_messages!
-          = form.inputs :label => false do
+      .col-md-8.col-md-offset-2
+        %h2.text-left You're almost done!
+        %p.text-center Now create a password to securely access your account.
+      
+    .row
+      = semantic_form_for(resource, :as => resource_name, :url => confirm_path) do |form|
+        -#
+          .alert.alert-danger
+            = devise_error_messages!
+        = form.inputs :label => false do
+          .col-md-4.col-md-offset-2
+            %p First Name
+            = form.input :first_name, :input_html => {:class => 'form-control', :placeholder => 'text' }, :label => false
+            %p Last Name
+            = form.input :last_name, :input_html => {:class => 'form-control', :placeholder => 'text' }, :label => false
+          .col-md-4
             %p Password
             = form.input :password, :input_html => {:autofocus => true, :class => 'form-control', :placeholder => 'Password' }, :label => false
-
             %p Repeat Password      
             = form.input :password_confirmation, :input_html => { :class => 'form-control', :placeholder => 'Repeat Password' }, :label => false
             = form.input :confirmation_token, :as => :hidden
-            //= form.actions do
+   
             = form.action :submit, :label => 'Confirm Account', :button_html => { :class => 'btn btn-lg btn-primary btn-block' }
