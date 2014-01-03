@@ -1,5 +1,4 @@
 class ScopeGroup < ActiveRecord::Base
-  @@scope_group_clinic = self.find_by_name("Context").id
 
   before_destroy :confirm_relation_with_permissions
 
@@ -13,7 +12,7 @@ class ScopeGroup < ActiveRecord::Base
   attr_accessible :description, :name
 
   def self.group_clinic_id
-    @@scope_group_clinic
+    @@scope_group_clinic ||= self.find_by_name("Context").id
   end
 
   private
