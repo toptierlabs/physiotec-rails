@@ -25,7 +25,7 @@ module Api
       def create
         authorize_request!(:exercise, :create)
 
-        params[:exercise][:translations_attributes]each do |v|
+        params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate, :create, scopes: [v[:locale].as_sym])
         end
 
@@ -33,12 +33,12 @@ module Api
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
         @exercise.owner = @current_user
-        I18n.locale = :en
         if @exercise.save
           render json: @exercise, status: :created
         else
           render json: @exercise.errors.full_messages, status: :unprocessable_entity
         end
+        I18n.locale = :en
       end
 
       # PUT /exercise/1
@@ -46,7 +46,7 @@ module Api
       def update        
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
-        params[:exercise][:translations_attributes]each do |v|
+        params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate, :modify, scopes: [v[:locale].as_sym], model: @exercise)
         end
         if @exercise.update_attributes(params[:exercise].except(:api_license_id))
