@@ -47,7 +47,7 @@ module Api
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
         params[:exercise][:translations_attributes].each do |v|
-          authorize_request!(:translate, :modify, scopes: [v[:locale].as_sym], model: @exercise)
+          authorize_request!(:translate, :create, scopes: [v[:locale].as_sym], model: @exercise)
         end
         @exercise
         if @exercise.update_attributes(params[:exercise].except(:api_license_id))
