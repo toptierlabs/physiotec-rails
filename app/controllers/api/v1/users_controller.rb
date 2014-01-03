@@ -23,7 +23,7 @@ module Api
 			def show
 				@user = User.includes(:profiles).find(params[:id])
 				authorize_request!(:user, :read, :model=>@user)
-				render json: @user.as_json(:include=>{profiles:{only:[:id, :name], scope_permissions:{only:[:id, :name]} })
+				render json: @user.as_json(:include=>{profiles:{only:[:id, :name], scope_permissions:{only:[:id, :name]} } })
 			end
 
 
