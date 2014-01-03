@@ -23,7 +23,7 @@ module Api
 			def show
 				@user = User.includes(:profiles).find(params[:id])
 				authorize_request!(:user, :read, :model=>@user)
-				render json: @user.as_json(:include=>{profiles:{only:[:id, :name]} })
+				render json: @user.as_json(:include=>{profiles:{only:[:id, :name], scope_permissions:{only:[:id, :name]} })
 			end
 
 
@@ -77,6 +77,8 @@ module Api
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+
+				authorize_request!(:permission, :assign) if params[:user][:scope_permission_ids].present?
 
 				if @selected_user.update_attributes(formatted_params)
 					head :no_content
