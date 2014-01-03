@@ -1,4 +1,5 @@
 class ScopeGroup < ActiveRecord::Base
+  @@scope_group_clinic = nil
 
   before_destroy :confirm_relation_with_permissions
 
