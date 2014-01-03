@@ -21,7 +21,7 @@ module Api
 																permission:{only:[:id, :name]}, scopes:{only: [:id, :name]}}),
 																
 																context: { 'Clinic'=> @selected_user.contexts(only: :clinic).as_json(only:[:id, :name],:methods => :entity),
-																					 'License'=> @selected_user.contexts(only: :license).as_json(only:[:id, :name],:methods => :entity),
+																					 'License'=> @selected_user.contexts(only: :license).as_json(only:[:id, :email],:methods => :entity),
 																					 'ApiLicense'=> @selected_user.contexts(only: :api_license).as_json(only:[:id, :name],:methods => :entity),
 																					 'User' => [{id: @selected_user.id, entity: User.name}] }}
 
