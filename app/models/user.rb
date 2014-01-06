@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
 
 	include PermissionHelper
 
+	include AssignableHelper
+
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
 	# Include default devise modules. Others available are:
@@ -142,7 +144,11 @@ class User < ActiveRecord::Base
 			auxiliar = self.context.licenses.includes(:clinics)
 			response = []
 			response += auxiliar											if params.blank? || (params[:only] == License.name.as_sym)
-			response += auxiliar.map{ |v| v.clinics } if params.blank? || (params[:only] == Clinic.name.as_sym)
+			if params.blank? || (params[:only] == Clinic.name.as_sym)
+				auxiliar.each do |v|
+					response += v.clinics.map{ |v| v }
+				end
+			end
 			response << self.context 									if params.blank? || (params[:only] == ApiLicense.name.as_sym)
 			response
 		end
