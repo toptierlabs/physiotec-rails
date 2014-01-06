@@ -26,7 +26,11 @@ module Api
         authorize_request!(:exercise, :create)
 
         params[:exercise][:translations_attributes].each do |v|
-          authorize_request!(:translate, :create, scopes: [v[:locale].as_sym])
+          authorize_request!(:translate,
+                            :create,
+                            scopes: [ v[:locale].as_sym,
+                                      params[:exercise][:context_type]]
+                            )
         end
 
         I18n.locale = params[:exercise][:translations_attributes].first[:locale]
