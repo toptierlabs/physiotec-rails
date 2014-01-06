@@ -75,13 +75,25 @@ module Api
 				authorize_request!(:user, :modify, :model=>@selected_user)
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
-				profiles_param = { profile_ids: params[:user][:user_profiles] || [] }
+				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+				
+				if formatted_params[:scope_permission_ids].present? &&
+						(params[:user][:scope_permission_ids] - @selected_user.scope_permission_ids).present?
+					authorize_request!(:permission, :assign)
+				elsif formatted_params[:scope_permission_ids].nil?
+					formatted_params.except!(:scope_permission_ids)
+				end
 
-				authorize_request!(:permission, :assign) if params[:user][:scope_permission_ids].present?
+
+
+				if (formatted_params[:profile_ids] - @selected_user.profile_ids).present?
+					authorize_request!(:profile, :assign)
+				elsif formatted_params[:profile_ids].nil?
+					formatted_params.except!(:profile_ids)
+				end
 				
 
-				if @selected_user.update_attributes(formatted_params) &&
-						@selected_user.update_attributes(profiles_param)
+				if @selected_user.update_attributes(formatted_params)
 					head :no_content
 				else
 					render json: @selected_user.errors.full_messages, status: :unprocessable_entity

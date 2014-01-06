@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
 
 	include PermissionHelper
-
 	include AssignableHelper
 
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
@@ -22,8 +21,8 @@ class User < ActiveRecord::Base
 
 	validates :email, :uniqueness => {:scope => :api_license_id}
 
-	validates :context, :associated => { :message => "reached maximum clinics" },
-											:if => lambda { (self.context_type == License.name) && (self.context_id_changed? && self.context_type_changed?) }
+	validates :context, associated: {:message => "reached maximum clinics"},
+											:if => lambda { (self.context_type == License.name) && (self.context_id_changed? || self.context_type_changed?) }
 
 	belongs_to :api_license
 	belongs_to :context, :polymorphic => true  
@@ -40,8 +39,8 @@ class User < ActiveRecord::Base
 	#a user may have many profiles, also it creates the user_scope_permissions
 	# for the user, given the profiles
 	has_many :user_profiles
-	has_many :profiles, :through => :user_profiles, before_add: :set_scope_permissions,
-																									before_remove: :remove_scope_permissions
+	has_many :profiles, :through => :user_profiles
+
 	accepts_nested_attributes_for :user_profiles, :allow_destroy => true
 
 	# Setup accessible (or protected) attributes
@@ -170,28 +169,5 @@ class User < ActiveRecord::Base
   def self.find_for_authentication(warden_conditions)
     where(:email => warden_conditions[:email], :api_license_id => warden_conditions[:api_license_id]).first
   end
-
-	private
-
-		#called when a profile is added to the user
-		def set_scope_permissions(profile)
-			p_sp = profile.scope_permission_ids
-			u_sp = self.user_scope_permissions.where("scope_permission_id NOT IN (?)", p_sp).map{ |v| v.scope_permission_id }
-			#scope_permisssions that it has to add
-			add_scope_permission_ids = p_sp - u_sp
-			self.scope_permissions << ScopePermission.where(id:add_scope_permission_ids)
-		end
-
-		#called when a profile is removed from the user
-		def remove_scope_permissions(profile)
-			puts profile
-			p_sp = profile.scope_permission_ids
-			#scope_permissions associated with the user except those linked with the deleted profile
-			u_sp = self.profiles.where("scope_permission_id NOT IN (?)", p_sp).joins(:profile_scope_permissions)
-						.select(:scope_permission_id).map{ |v| v.scope_permission_id}
-			#scope_permisssions that it has to remove
-			remove_scope_permission_ids = p_sp - u_sp
-			self.scope_permissions.delete(ScopePermission.where(id:remove_scope_permission_ids))
-		end
 
 end

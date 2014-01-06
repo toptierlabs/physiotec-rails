@@ -8,4 +8,4 @@ test:
 
 production:
   physiotec-api-administrator-url: "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"
-  physiotec-common-url: "http://physiotec-api-license-administrator.s3-website-us-west-2.amazonaws.com/login.html"
+  physiotec-common-url: "http://physiotec-default-site.s3-website-us-west-2.amazonaws.com/login.html"
