@@ -75,7 +75,7 @@ module AssignableHelper
 		elsif self.owner == user
 			list_scopes <<  :own << :clinic << :license << :api_license
 		#user belongs to the same clilic
-		elsif (self.context.respond_to?(:clinic)) && (user.clinics.include? self.context.clinic)
+		elsif (self.context.respond_to?(:clinic)) && ((user.clinics.include? self.context.clinic) || user.context = self.context)
 			list_scopes << :clinic << :license << :api_license
 		#user belongs to the same license
 		elsif self.context.respond_to?(:license)

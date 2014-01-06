@@ -14,6 +14,7 @@ module Api
 			# GET /users
 			# GET /users.json
 			def index
+				authorize_request!(:user, :read)
 				@users = User.on_api_license(@api_license)
 				render json:  { users: @users.as_json }
 			end
@@ -61,9 +62,7 @@ module Api
 
 				if @user.save
 					render json: @user, status: :created
-				else
-					puts '*'*80
-					puts 
+				else 
 					render json: @user.errors.full_messages, status: :unprocessable_entity
 				end
 
@@ -73,14 +72,16 @@ module Api
 			# PUT /users/1
 			# PUT /users/1.json
 			def update
-				#authorize_request!(:user, :modify, :model=>@selected_user)
+				authorize_request!(:user, :modify, :model=>@selected_user)
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
-				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+				profiles_param = { profile_ids: params[:user][:user_profiles] || [] }
 
 				authorize_request!(:permission, :assign) if params[:user][:scope_permission_ids].present?
+				
 
-				if @selected_user.update_attributes(formatted_params)
+				if @selected_user.update_attributes(formatted_params) &&
+						@selected_user.update_attributes(profiles_param)
 					head :no_content
 				else
 					render json: @selected_user.errors.full_messages, status: :unprocessable_entity

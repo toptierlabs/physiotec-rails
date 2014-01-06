@@ -19,6 +19,10 @@ class Clinic < ActiveRecord::Base
 
 	attr_accessible :name, :license_id	 
 	attr_protected :api_license_id
+
+	def clinic
+		self
+	end
 	
 
 	def context
