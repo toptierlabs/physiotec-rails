@@ -9,7 +9,7 @@ module Api
       def index
         authorize_request!(:clinic, :read)
         @clinics = Clinic.on_api_license(@api_license)
-        render json: { clinics: @clinics.as_json }
+        render json: { clinics: @clinics.as_json(:include=>{:license=>{:only=>:email}}) }
       end
 
       # GET /clinics/1
@@ -17,7 +17,7 @@ module Api
       def show
         @clinic = Clinic.find(params[:id])
         authorize_request!(:clinic, :read, :model=>@clinic)        
-        render json: @clinic
+        render json: @clinic.as_json(:include=>{:license=>{:only=>:email}})
       end
 
       # POST /clinics

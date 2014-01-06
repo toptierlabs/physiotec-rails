@@ -27,7 +27,6 @@ module Api
 			def create
 				authorize_request!(:scopegroup, :create)
 				@scope_group = ScopeGroup.new( params[:scope_group].except(:scopes) )
-				@scope_group.api_license_id = @api_license.id
 				#creates the scopes
 				if !params[:scope_group][:scopes].nil?
 					authorize_request!(:scope, :create)

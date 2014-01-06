@@ -53,6 +53,7 @@ module PermissionHelper
 
 		#preconditions
 		if model.present? &&
+			(model.respond_to?(:api_license_id) && self.respond_to?(:api_license_id)) &&
 			(model.api_license_id.present? && self.api_license_id.present?) &&
 			(model.api_license_id != self.api_license_id)
 			return false
