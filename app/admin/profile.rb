@@ -1,7 +1,6 @@
 ActiveAdmin.register Profile do
 
   filter :api_license
-  filter :profile_scope_permissions
   filter :destination_profiles
   filter :name
   filter :created_at

@@ -9,7 +9,10 @@ class ProfileScopePermission < ActiveRecord::Base
   attr_accessible :profile_id, :scope_permission_id
   # uniqueness of the permission inside the same scope
   validates :scope_permission_id, :uniqueness => {:scope => :profile_id}
-  validates :scope_permission, :profile, :presence => true, :on => :update
+
+  # activeadmin, validates the profile when its updated
+  validates :scope_permission, :presence => true
+  validates :profile, :presence => true, :on => :update
 
   def datatype
     result = {}
@@ -22,7 +25,8 @@ class ProfileScopePermission < ActiveRecord::Base
   private
 
     def check_protection
-      if self.protected?
+      if self.protected? &&
+          self.profile.present? && self.scope_permission.present?
         self.errors[:base] << "profile protected against deletion"
         false
       end

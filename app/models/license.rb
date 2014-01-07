@@ -14,7 +14,8 @@ class License < ActiveRecord::Base
   has_many :clinics, :dependent => :destroy
 
   #model validations
-  validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone, :api_license,
+  validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone,
+            :api_license, :company_name,
             :presence => true
 
   validates :email, :company_name, :uniqueness => {:scope => :api_license_id}
@@ -33,6 +34,10 @@ class License < ActiveRecord::Base
   #returns object class name, required for returning user's context
   def entity
     self.class.name
+  end
+
+  def display_name
+    self.company_name
   end
 
   private
