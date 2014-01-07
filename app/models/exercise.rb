@@ -14,7 +14,7 @@ class Exercise < ActiveRecord::Base
   belongs_to :context, :polymorphic=>true
 
   attr_accessible :title, :short_title, :description, :exercise_illustrations, :exercise_images,
-                  :context_id, :context_type, :code
+                  :context_id, :context_type, :code, :translations_attr, :api_license_id
   attr_protected :owner, :api_license_id
 
 
@@ -33,6 +33,10 @@ class Exercise < ActiveRecord::Base
 
   class Translation
     belongs_to :exercise
+  end
+
+  def translations_attr=(x)
+    self.set_translations(x)
   end
 
   private

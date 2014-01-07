@@ -33,7 +33,6 @@ module Api
 
 				else
 					@permission = Permission.new(params[:permission].except(:scope_groups))
-					@permission.api_license_id = @api_license.id
 					params[:permission][:scope_groups].each do |v|
 						@permission.scope_groups << ScopeGroup.find(v)
 					end 
