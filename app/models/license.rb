@@ -43,12 +43,13 @@ class License < ActiveRecord::Base
   private
 
     def validate_clinics
-      errors.add(:clinics, "too much") if clinics.size  >= maximum_clinics
+      errors.add(:clinics, "too much") if (maximum_clinics != 0) &&
+                                          (clinics.size  >= maximum_clinics)
     end
-
     
     def validate_users
-      errors.add(:users, "too much") if users.size >= maximum_users
+      errors.add(:users, "too much") if (maximum_users != 0) &&
+                                        (users.size >= maximum_users)
     end
 
     def confirm_relation_with_clinics

@@ -12,4 +12,8 @@ class Language < ActiveRecord::Base
 		Language.where(api_license_id:api_license_param.id).select(:locale).map{ |v| v.locale.as_sym }
 	end
 
+	def display_name
+		self.description
+	end
+
 end
