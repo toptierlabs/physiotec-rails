@@ -49,7 +49,7 @@ class License < ActiveRecord::Base
     
     def validate_users
       errors.add(:users, "too much") if (maximum_users != 0) &&
-                                        (users.size >= maximum_users)
+                                        (self.users.size >= maximum_users)
     end
 
     def confirm_relation_with_clinics

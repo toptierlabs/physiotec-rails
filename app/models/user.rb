@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
 
 	validates :email, :uniqueness => {:scope => :api_license_id}
 
-	validates :context, associated: {:message => "reached maximum clinics"},
+	validates :context, associated: {:message => "reached maximum users"},
 											:if => lambda { (self.context_type == License.name) && (self.context_id_changed? || self.context_type_changed?) }
 
 	belongs_to :api_license

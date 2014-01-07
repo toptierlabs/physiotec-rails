@@ -92,6 +92,11 @@ profile_scope_permission = [
 														["Translator", "Translate", "Create", ["pt", "Clinic"]],
 														["Translator", "Translate", "Create", ["es", "License"]],
 
+														["Translator", "Exercise", "Create", ["Clinic"]],
+														["Translator", "Exercise", "Modify", ["Clinic"]],
+														["Translator", "Exercise", "Delete", ["Own"]],
+														["Translator", "Exercise", "Read", ["Clinic"]],
+
 														["License administrator", "User", "Create", ["License"]],
 														["License administrator", "User", "Read", ["License"]],
 														["License administrator", "User", "Modify", ["License"]],
@@ -183,7 +188,9 @@ profile_assignment = [
 											["Clinic Administrator", "Media"],
 											["API Administrator", "Clinic Administrator"],
 											["API Administrator", "License administrator"],
-											["API Administrator", "API Administrator"]
+											["API Administrator", "API Administrator"],
+											["API Administrator", "Translator"]
+											
 										]
 
 profile_assignment.each do | profile, destination_profile |
