@@ -8,7 +8,7 @@ module Api
       # GET /exercises.json
       def index
         authorize_request!(:exercise, :read)
-        @exercises = Exercise.where(:api_license_id => @api_license.id)
+        @exercises = Exercise.on_api_license(@api_license)
         render json: { exercises: @exercises.as_json }
       end
 

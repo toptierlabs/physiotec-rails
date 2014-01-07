@@ -2,6 +2,8 @@ class Exercise < ActiveRecord::Base
 	
   include AssignableHelper
 
+  scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
+
   before_update :clear_exercise_translations
 
   translates :title, :short_title, :description
