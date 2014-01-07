@@ -43,20 +43,20 @@ module Api
 
 				def render_forbidden_access(exception)
 					# logger.info(exception) # for logging 
-					render json: {:error => "403 Not Authorized"}, status: 403
+					render json: {:error => "Not Authorized"}, status: 403
 				end
 
 				def render_not_found(exception)
 					# logger.info(exception) # for logging 
 					respond_to do |format|
-						render json: {:error => "404 Not found"}, status: 404
+						render json: {:error => "Not found"}, status: 404
 					end    
 				end
 
 				def render_error(exception)
 					# logger.info(exception) # for logging
 					respond_to do |format|
-						render json: {:error => "500 Internal server error"}, status: 500
+						render json: {:error => "Internal server error"}, status: 500
 					end
 				end
 
@@ -108,7 +108,7 @@ module Api
 					else
 						unauthorized = true
 					end
-					render json: {:error => "401"}, :status => :unauthorized if unauthorized
+					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
 				end
 
 				def identify_user
@@ -130,7 +130,7 @@ module Api
 					else
 						unauthorized = true
 					end
-					render json: {:error => "401"}, :status => :unauthorized if unauthorized
+					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
 				end
 
 				
