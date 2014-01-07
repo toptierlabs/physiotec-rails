@@ -1,4 +1,4 @@
-module Api
+ module Api
 	module V1
 		class UsersController < Api::V1::ApiController
 			# @current_user will hold the identified user
@@ -58,7 +58,6 @@ module Api
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
 				@user = User.new(formatted_params)
 				@user.api_license = @api_license
-				@user.context = @api_license
 
 				if @user.save
 					render json: @user, status: :created
