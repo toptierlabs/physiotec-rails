@@ -13,7 +13,7 @@ class Permission < ActiveRecord::Base
   validates :name, :presence => true
 
   attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
-                  :model_name
+                  :model_name, :scope_group_ids
   
   def name_as_sym #no test for nil
   	#returns a symbol representation of the string

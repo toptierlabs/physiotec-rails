@@ -26,24 +26,14 @@ module Api
 				authorize_request!(:permission, :create)        
 				#what happens if a scope_permission is created and then the permission's scopes are updated?
 
-				#fix for api explorer compatibility
-				params[:permission][:scope_groups].map{ |i| i.to_s.to_i}
-				if (ScopeGroup.where(id: params[:permission][:scope_groups]).length != params[:permission][:scope_groups].length)
-					render json: { :error => "Could not find all the given scope groups." }, status: :unprocessable_entity
-
+				formatted_params = params[:permission].except(:scope_groups)
+				formatted_params[:scope_group_ids] = params[:permission][:scope_groups] if params[:permission][:scope_groups].present?
+				@permission = Permission.new(formatted_params)
+				
+				if @permission.save
+					render json: @permission, status: :created
 				else
-					@permission = Permission.new(params[:permission].except(:scope_groups))
-					params[:permission][:scope_groups].each do |v|
-						@permission.scope_groups << ScopeGroup.find(v)
-					end 
-
-					#creates the formatted_params for correct creation of nested scopes
-
-					if @permission.save
-						render json: @permission, status: :created
-					else
-						render json: @permission.errors.full_messages, status: :unprocessable_entity
-					end
+					render json: @permission.errors.full_messages, status: :unprocessable_entity
 				end
 			end
 
