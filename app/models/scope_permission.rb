@@ -6,7 +6,8 @@ class ScopePermission < ActiveRecord::Base
   belongs_to :action
 
 
-  attr_accessible :permission_id, :action_id, :scopes, :scope_permission_group_scopes_attributes
+  attr_accessible :permission_id, :action_id, :scopes,
+                  :scope_permission_group_scopes_attributes, :scope_ids
   # uniqueness of the permission inside the same scope
 
   #has many profiles
