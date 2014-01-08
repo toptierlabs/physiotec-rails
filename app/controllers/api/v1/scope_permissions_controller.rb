@@ -37,19 +37,12 @@ module Api
 			# PRECONDITIONS: The given action, permission and scopes must exist in the system.
 			# PARAMS => {:action_id=>'', :permission_id=>'', scopes=>[:scope_id]}
 			def create
-				authorize_request!(:permission, :create)				
-				#validates the scopes
-				perm = Permission.find_by_id(params[:scope_permission][:permission_id])
-
-				@scope_permission = ScopePermission.new(params[:scope_permission].except(:scopes))
-				#creates the scope_permission_group_scopes
-				if params[:scope_permission][:scopes].present?
-					params[:scope_permission][:scopes].each do |v|
-						scope = Scope.find(v)
-						@scope_permission.scopes << scope
-					end
-				end
-
+				authorize_request!(:permission, :create)
+				
+				formatted_params = params[:scope_permission].except(:scopes)
+				formatted_params[:scope_ids] = params[:scope_permission][:scopes] || []
+				
+				@scope_permission = ScopePermission.new(formatted_params)
 				if @scope_permission.save
 					render json: @scope_permission, status: :created
 				else
@@ -62,50 +55,14 @@ module Api
 			def update
 				@scope_permission = ScopePermission.find(params[:id])
 				authorize_request!(:permission, :modify, @scope_permission)
-				#The given scopes exists in the system
-				if (params[:scope_permission][:scopes].length != Scope.where(:id => params[:scope_permission][:scopes]).length)
-					render json: { :error => "Scopes not found." }, status: :unprocessable_entity
+
+				formatted_params = params[:scope_permission].except(:scopes)
+				formatted_params[:scope_ids] = params[:scope_permission][:scopes] || []
+
+				if @scope_permission.update_attributes(formatted_params)
+					head :no_content
 				else
-					#Array with the id of scopes linked with @scope_permission
-					current_scopes = []
-					scope_permission_link = {}
-					@scope_permission.scope_permission_group_scopes.includes(:scope).each do | spgs |
-						current_scopes << spgs.scope_id
-						scope_permission_link[spgs.scope_id] = spgs.id
-					end
-
-					#scopes to remove
-					remove_scopes = current_scopes - params[:scope_permission][:scopes]
-
-					#Scope_permission_group_scopes to remove
-					scope_permission_remove = {}
-					remove_scopes.each do | rs |
-						scope_permission_remove[rs] = scope_permission_link[rs] 
-					end
-
-					#Scopes to add
-					add_scopes = params[:scope_permission][:scopes] - current_scopes
-
-					update_scopes = {}
-					i = 0
-					scope_permission_remove.each do |k|
-					#k holds an array with 2 elements, the first one is the scope_id, and the second one is the spgs_id
-						update_scopes[i] = {scope_id: k[0], _destroy: true, id: k[1]}
-						i = i + 1
-					end
-					add_scopes.each do |s|
-						update_scopes[i] = {scope_id: s}
-						i = i + 1
-					end
-					#{"0"=>{"scope_id"=>"", "_destroy"=>"0", "id"=>"66"}
-					formatted_params = params[:scope_permission].except(:scopes)
-					formatted_params[:scope_permission_group_scopes_attributes] = update_scopes
-
-					if @scope_permission.update_attributes( formatted_params )
-						head :no_content
-					else
-						render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
-					end
+					render json: @scope_permission.errors.full_messages, status: :unprocessable_entity
 				end
 
 			end

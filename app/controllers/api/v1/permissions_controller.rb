@@ -27,9 +27,9 @@ module Api
 				#what happens if a scope_permission is created and then the permission's scopes are updated?
 
 				formatted_params = params[:permission].except(:scope_groups)
-				formatted_params[:scope_group_ids] = params[:permission][:scope_groups] if params[:permission][:scope_groups].present?
+				formatted_params[:scope_group_ids] = params[:permission][:scope_groups] || []
 				@permission = Permission.new(formatted_params)
-				
+
 				if @permission.save
 					render json: @permission, status: :created
 				else
