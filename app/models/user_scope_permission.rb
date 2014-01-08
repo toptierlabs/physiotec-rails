@@ -29,18 +29,15 @@ class UserScopePermission < ActiveRecord::Base
         elsif record.user.context.class == ApiLicense
           context_user = UserScopePermission.context_value[:api_license]
         end
-        puts '*'*80
-        puts context_user
-        puts context_scope
         puts record.scope_permission.context_scope.to_json
         if (context_user < context_scope)
-          record.errors[:base] << "clinic scope must be greater than user's context"
+          record.errors.add(:user_id, "clinic scope must be greater than user's context")
         end
       end
     end
   end
 
-  validates_with ScopeInContextValidator
+  #validates_with ScopeInContextValidator
 
   def datatype
     result = {}
