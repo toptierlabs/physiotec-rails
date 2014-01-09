@@ -50,7 +50,7 @@ module Api
       def update        
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
-        params[:exercise][:translation_set].keys.each do |v|
+        params[:exercise][:translation_set].keys.first.each do |v|
           authorize_request!(:translate,
                             :create,
                             scopes: [ v,

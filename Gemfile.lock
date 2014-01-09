@@ -1,7 +1,5 @@
-GIT
-  remote: git://github.com/toptierlabs/globalize.git
-  revision: fed67b24f528e270bec0cbba0d015ead798ab9cd
-  branch: 3-0-stable
+PATH
+  remote: /Users/TopTierlabs/Desktop/proyectos/globalize
   specs:
     globalize (3.0.41)
       activemodel (>= 3.0.0)
