@@ -77,7 +77,7 @@
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
 				formatted_params[:scope_permission_ids] = params[:user][:scope_permission_ids] || []
 				
-				if (params[:user][:scope_permission_ids] - @selected_user.scope_permission_ids).present?
+				if (formatted_params[:scope_permission_ids] - @selected_user.scope_permission_ids).present?
 					authorize_request!(:permission, :assign)
 				end
 
