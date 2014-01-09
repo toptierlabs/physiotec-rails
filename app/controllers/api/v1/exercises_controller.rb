@@ -33,7 +33,7 @@ module Api
                             )
         end
 
-        I18n.locale = params[:exercise][:translations_attributes].first[:locale]
+        I18n.locale = params[:exercise][:translation_set].first[:locale]
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
         @exercise.owner = @current_user
@@ -59,7 +59,7 @@ module Api
         end
 
         @exercise.translations.clear
-        params[:exercise][:translations_attributes].each do |v|
+        params[:exercise][:translation_set].each do |v|
           @exercise.translations << @exercise.translations.new(v.except(:id))
         end
         if @exercise.update_attributes(params[:exercise].except(:api_license_id, :translations_attributes))
