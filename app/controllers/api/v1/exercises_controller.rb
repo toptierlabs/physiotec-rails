@@ -25,10 +25,10 @@ module Api
       def create
         authorize_request!(:exercise, :create)
 
-        params[:exercise][:translations_attributes].each do |v|
+        params[:exercise][:translation_set].keys.each do |v|
           authorize_request!(:translate,
                             :create,
-                            scopes: [ v[:locale].as_sym,
+                            scopes: [ v,
                                       params[:exercise][:context_type]]
                             )
         end
@@ -50,8 +50,12 @@ module Api
       def update        
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
-        params[:exercise][:translations_attributes].each do |v|
-          authorize_request!(:translate, :create, scopes: [v[:locale].as_sym], model: @exercise)
+        params[:exercise][:translation_set].keys.each do |v|
+          authorize_request!(:translate,
+                            :create,
+                            scopes: [ v,
+                                      params[:exercise][:context_type]]
+                            )
         end
 
         @exercise.translations.clear
