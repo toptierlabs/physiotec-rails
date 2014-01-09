@@ -75,20 +75,14 @@
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+				formatted_params[:scope_permission_ids] = params[:user][:scope_permission_ids] || []
 				
-				if formatted_params[:scope_permission_ids].present? &&
-						(params[:user][:scope_permission_ids] - @selected_user.scope_permission_ids).present?
+				if (params[:user][:scope_permission_ids] - @selected_user.scope_permission_ids).present?
 					authorize_request!(:permission, :assign)
-				elsif formatted_params[:scope_permission_ids].nil?
-					formatted_params.except!(:scope_permission_ids)
 				end
-
-
 
 				if (formatted_params[:profile_ids] - @selected_user.profile_ids).present?
 					authorize_request!(:profile, :assign)
-				elsif formatted_params[:profile_ids].nil?
-					formatted_params.except!(:profile_ids)
 				end
 				
 

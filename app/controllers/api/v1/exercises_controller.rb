@@ -53,8 +53,12 @@ module Api
         params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate, :create, scopes: [v[:locale].as_sym], model: @exercise)
         end
-        @exercise
-        if @exercise.update_attributes(params[:exercise].except(:api_license_id))
+
+        @exercise.translations.clear
+        params[:exercise][:translations_attributes].each do |v|
+          @exercise.translations << @exercise.translations.new(v.except(:id))
+        end
+        if @exercise.update_attributes(params[:exercise].except(:api_license_id, :translations_attributes))
           head :no_content
         else
           render json: @exercise.errors.full_messages, status: :unprocessable_entity
