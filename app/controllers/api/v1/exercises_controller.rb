@@ -33,7 +33,7 @@ module Api
                             )
         end
 
-        I18n.locale = params[:exercise][:translation_set].first[:locale]
+        I18n.locale = params[:exercise][:translation_set].keys.first
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license_id = @api_license.id
         @exercise.owner = @current_user
