@@ -1,6 +1,6 @@
 class UserProfile < ActiveRecord::Base
 
-  after_create :set_user_scope_permissions
+  #after_create :set_user_scope_permissions
 
   belongs_to :user
   belongs_to :profile
