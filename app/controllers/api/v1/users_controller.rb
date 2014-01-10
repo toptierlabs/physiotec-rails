@@ -56,6 +56,16 @@
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
+
+				# Update the context_id
+        case formatted_params[:context_type]
+        when "Own"
+          formatted_params[:context_type] = User.name
+          formatted_params[:context_id] = @current_user.id
+        when "ApiLicense"
+          formatted_params[:context_id] = @api_license.id
+        end
+
 				@user = User.new(formatted_params)
 				@user.api_license = @api_license
 

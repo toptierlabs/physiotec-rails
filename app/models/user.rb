@@ -5,8 +5,6 @@ class User < ActiveRecord::Base
 
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
-	before_validation lambda { |v| v.context_id = v.api_license_id if (v.context_type == ApiLicense.name) }
-
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :registerable,

@@ -25,18 +25,26 @@ module Api
       def create
         authorize_request!(:exercise, :create)
 
-        params[:exercise][:translation_set].keys.each do |v|
+        params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate,
                             :create,
-                            scopes: [ v,
+                            scopes: [ v[:locale],
                                       params[:exercise][:context_type]]
                             )
         end
-
-        I18n.locale = params[:exercise][:translation_set].keys.first
-        @exercise = Exercise.new(params[:exercise])
-        @exercise.api_license_id = @api_license.id
+        # Update the context_id
+        case params[:exercise][:context_type]
+        when "Own"
+          params[:exercise][:context_type] = User.name
+          params[:exercise][:context_id] = @current_user.id
+        when "ApiLicense"
+          params[:exercise][:context_id] = @api_license.id
+        end
+                @exercise = Exercise.new(params[:exercise])
+        @exercise.api_license = @api_license
         @exercise.owner = @current_user
+
+        I18n.locale = params[:exercise][:translations_attributes].first[:locale]
         if @exercise.save
           render json: @exercise, status: :created
         else
@@ -50,23 +58,29 @@ module Api
       def update        
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
-        params[:exercise][:translation_set].keys.first.each do |v|
+        params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:translate,
                             :create,
-                            scopes: [ v,
-                                      params[:exercise][:context_type]]
+                            scopes: [ v[:locale],
+                                      params[:exercise][:context_type]],
+                            model: @exercise
                             )
         end
-
-        @exercise.translations.clear
-        params[:exercise][:translation_set].each do |v|
-          @exercise.translations << @exercise.translations.new(v.except(:id))
+        # Update the context_id
+        case params[:exercise][:context_type]
+        when "Own"
+          params[:exercise][:context_type] = User.name
+          params[:exercise][:context_id] = @current_user.id
+        when "ApiLicense"
+          params[:exercise][:context_id] = @api_license.id
         end
-        if @exercise.update_attributes(params[:exercise].except(:api_license_id, :translations_attributes))
+        I18n.locale = params[:exercise][:translations_attributes].first[:locale]
+        if @exercise.update_attributes(params[:exercise].except(:api_license_id))
           head :no_content
         else
           render json: @exercise.errors.full_messages, status: :unprocessable_entity
         end
+        I18n.locale = :en
       end
 
       # DELETE /exercise/1
