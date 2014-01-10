@@ -54,6 +54,25 @@ class ScopePermission < ActiveRecord::Base
     display_scopes
   end
 
+  class EqualScopePermissionValidator < ActiveModel::Validator
+    def validate(record)
+      sp = ScopePermission.includes(:scopes)
+                          .where(action_id: record.action_id,
+                                 permission_id: record.permission_id)
+
+
+      sp.each do |v|
+        if (v.scopes - record.scopes).blank? &&
+          (record.scopes - v.scopes).blank?
+          record.errors[:scopes] << "alredy exists ability with the same scopes"
+        end
+      end
+
+    end
+  end
+
+  validates_with EqualScopePermissionValidator
+
   def display_name
     #concatenates the scopes names linked with the instance
     display_scopes = ''

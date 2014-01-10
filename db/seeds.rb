@@ -246,6 +246,7 @@ for i in 0..5
 		u.profiles << Profile.find_by_name('Clinic administrator')
 		u.context = clinics[i%clinics.length]
 	end
+	u.apply_profiles
 	u.save
 	users << u
 end

@@ -174,4 +174,11 @@ class User < ActiveRecord::Base
     where(:email => warden_conditions[:email], :api_license_id => warden_conditions[:api_license_id]).first
   end
 
+  def apply_profiles
+  	it = UserProfile.where(user_id: self.id)
+  	it.each do |v|
+  		v.set_user_scope_permissions
+  	end
+  end
+
 end

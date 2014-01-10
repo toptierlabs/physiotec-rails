@@ -23,7 +23,7 @@ class UserProfile < ActiveRecord::Base
 
   validates_with SameApiLicenseValidator
 
-  private
+
 
     #called when there are new profiles asssigned to this user
     def set_user_scope_permissions
