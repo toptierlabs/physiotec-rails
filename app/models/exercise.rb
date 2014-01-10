@@ -55,4 +55,8 @@ class Exercise < ActiveRecord::Base
     aux
   end
 
+  class Translation
+    validates :locale, :uniqueness => {:scope => :exercise_id}
+  end
+
 end
