@@ -39,10 +39,6 @@ class Exercise < ActiveRecord::Base
   validates :api_license,
             :owner,
             :code,
-            :title,
-            :short_title,
-            :description,
-            :code,
             :context_type,
             :context_id,       :presence => true
   validates :code,             :uniqueness => { :scope => :api_license_id }
@@ -56,7 +52,8 @@ class Exercise < ActiveRecord::Base
   end
 
   class Translation
-    validates :locale, :uniqueness => {:scope => :exercise_id}
+    validates :title,      :presence => true
+    validates :locale,     :uniqueness => {:scope => :exercise_id}
   end
 
 end
