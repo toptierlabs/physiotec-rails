@@ -43,12 +43,12 @@ class License < ActiveRecord::Base
   private
 
     def validate_clinics
-      errors.add(:clinics, "too much") if (maximum_clinics != 0) &&
+      errors.add(:clinics, "already reached license maximum quota") if (maximum_clinics != 0) &&
                                           (clinics.size  >= maximum_clinics)
     end
     
     def validate_users
-      errors.add(:users, "too much") if (maximum_users != 0) &&
+      errors.add(:users, "already reached license maximum quota") if (maximum_users != 0) &&
                                         (self.users.size >= maximum_users)
     end
 
