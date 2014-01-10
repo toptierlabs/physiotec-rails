@@ -40,7 +40,7 @@ module Api
         when "ApiLicense"
           params[:exercise][:context_id] = @api_license.id
         end
-                @exercise = Exercise.new(params[:exercise])
+        @exercise = Exercise.new(params[:exercise])
         @exercise.api_license = @api_license
         @exercise.owner = @current_user
 

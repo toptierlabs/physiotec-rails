@@ -14,7 +14,7 @@ module Api
 
 				#List all the scope_permissions
 				def index
-					authorize_request!(:user, :read)
+					authorize_request!(:user, :read, model: @selected_user)
 					scope_permissions = @selected_user.scope_permissions.includes(:action,:permission,:scopes).all
 
 					formatted_response = {scope_permissions: scope_permissions.as_json(:include=>{action:{only:[:id, :name]},

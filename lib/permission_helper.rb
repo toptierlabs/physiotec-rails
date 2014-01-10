@@ -59,6 +59,10 @@ module PermissionHelper
 			return false
 		end
 
+		if model == self
+			return true
+		end
+
 		abilities = self.abilities_by_permission_and_action(permission, action)
 
 		check_scopes = scopes.present?
