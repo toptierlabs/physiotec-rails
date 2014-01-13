@@ -32,7 +32,7 @@ module Api
                                       params[:exercise][:context_type]]
                             )
         end
-        validate_and_sanitize_context(formatted_params)
+        validate_and_sanitize_context(params[:exercise])
 
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license = @api_license
@@ -60,10 +60,10 @@ module Api
                             model: @exercise
                             )
         end
-        validate_and_sanitize_context(formatted_params)
+        validate_and_sanitize_context(params[:exercise])
 
         I18n.locale = params[:exercise][:translations_attributes].first[:locale]
-        if @exercise.update_attributes(params[:exercise].except(:api_license_id))
+        if @exercise.update_attributes(params[:exercise])
           head :no_content
         else
           render json: @exercise.errors.full_messages, status: :unprocessable_entity
