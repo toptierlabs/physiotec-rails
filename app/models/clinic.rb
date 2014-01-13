@@ -2,6 +2,8 @@ class Clinic < ActiveRecord::Base
 
 	include AssignableHelper
 
+	before_destroy :confirm_relation_with_exercises
+
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
 	belongs_to :license
@@ -32,6 +34,15 @@ class Clinic < ActiveRecord::Base
   #returns object class name, required for returning user's context
   def entity
     self.class.name
+  end
+
+  private
+
+  def confirm_relation_with_exercises
+    if (self.exercises.size > 0)        
+      self.errors[:base] << "Can't delete a clinic unless it is not associated with any exercise"
+      false
+    end
   end
 
 end

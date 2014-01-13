@@ -13,6 +13,8 @@ class ConfirmationsController < Devise::ConfirmationsController
     
     self.resource.password = params[resource_name][:password]
     self.resource.password_confirmation = params[resource_name][:password_confirmation]
+    self.resource.first_name = params[resource_name][:first_name]
+    self.resource.last_name = params[resource_name][:last_name]
 
     if resource.password_match? && resource.save && self.resource.confirm!
 

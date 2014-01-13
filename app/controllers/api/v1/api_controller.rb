@@ -41,6 +41,22 @@ module Api
 					end
 				end
 
+				def validate_and_sanitize_context(options)
+					case options[:context_type]
+	        when "Own"
+	          options[:context_type] = User.name
+	          options[:context_id] = @current_user.id
+	        when "ApiLicense"
+	          options[:context_id] = @api_license.id
+	        end
+	         
+	        contexts = @current_user.contexts(only: options[:context_type].as_sym)
+
+	        authorized = (options[:context_type] == User.name) ||
+	                     contexts.select{|v| v.id == options[:context_id]}.present?
+	        raise PermissionsHelper::ForbiddenAccess.new unless authorized
+				end
+
 				def render_forbidden_access(exception)
 					# logger.info(exception) # for logging 
 					render json: {:error => "Not Authorized"}, status: 403

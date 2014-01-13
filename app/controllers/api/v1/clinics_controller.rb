@@ -50,8 +50,11 @@ module Api
       def destroy        
         @clinic = Clinic.find(params[:id])
         authorize_request!(:clinic, :delete, :model=>@clinic)
-        @clinic.destroy
-        head :no_content
+        if @clinic.destroy
+          head :no_content
+        else
+          render json: @clinic.errors.full_messages, status: :unprocessable_entity
+        end
       end
 
     end

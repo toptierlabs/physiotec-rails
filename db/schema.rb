@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140102210918) do
+ActiveRecord::Schema.define(:version => 20140110213242) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -184,9 +184,8 @@ ActiveRecord::Schema.define(:version => 20140102210918) do
   create_table "profile_assignments", :force => true do |t|
     t.integer  "profile_id"
     t.integer  "destination_profile_id"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "protected",              :default => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
   end
 
   add_index "profile_assignments", ["destination_profile_id"], :name => "index_profile_assignments_on_destination_profile_id"
@@ -195,9 +194,8 @@ ActiveRecord::Schema.define(:version => 20140102210918) do
   create_table "profile_scope_permissions", :force => true do |t|
     t.integer  "profile_id"
     t.integer  "scope_permission_id"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.boolean  "protected",           :default => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   add_index "profile_scope_permissions", ["profile_id"], :name => "index_profile_scope_permissions_on_profile_id"

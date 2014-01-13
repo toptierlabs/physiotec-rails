@@ -1,7 +1,6 @@
 class ProfileAssignment < ActiveRecord::Base
 
 	before_destroy :check_protection
-	before_save :assign_protection
 
   belongs_to :profile
   belongs_to :destination_profile, :class_name => "Profile"
@@ -14,15 +13,10 @@ class ProfileAssignment < ActiveRecord::Base
   private
 
   	def check_protection
-      if self.protected?
+      if self.profile.protected?
         self.errors[:base] << "profile protected against deletion"
     		false
       end
-  	end
-
-  	def assign_protection
-  		self.protected = self.profile.protected?
-      true
   	end
 
 end

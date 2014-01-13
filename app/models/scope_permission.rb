@@ -1,6 +1,6 @@
 class ScopePermission < ActiveRecord::Base
 
-  #TODO validates uniqueness of a scope_permission
+  before_destroy :check_protection
 
   belongs_to :permission
   belongs_to :action
@@ -60,10 +60,10 @@ class ScopePermission < ActiveRecord::Base
                           .where(action_id: record.action_id,
                                  permission_id: record.permission_id)
 
-
       sp.each do |v|
         if (v.scopes - record.scopes).blank? &&
-          (record.scopes - v.scopes).blank?
+          (record.scopes - v.scopes).blank? && record.id != v.id
+          puts record.to_yaml
           record.errors[:scopes] << "alredy exists ability with the same scopes"
         end
       end
@@ -118,5 +118,15 @@ class ScopePermission < ActiveRecord::Base
   def find_scope_by_scope_group(scope_group)
     self.scopes.find_by_scope_group_id(scope_group.id)
   end
+
+
+  private
+
+    def check_protection
+      if self.profiles.select{|v| v.protected?}.present?
+        self.errors[:base] << "profile protected against deletion"
+        false
+      end
+    end
 
 end

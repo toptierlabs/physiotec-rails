@@ -32,14 +32,8 @@ module Api
                                       params[:exercise][:context_type]]
                             )
         end
-        # Update the context_id
-        case params[:exercise][:context_type]
-        when "Own"
-          params[:exercise][:context_type] = User.name
-          params[:exercise][:context_id] = @current_user.id
-        when "ApiLicense"
-          params[:exercise][:context_id] = @api_license.id
-        end
+        validate_and_sanitize_context(formatted_params)
+
         @exercise = Exercise.new(params[:exercise])
         @exercise.api_license = @api_license
         @exercise.owner = @current_user
@@ -66,14 +60,8 @@ module Api
                             model: @exercise
                             )
         end
-        # Update the context_id
-        case params[:exercise][:context_type]
-        when "Own"
-          params[:exercise][:context_type] = User.name
-          params[:exercise][:context_id] = @current_user.id
-        when "ApiLicense"
-          params[:exercise][:context_id] = @api_license.id
-        end
+        validate_and_sanitize_context(formatted_params)
+
         I18n.locale = params[:exercise][:translations_attributes].first[:locale]
         if @exercise.update_attributes(params[:exercise].except(:api_license_id))
           head :no_content

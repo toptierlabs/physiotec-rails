@@ -55,19 +55,10 @@
 				authorize_request!(:user, :create)
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
+				formatted_params[:scope_permission_ids] ||= []
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
-				puts '*'*80
-				puts formatted_params
 
-				# Update the context_id
-        case formatted_params[:context_type]
-        when "Own"
-          formatted_params[:context_type] = User.name
-          formatted_params[:context_id] = @current_user.id
-        when "ApiLicense"
-        	puts 'llega'
-          formatted_params[:context_id] = @api_license.id
-        end
+				validate_and_sanitize_context(formatted_params)
 
 				@user = User.new(formatted_params)
 				@user.api_license = @api_license
@@ -88,7 +79,7 @@
 
 				formatted_params = params[:user].except(:user_profiles, :profiles)
 				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
-				formatted_params[:scope_permission_ids] = params[:user][:scope_permission_ids] || []
+				formatted_params[:scope_permission_ids] ||= []
 				
 				if (formatted_params[:scope_permission_ids] - @selected_user.scope_permission_ids).present?
 					authorize_request!(:permission, :assign)
@@ -97,16 +88,8 @@
 				if (formatted_params[:profile_ids] - @selected_user.profile_ids).present?
 					authorize_request!(:profile, :assign)
 				end
-				
-				# Update the context_id
-        case formatted_params[:context_type]
-        when "Own"
-          formatted_params[:context_type] = User.name
-          formatted_params[:context_id] = @current_user.id
-        when "ApiLicense"
-        	puts 'llega'
-          formatted_params[:context_id] = @api_license.id
-        end
+
+				validate_and_sanitize_context(formatted_params)
 
 				if @selected_user.update_attributes(formatted_params)
 					head :no_content

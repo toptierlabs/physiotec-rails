@@ -1,7 +1,6 @@
 class ProfileScopePermission < ActiveRecord::Base
 
   before_destroy :check_protection
-  before_save :assign_protection
 
   belongs_to :profile
   belongs_to :scope_permission
@@ -25,16 +24,10 @@ class ProfileScopePermission < ActiveRecord::Base
   private
 
     def check_protection
-      if self.protected? &&
-          self.profile.present? && self.scope_permission.present?
+      if self.profile.protected?
         self.errors[:base] << "profile protected against deletion"
         false
       end
-    end
-
-    def assign_protection
-      self.protected = self.profile.protected?
-      true
     end
 
 end
