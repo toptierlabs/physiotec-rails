@@ -20,8 +20,18 @@ class License < ActiveRecord::Base
   has_many :users,      as:        :context,
                         dependent: :destroy
   has_many :clinics,    dependent: :destroy
-  has_many :categories, as:        :context,
-                        dependent: :destroy
+
+  has_many :license_categories, as:         :context,
+                                class_name: 'Category',
+                                dependent:  :destroy
+
+  has_many :api_categories,     class_name: 'Category',
+                                source:     'categories',
+                                through:    :api_license
+
+  def categories
+    license_categories + api_categories
+  end
 
   #model validations
 

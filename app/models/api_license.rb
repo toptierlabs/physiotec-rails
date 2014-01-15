@@ -14,6 +14,8 @@ class ApiLicense < ActiveRecord::Base
   has_many :licenses,  :dependent => :destroy
   has_many :exercises, :dependent => :destroy
   has_many :sections,  :dependent => :destroy
+  has_many :categories, as:        :context,
+                        dependent: :destroy
 
   #Set the attributes validations
   validates :name,
