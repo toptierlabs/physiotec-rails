@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140110213242) do
+ActiveRecord::Schema.define(:version => 20140114205007) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -74,6 +74,28 @@ ActiveRecord::Schema.define(:version => 20140110213242) do
   end
 
   add_index "assignments", ["user_id"], :name => "index_assignments_on_user_id"
+
+  create_table "categories", :force => true do |t|
+    t.integer  "owner_id"
+    t.integer  "context_id",   :null => false
+    t.string   "context_type", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "categories", ["context_type", "context_id"], :name => "index_categories_on_context_type_and_context_id"
+  add_index "categories", ["owner_id"], :name => "index_categories_on_owner_id"
+
+  create_table "category_translations", :force => true do |t|
+    t.integer  "category_id"
+    t.string   "locale",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "name"
+  end
+
+  add_index "category_translations", ["category_id"], :name => "index_category_translations_on_category_id"
+  add_index "category_translations", ["locale"], :name => "index_category_translations_on_locale"
 
   create_table "clinics", :force => true do |t|
     t.string   "name"
@@ -244,6 +266,80 @@ ActiveRecord::Schema.define(:version => 20140110213242) do
     t.datetime "updated_at",     :null => false
     t.integer  "scope_group_id"
   end
+
+  create_table "section_data", :force => true do |t|
+    t.integer  "api_license_id", :null => false
+    t.integer  "context_id",     :null => false
+    t.string   "context_type",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "section_data", ["api_license_id"], :name => "index_section_data_on_api_license_id"
+  add_index "section_data", ["context_type", "context_id"], :name => "index_section_data_on_context_type_and_context_id"
+
+  create_table "section_datum_translations", :force => true do |t|
+    t.integer  "section_datum_id"
+    t.string   "locale",           :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.string   "name"
+  end
+
+  add_index "section_datum_translations", ["locale"], :name => "index_section_datum_translations_on_locale"
+  add_index "section_datum_translations", ["section_datum_id"], :name => "index_section_datum_translations_on_section_datum_id"
+
+  create_table "sections", :force => true do |t|
+    t.integer  "category_id",      :null => false
+    t.integer  "section_datum_id", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "sections", ["category_id"], :name => "index_sections_on_category_id"
+  add_index "sections", ["section_datum_id", "category_id"], :name => "index_sections_on_section_datum_id_and_category_id", :unique => true
+  add_index "sections", ["section_datum_id"], :name => "index_sections_on_section_datum_id"
+
+  create_table "subsection_data", :force => true do |t|
+    t.integer  "section_datum_id", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "subsection_data", ["section_datum_id"], :name => "index_subsection_data_on_section_datum_id"
+
+  create_table "subsection_datum_translations", :force => true do |t|
+    t.integer  "subsection_datum_id"
+    t.string   "locale",              :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.string   "name"
+  end
+
+  add_index "subsection_datum_translations", ["locale"], :name => "index_subsection_datum_translations_on_locale"
+  add_index "subsection_datum_translations", ["subsection_datum_id"], :name => "index_subsection_datum_translations_on_subsection_datum_id"
+
+  create_table "subsection_exercises", :force => true do |t|
+    t.integer  "subsection_id"
+    t.integer  "exercise_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "subsection_exercises", ["exercise_id", "subsection_id"], :name => "index_subsection_exercises_on_exercise_id_and_subsection_id", :unique => true
+  add_index "subsection_exercises", ["exercise_id"], :name => "index_subsection_exercises_on_exercise_id"
+  add_index "subsection_exercises", ["subsection_id"], :name => "index_subsection_exercises_on_subsection_id"
+
+  create_table "subsections", :force => true do |t|
+    t.integer  "section_id",          :null => false
+    t.integer  "subsection_datum_id", :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "subsections", ["section_id", "subsection_datum_id"], :name => "index_subsections_on_section_id_and_subsection_datum_id", :unique => true
+  add_index "subsections", ["section_id"], :name => "index_subsections_on_section_id"
+  add_index "subsections", ["subsection_datum_id"], :name => "index_subsections_on_subsection_datum_id"
 
   create_table "user_clinics", :force => true do |t|
     t.integer  "user_id"

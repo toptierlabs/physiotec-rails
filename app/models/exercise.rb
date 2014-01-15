@@ -6,6 +6,28 @@ class Exercise < ActiveRecord::Base
           where("api_license_id = ? OR api_license_id IS NULL", api_license.id)
         }
 
+  def by_user_scope(user)
+    #get user context
+    #get permission for read exercises
+    result = case user_scope
+    when :api_license
+      #return all exercises
+      where(api_license_id: [api_license.id, nil])
+    when :license
+      #return exercises inside user license and its clinics
+      where(api_license_id: [api_license.id, nil],
+            context_type: License.name,
+            context_id: user.context_id)
+
+      where("api_license_id = ? OR api_license_id IS NULL", api_license.id)
+    when :clinic
+      #return exercises inside user clinics
+    when :own
+      #return only user's exercises
+    end
+    result
+  end
+
   attr_protected  :owner_id,
                   :api_license_id
 

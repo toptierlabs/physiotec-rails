@@ -11,6 +11,7 @@ module Api
 			rescue_from ActionController::UnknownController, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 			rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 			rescue_from PermissionsHelper::ForbiddenAccess, :with => :render_forbidden_access if AUTH_CONFIG['catch_exceptions']
+			rescue_from ActiveRecord::RecordInvalid, :with => :invalid_precondition if AUTH_CONFIG['catch_exceptions'] 
 			#rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
 
 			before_filter :cors_access_control, :except=>:cors_access_control
@@ -64,16 +65,17 @@ module Api
 
 				def render_not_found(exception)
 					# logger.info(exception) # for logging 
-					respond_to do |format|
-						render json: {:error => "Not found"}, status: 404
-					end    
+					render json: { :error => exception.message }, status: 404 
 				end
 
 				def render_error(exception)
 					# logger.info(exception) # for logging
-					respond_to do |format|
-						render json: {:error => "Internal server error"}, status: 500
-					end
+					render json: {:error => "Internal server error"}, status: 500
+				end
+
+				def invalid_precondition(exception)
+					# logger.info(exception) # for logging
+					render json:  [exception.message] , status: 412
 				end
 
 				def check_api_token(secret_key, string_to_convert, hash)

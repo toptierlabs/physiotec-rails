@@ -100,17 +100,32 @@ PhysiotecV3::Application.routes.draw do
           post 'unassign_ability'
           get 'assignable_profiles'
         end
-        resources :user_scope_permissions, :controller => 'users/user_scope_permissions', :only => [:index, :show]
-        resources :user_profiles, :controller => 'users/user_profiles', :only => [:index, :show]
+        resources :user_scope_permissions,
+                                  controller: 'users/user_scope_permissions',
+                                  only:       [:index, :show]
+        resources :user_profiles, controller: 'users/user_profiles',
+                                  only: [:index, :show]
 
         collection do
           post '/login' => 'users#login'
 
-      end          
         end
+
+      end
+
+      resources :section_data
       
+      resources :licenses do
+        resources :categories, path: 'modules', :controller => 'licenses/categories' do
+          resources :sections, :controller => 'licenses/categories/sections' do
+            resources :subsections, :controller => 'licenses/categories/sections/subsections'
+          end
+        end
+      end
+        
     end
   end
+
 
   match '*all' => 'api/v1/api#cors_access_control', :constraints => {:method => 'OPTIONS'}
 end

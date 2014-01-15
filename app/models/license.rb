@@ -4,28 +4,47 @@ class License < ActiveRecord::Base
 
   before_destroy :confirm_relation_with_clinics
 
-  attr_accessible :email, :first_name, :last_name, :maximum_clinics, :maximum_users,
-                  :phone, :company_name, :api_license_id
+  attr_accessible :email,
+                  :first_name,
+                  :last_name,
+                  :maximum_clinics,
+                  :maximum_users,
+                  :phone,
+                  :company_name,
+                  :api_license_id
 
   belongs_to :api_license
   
-  has_many :exercises, as: :context, :dependent => :destroy
-  has_many :users, as: :context, :dependent => :destroy
-  has_many :clinics, :dependent => :destroy
+  has_many :exercises,  as:        :context,
+                        dependent: :destroy
+  has_many :users,      as:        :context,
+                        dependent: :destroy
+  has_many :clinics,    dependent: :destroy
+  has_many :categories, as:        :context,
+                        dependent: :destroy
 
   #model validations
-  validates :email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone,
-            :api_license, :company_name,
-            :presence => true
 
-  validates :email, :company_name, :uniqueness => {:scope => :api_license_id}
-  validates :email, :email => true
-  validates :maximum_clinics, :maximum_users, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+  validates :email,           presence: true,
+                              email: true,
+                              :uniqueness => { :scope => :api_license_id }
+  validates :company_name,    presence: true,
+                              :uniqueness => { :scope => :api_license_id }
+  validates :first_name,      presence: true
+  validates :last_name,       presence: true
+  validates :maximum_clinics, presence: true,
+                              numericality: { only_integer: true,
+                                              greater_than_or_equal_to: 0 }
+  validates :maximum_users,   presence: true,
+                              numericality: { only_integer: true,
+                                              greater_than_or_equal_to: 0 }
+  validates :phone,           presence: true
+  validates :api_license,     presence: true
 
 
   validate :validate_clinics, :on => :update
 
-  validate :validate_users
+  validate :validate_users,   :on => :update
 
   def license
     self
