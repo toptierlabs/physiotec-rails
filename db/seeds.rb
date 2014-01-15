@@ -54,7 +54,8 @@ end
 # Creates the scopes
 scopes = [["en","Languages"], ["fr", "Languages"], ["pt", "Languages"],
 				 ["es", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
-				 ["License", "Context"], ["Api License", "Context"]]
+				 ["License", "Context"], ["Api License", "Context"],
+				 ["Module", "Context"], ["Section", "Context"]]
 
 scopes.each do | name, scope_group |
 	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
