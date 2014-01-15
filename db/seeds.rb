@@ -35,7 +35,9 @@ permissions = [ ["Translate", Exercise.name],
 								["Permission", Permission.name],
 								["ScopeGroup", ScopeGroup.name],
 								["Scope", Scope.name],
-								["Profile", Profile.name]]
+								["Profile", Profile.name],
+								["Module", Category.name],
+								["Section", SectionDatum.name]]
 
 permissions.each do | name, model |
 	Permission.create(name: name, model_name: model)
@@ -61,7 +63,8 @@ end
 #Links the permissions and the scope groups
 permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
 												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"],
-												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"],["Permission", "Context"]]
+												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"],["Permission", "Context"],
+												 ["Module", "Context"], ["Section", "Context"]]
 
 permission_scope_group.each do | permission, scope_group |
 	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
@@ -91,11 +94,26 @@ profile_scope_permission = [
 														["Translator", "Translate", "Create", ["en", "fr", "Own"]],
 														["Translator", "Translate", "Create", ["pt", "Clinic"]],
 														["Translator", "Translate", "Create", ["es", "License"]],
-
 														["Translator", "Exercise", "Create", ["Clinic"]],
 														["Translator", "Exercise", "Modify", ["Clinic"]],
 														["Translator", "Exercise", "Delete", ["Own"]],
 														["Translator", "Exercise", "Read", ["Clinic"]],
+														["Translator", "License", "Create", ["License"]],
+														["Translator", "License", "Read", ["License"]],
+														["Translator", "License", "Modify", ["License"]],
+														["Translator", "License", "Delete", ["License"]],
+														["Translator", "Clinic", "Create", ["License"]],
+														["Translator", "Clinic", "Delete", ["License"]],
+														["Translator", "Clinic", "Read", ["License"]],
+														["Translator", "Clinic", "Modify", ["License"]],
+														["Translator", "Module", "Create", ["License"]],
+														["Translator", "Module", "Read", ["License"]],
+														["Translator", "Module", "Modify", ["License"]],
+														["Translator", "Module", "Delete", ["License"]],
+														["Translator", "Section", "Create", ["License"]],
+														["Translator", "Section", "Read", ["License"]],
+														["Translator", "Section", "Modify", ["License"]],
+														["Translator", "Section", "Delete", ["License"]],
 
 														["License administrator", "User", "Create", ["License"]],
 														["License administrator", "User", "Read", ["License"]],
@@ -111,6 +129,14 @@ profile_scope_permission = [
 														["License administrator", "Exercise", "Read", ["License"]],
 														["License administrator", "Exercise", "Modify", ["License"]],
 														["License administrator", "Exercise", "Delete", ["License"]],
+														["License administrator", "Module", "Create", ["License"]],
+														["License administrator", "Module", "Read", ["License"]],
+														["License administrator", "Module", "Modify", ["License"]],
+														["License administrator", "Module", "Delete", ["License"]],
+														["License administrator", "Section", "Create", ["License"]],
+														["License administrator", "Section", "Read", ["License"]],
+														["License administrator", "Section", "Modify", ["License"]],
+														["License administrator", "Section", "Delete", ["License"]],
 
 														["Clinic administrator", "User", "Create", ["Clinic"]],
 														["Clinic administrator", "User", "Read", ["Clinic"]],
@@ -227,7 +253,11 @@ users = []
 clinics = [c1,c2,c3, l, l2, ApiLicense.first]
 licenses = [l, l2]
 for i in 0..5
-	u = User.create(:email => "test-#{i+1}@toptierlabs.com",:api_license_id=>1, :first_name=> "Test User #{i+1}", :last_name=>'Dev')
+	u = User.create :email => "test-#{i+1}@email.com",
+		              :api_license_id=>1,
+		              :first_name=> "Test User #{i+1}",
+		              :last_name=>'Dev'
+
 	u.password = 'pepepepe'
 	u.password_confirmation = 'pepepepe'
 	u.confirm!
