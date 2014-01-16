@@ -71,8 +71,9 @@ ActiveAdmin.register User do
     def create
       params[:user].merge!({context_id: params[:user][:api_license_id], context_type: ApiLicense.name})
       params[:user].merge!({profile_ids: [Profile.api_license_administrator_profile.id]})
-      super do |format|
-      end
+      super
+      @user.apply_profiles
+      
     end
 
   end
