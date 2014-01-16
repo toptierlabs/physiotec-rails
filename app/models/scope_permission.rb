@@ -34,7 +34,9 @@ class ScopePermission < ActiveRecord::Base
     def validate(record)
       record.scopes.each do | spgs |
 
-        if spgs.scope_group.present? && record.permission.permission_scope_groups.where('scope_group_id = ?', spgs.scope_group.id).blank?
+        if spgs.scope_group.present? &&
+          record.permission.permission_scope_groups.where('scope_group_id = ?', spgs.scope_group.id).blank? &&
+          spgs != record
           record.errors[:base] << "invalid scopes for the current permission"
         end
       end      
