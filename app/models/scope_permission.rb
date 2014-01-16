@@ -64,8 +64,7 @@ class ScopePermission < ActiveRecord::Base
 
       sp.each do |v|
         if (v.scopes - record.scopes).blank? &&
-          (record.scopes - v.scopes).blank? && record.id != v.id
-          puts record.to_yaml
+          (record.scopes - v.scopes).blank? && record != v
           record.errors[:scopes] << "alredy exists ability with the same scopes"
         end
       end
@@ -73,7 +72,7 @@ class ScopePermission < ActiveRecord::Base
     end
   end
 
-  validates_with EqualScopePermissionValidator
+  #validates_with EqualScopePermissionValidator
 
   def display_name
     #concatenates the scopes names linked with the instance

@@ -64,8 +64,9 @@
 				@user.api_license = @api_license
 
 				if @user.save
+
 					render json: @user, status: :created
-				else 
+				else
 					render json: @user.errors.full_messages, status: :unprocessable_entity
 				end
 
