@@ -20,16 +20,16 @@ module Api
       # GET /modules/:id/sections/:id/subsections
       def index
         subsections = @current_section.subsections
-        render json: { clinics: subsections.as_json include: 
-                                      { exercises: { only: [:id, :name] } } }
+        render json: { clinics: subsections.as_json(include: 
+                                      { exercises: { only: [:id, :name] } }) }
       end
 
       # GET /modules/:id/sections/:id/subsections/1
       def show
         subsection = Subection.find(params[:id])
 
-        render json: subsection.as_json include: { exercises:
-                                                    { only: [:id, :name] } }
+        render json: subsection.as_json(include: { exercises:
+                                                    { only: [:id, :name] } })
       end
 
       # POST /modules/:id/sections/:id/subsections

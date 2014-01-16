@@ -13,21 +13,23 @@ module Api
 
           def identify_license
             @current_license = @api_license.licenses
-                                          .find(params[:license_id])
+                                           .find(params[:license_id])
             authorize_request! :license,
                                :read,
                                model: @current_license
           end
 
           def identify_category
-            @current_category = @current_license.categories.find(params[:category_id])
+            @current_category = @current_license.categories
+                                                .find(params[:category_id])
             authorize_request! :module,
                                :read,
                                model: @current_category
           end
 
           def identify_section
-            @current_section = @current_category.sections.find(params[:id])
+            @current_section = @current_category.sections
+                                                .find(params[:id])
           end
 
 

@@ -15,13 +15,15 @@ class Exercise < ActiveRecord::Base
       where(api_license_id: [api_license.id, nil])
     when :license
       #return exercises inside user license and its clinics
-      where(api_license_id: [api_license.id, nil],
-            context_type: License.name,
-            context_id: user.context_id)
+      where(context_type: License.name,
+            context_id: user.context_id) <<
+      where(context_type: Clinic.name,
+            context_id: license.clinics.pluck(:id))
 
-      where("api_license_id = ? OR api_license_id IS NULL", api_license.id)
     when :clinic
       #return exercises inside user clinics
+        where(context_type: Clinic.name,
+        context_id: user.context_id)
     when :own
       #return only user's exercises
     end

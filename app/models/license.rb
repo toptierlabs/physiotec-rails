@@ -30,7 +30,7 @@ class License < ActiveRecord::Base
                                 through:    :api_license
 
   def categories
-    license_categories + api_categories
+    license_categories << api_categories
   end
 
   #model validations
