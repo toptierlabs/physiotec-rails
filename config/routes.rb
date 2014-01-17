@@ -80,6 +80,7 @@ PhysiotecV3::Application.routes.draw do
       resources :scope_permissions
       resources :permissions, :except => :update
       resources :exercises
+      resources :categories, path: 'modules', :controller => 'categories'
       resources :profiles do
         member do
           post 'assign_ability'

@@ -10,7 +10,7 @@ module Api
         authorize_request! :module,
                            :read
 
-        categories = Category.by_user(@current_user)
+        categories = @api_license.categories
         render json: { modules: categories.as_json(include: 
                                     { sections: { only: [:id, :cname] } }) }
       end
@@ -24,7 +24,7 @@ module Api
                            model: category
 
         render json: category.as_json(include: { sections:
-                                                  { :only=>[:id, :name] } })
+                                                  { :only=>[:id], methods: :name } })
       end
 
       # POST /module

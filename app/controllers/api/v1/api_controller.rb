@@ -11,7 +11,7 @@ module Api
 			rescue_from ActionController::UnknownController, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 			rescue_from AbstractController::ActionNotFound, :with => :render_not_found if AUTH_CONFIG['catch_exceptions']
 			rescue_from PermissionsHelper::ForbiddenAccess, :with => :render_forbidden_access if AUTH_CONFIG['catch_exceptions']
-			rescue_from ActiveRecord::RecordInvalid, :with => :invalid_precondition if AUTH_CONFIG['catch_exceptions'] 
+			#rescue_from ActiveRecord::RecordInvalid, :with => :invalid_precondition if AUTH_CONFIG['catch_exceptions'] 
 			#rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
 
 			before_filter :cors_access_control, :except=>:cors_access_control

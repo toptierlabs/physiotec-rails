@@ -12,9 +12,7 @@ module Api
                            :read
 
         sections = SectionDatum.all
-        render json: { section_data: sections.as_json(include: 
-                                        { subsection_data: { only: [:id,
-                                                                :name] } }) }
+        render json: { section_data: sections.as_json() }
       end
 
       # GET /sections/1
@@ -24,8 +22,8 @@ module Api
                            :read,
                            model: section
 
-        render json: section.as_json(include:{ subsections:
-                                                    { only: [:id, :name] } })
+        render json: section.as_json(include:{ subsection_data:
+                                                    { only: [:id], methods: :name } })
       end
 
       # POST /sections
