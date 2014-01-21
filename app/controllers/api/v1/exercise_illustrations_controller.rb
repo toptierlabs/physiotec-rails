@@ -23,7 +23,7 @@ module Api
       # POST /exercise_illustrations
       # POST /exercise_illustrations.json
       def create
-        authorize_request!(:exercise_illustration, :create)
+        # authorize_request!(:exercise_illustration, :create)
       
         # Check if the exercise has been created before the upload is complete
         if params[:exercise_illustration][:exercise_id].nil?
@@ -37,10 +37,10 @@ module Api
         
         # Won't validate so we avoid carrierwave error checking
         if @exercise_illustration.save(:validate=>false)
-          file_name = ActiveRecord::Base.sanitize(params[:exercise_illustration][:image]
+          file_name = ActiveRecord::Base.sanitize(params[:exercise_illustration][:illustration])
 
           # Manually update exercise so we avoid carrierwave
-          ActiveRecord::Base.connection.execute("update exercise_illustrations set image='" + file_name+ "' where id=" + @exercise_illustration.id.to_s)
+          ActiveRecord::Base.connection.execute("update exercise_illustrations set illustration='" + file_name+ "' where id=" + @exercise_illustration.id.to_s)
           @exercise_illustration.reload
           # Maybe reprocess the image to get thumbnails?? Naaah
 

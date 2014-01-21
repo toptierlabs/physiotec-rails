@@ -1,0 +1,31 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: physiotec-develop-2
+  pool: 5
+  username: root
+  password:
+  socket: /tmp/mysql.sock
+
+test:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: physiotec_test
+  pool: 5
+  username: root
+  password:
+  socket: /tmp/mysql.sock
+
+
+
+production:
+  adapter: mysql2
+  host: aa1tgazv8vtv5aq.ceqzikhypzkl.us-west-2.rds.amazonaws.com
+  port: 3306
+  database: ebdb
+  username: ebroot
+  password: TopTier2011
+  pool: 5
+  timeout: 5000

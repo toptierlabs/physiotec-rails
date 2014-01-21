@@ -80,6 +80,8 @@ PhysiotecV3::Application.routes.draw do
       resources :scope_permissions
       resources :permissions, :except => :update
       resources :exercises
+      resources :exercise_images
+      resources :exercise_illustrations
       resources :categories, path: 'modules', :controller => 'categories'
       resources :profiles do
         member do

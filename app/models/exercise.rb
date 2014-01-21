@@ -70,11 +70,11 @@ class Exercise < ActiveRecord::Base
   validates :code,             :uniqueness => { :scope => :api_license_id }
   
   def link_orphan_images
-    ExerciseImage.where("exercise_id=? && token=?", nil, self.token).each do |ei|
+    ExerciseImage.where("exercise_id is null && token=?", self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
-    ExerciseIllustration.where("exercise_id=? && token=?", nil, self.token).each do |ei|
+    ExerciseIllustration.where("exercise_id is null && token=?",  self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
