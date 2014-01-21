@@ -40,7 +40,7 @@ module Api
           file_name = ActiveRecord::Base.sanitize(params[:exercise_illustration][:illustration])
 
           # Manually update exercise so we avoid carrierwave
-          ActiveRecord::Base.connection.execute("update exercise_illustrations set illustration='" + file_name+ "' where id=" + @exercise_illustration.id.to_s)
+          ActiveRecord::Base.connection.execute("update exercise_illustrations set illustration=" + file_name+ " where id=" + @exercise_illustration.id.to_s)
           @exercise_illustration.reload
           # Maybe reprocess the image to get thumbnails?? Naaah
 
