@@ -6,12 +6,13 @@ module Api
                     :identify_exercise
 
       def identify_exercise
+        @token = false
         @exercise = case params[:exercise_id].represents_number?
         when true
           Exercise.find(params[:exercise_id])
         when false
-          Exercise.find_by_token(params[:exercise_id]) ||
-          Exercise.new(token: params[:exercise_id])
+          @token = true
+          Exercise.find_by_token(params[:exercise_id])
         end
       end
 
@@ -19,32 +20,42 @@ module Api
       # GET /exercise_images.json
       def index
         authorize_request!(:exercise_image, :read)
-        @exercise_images = ExerciseImage.where(:exercise_id=>params[:exercise_id])
-        render json: { exercises: @exercise_images.as_json }
+
+        exercise_images = case @token
+        when true
+          ExerciseImage.where(token: params[:exercise_id])
+        when false
+          @exercise.exercise_images
+        end
+
+        render json: { exercises: exercise_images.as_json }
       end
 
       # GET /exercise_images/1
       # GET /exercise_images/1.json
       def show
-        @exercise_image = ExerciseImage.find(params[:id])
-        authorize_request!(:exercise_image, :read, :model=>@exercise_image)        
-        render json: @exercise_image
+        exercise_image = case @token
+        when true
+          ExerciseImage.where(token: params[:exercise_id], id: params[:id])
+        when false
+          @exercise.exercise_images.find(params[:id])
+        end
+        authorize_request!(:exercise_image, :read, :model=>@exercise_image)
+
+        render json: exercise_image
       end
 
       # POST /exercise_images
       # POST /exercise_images.json
       def create
         # authorize_request!(:exercise_image, :create)
-      
-        # Check if the exercise has been created before the upload is complete
-        if params[:exercise_image][:exercise_id].nil?
-          ex = Exercise.find_by_token(params[:exercise_image][:token])
-          if !ex.nil?
-            params[:exercise_image][:exercise_id] = ex.id
-          end
+        params[:exercise_image][:token] = params[:exercise_id]
+        @exercise_image = case @token
+        when true
+          ExerciseImage.new(params[:exercise_image])
+        when false
+          @exercise.exercise_images.new(params[:exercise_image])
         end
-
-        @exercise_image = ExerciseImage.new(params[:exercise_image])
         
         # Won't validate so we avoid carrierwave error checking
         if @exercise_image.save(:validate=>false)
@@ -62,24 +73,16 @@ module Api
         
       end
 
-      # PUT /exercise_images/1
-      # PUT /exercise_images/1.json
-      def update        
-        @exercise_image = ExerciseImage.find(params[:id])
-        authorize_request!(:exercise_image, :modify, :model=>@exercise_image)
-       
-        if @exercise_image.update_attributes(params[:exercise_image])
-          head :no_content
-        else
-          render json: @exercise_image.errors.full_messages, status: :unprocessable_entity
-        end
-        
-      end
 
       # DELETE /exercise_images/1
       # DELETE /exercise_images/1.json
-      def destroy        
-        @exercise_image = ExerciseImage.find(params[:id])
+      def destroy
+        @exercise_image = case @token
+        when true
+          ExerciseImage.where(token: params[:exercise_id], id: params[:id])
+        when false
+          @exercise.exercise_images.find(params[:id])
+        end
         authorize_request!(:exercise_image, :delete, :model=>@exercise_image)
         @exercise_image.destroy
         head :no_content
