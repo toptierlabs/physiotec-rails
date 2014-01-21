@@ -2,7 +2,18 @@ module Api
   module V1
     
     class ExerciseImagesController < Api::V1::ApiController
-      before_filter :identify_user
+      before_filter :identify_user,
+                    :identify_exercise
+
+      def identify_exercise
+        @exercise = case params[:exercise_id].represents_number?
+        when true
+          Exercise.find(params[:exercise_id])
+        when false
+          Exercise.find_by_token(params[:exercise_id]) ||
+          Exercise.new(token: params[:exercise_id])
+        end
+      end
 
       # GET /exercise_images
       # GET /exercise_images.json

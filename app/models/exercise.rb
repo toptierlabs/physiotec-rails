@@ -1,7 +1,7 @@
 class Exercise < ActiveRecord::Base
 	
   include AssignableHelper
-  after_create :link_orphan_images
+  after_create :link_orphan_media
 
   scope :on_api_license, ->(api_license) {
           where("api_license_id = ? OR api_license_id IS NULL", api_license.id)
@@ -70,12 +70,16 @@ class Exercise < ActiveRecord::Base
             :context_id,       :presence => true
   validates :code,             :uniqueness => { :scope => :api_license_id }
   
-  def link_orphan_images
+  def link_orphan_media
     ExerciseImage.where("exercise_id is null && token=?", self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
     ExerciseIllustration.where("exercise_id is null && token=?",  self.token).each do |ei|
+      ei.exercise = self
+      ei.save
+    end
+    ExerciseVideo.where("exercise_id is null && token=?",  self.token).each do |ei|
       ei.exercise = self
       ei.save
     end

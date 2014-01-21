@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117185007) do
+ActiveRecord::Schema.define(:version => 20140121170320) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -140,6 +140,17 @@ ActiveRecord::Schema.define(:version => 20140117185007) do
 
   add_index "exercise_translations", ["exercise_id"], :name => "index_exercise_translations_on_exercise_id"
   add_index "exercise_translations", ["locale"], :name => "index_exercise_translations_on_locale"
+
+  create_table "exercise_videos", :force => true do |t|
+    t.integer  "exercise_id"
+    t.string   "video"
+    t.string   "token"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "exercise_videos", ["exercise_id"], :name => "index_exercise_videos_on_exercise_id"
+  add_index "exercise_videos", ["token"], :name => "index_exercise_videos_on_token", :unique => true
 
   create_table "exercises", :force => true do |t|
     t.integer  "context_id"
