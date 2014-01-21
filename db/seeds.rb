@@ -185,6 +185,7 @@ profile_scope_permission = [
 													]
 
 
+
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
 	#sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,
 															#action_id: Action.find_by_name( action ).id ).firsts
@@ -299,4 +300,95 @@ languages.each do |v|
 end
 
 
-# id, title, description, context_id, context_type, license_id, owner_id, created_at, updated_at
+section_data = {:"Body Parts"=>["abdominals",
+																	"ankle/foot",
+																	"cervical",
+																	"chest",
+																	"elbow",
+																	"hip",
+																	"jaw",
+																	"knee",
+																	"lumbar",
+																	"pelvis",
+																	"scapula",
+																	"shoulder",
+																	"thoracic",
+																	"wrist/hand"],
+										:"Movements"=>["abduction",
+																"adduction",
+																"circumduction",
+																"depression",
+																"deviation verticale",
+																"elevation",
+																"eversion",
+																"extension",
+																"external rotation",
+																"flexion",
+																"horizontal abduction",
+																"horizontal adduction",
+																"internal rotation",
+																"inversion",
+																"lateral flexion",
+																"plantarflexion",
+																"pronation/supination",
+																"protraction",
+																"retraction",
+																"rotation",
+																"ulnar deviation"],
+										:"Objectives"=>["AAROM",
+																	"AROM",
+																	"gait/walking",
+																	"isometric",
+																	"myofascial release",
+																	"neural mobility",
+																	"posture",
+																	"PROM",
+																	"proprioception",
+																	"propulsion",
+																	"repeated",
+																	"stability",
+																	"stabilization",
+																	"strengthening",
+																	"stretching",
+																	"swelling control",
+																	"transfers/positioning"],
+										:"Positions"=>["crook lying",
+																	"kneeling",
+																	"long sitting",
+																	"on 1 foot",
+																	"on all fours",
+																	"prone",
+																	"side lying",
+																	"sitting",
+																	"standing",
+																	"supine"],
+										:"Others"=>["ball",
+															"belt",
+															"bosu",
+															"chair",
+															"elastic",
+															"floor",
+															"overhead pulley",
+															"peanut ball",
+															"pillow",
+															"roller",
+															"step/stair",
+															"stick/cane",
+															"swiss ball",
+															"table",
+															"towel",
+															"wall",
+															"weight"]}
+
+section_data.each do |k, v|
+	sd = SectionDatum.new name: k
+	sd.api_license = ApiLicense.first
+	sd.context = ApiLicense.first
+	sd.save
+	v.each do |ssd|
+		k = SubsectionDatum.new name: ssd
+		k.section_datum_id = sd.id
+		k.save    
+		       
+	end
+end

@@ -14,6 +14,7 @@ class SectionDatum < ActiveRecord::Base
                   :subsection_data_attributes
 
   translates :name
+  default_scope includes(:translations)
 
   validates  :name,               uniqueness: { scope: :category_id },
                                   presence: true

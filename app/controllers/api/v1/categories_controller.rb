@@ -24,7 +24,10 @@ module Api
                            model: category
 
         render json: category.as_json(include: { sections:
-                                                  { :only=>[:id], methods: :name } })
+                                                  { :only=>[:id, :section_datum_id],
+                                                    methods: :name,
+                                                    include: {subsections: {only: [:id, :subsection_datum_id],
+                                                                            methods: :name} } } })
       end
 
       # POST /module
@@ -34,6 +37,7 @@ module Api
                            :create
 
         category = Category.new(params[:module])
+        category.context = @api_license
         category.owner = @current_user
 
         if category.save

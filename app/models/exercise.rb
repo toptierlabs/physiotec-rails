@@ -48,7 +48,8 @@ class Exercise < ActiveRecord::Base
                   :exercise_illustrations_attributes,
                   :exercise_images_attributes
 
-  translates :title, :short_title, :description
+  translates    :title, :short_title, :description
+  default_scope includes(:translations)
 
   has_many   :assignments, :as => :assignable, dependent: :destroy
   has_many   :exercise_illustrations,          dependent: :destroy

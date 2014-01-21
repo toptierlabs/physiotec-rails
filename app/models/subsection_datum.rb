@@ -5,6 +5,7 @@ class SubsectionDatum < ActiveRecord::Base
                   :translations_attributes
 
   translates :name
+  default_scope includes(:translations)
 
   validates  :name,               uniqueness: { scope: :section_datum_id },
                                   presence: true

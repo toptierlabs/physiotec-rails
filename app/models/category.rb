@@ -14,14 +14,15 @@ class Category < ActiveRecord::Base
   belongs_to :context,                         polymorphic: true
   belongs_to :api_license
 
-  has_many   :sections
+  has_many   :sections,     inverse_of: :category
   has_many   :section_data, through: :sections
 
   attr_accessible :name,
                   :context_type,
                   :context_id,
                   :section_datum_ids,
-                  :translations_attributes
+                  :translations_attributes,
+                  :sections_attributes
 
   translates :name
   
@@ -32,6 +33,7 @@ class Category < ActiveRecord::Base
   validates :owner_id,        presence: true
 
   accepts_nested_attributes_for :translations,    allow_destroy: true
+  accepts_nested_attributes_for :sections,    allow_destroy: true
 
   def self.by_user(user)
     #get user context

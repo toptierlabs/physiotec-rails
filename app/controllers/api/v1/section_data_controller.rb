@@ -23,7 +23,8 @@ module Api
                            model: section
 
         render json: section.as_json(include:{ subsection_data:
-                                                    { only: [:id], methods: :name } })
+                                                    { only: [:id],
+                                                      methods: :name } })
       end
 
       # POST /sections
@@ -38,7 +39,7 @@ module Api
         if section.save
           render json: section, status: :created
         else
-          render json:   section.errors, #.full_messages,
+          render json:   section.errors.full_messages,
                  status: :unprocessable_entity
         end
       end
