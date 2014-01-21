@@ -128,6 +128,8 @@ PhysiotecV3::Application.routes.draw do
 
       resources :exercises do
         resources :exercise_images, :controller => 'exercises/exercise_images'
+        resources :exercise_illustrations, :controller => 'exercises/exercise_illustrations'
+        resources :exercise_videos, :controller => 'exercises/exercise_videos'
       end
         
     end
