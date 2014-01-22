@@ -8,6 +8,7 @@ class CreateExerciseVideos < ActiveRecord::Migration
       t.timestamps
     end
     add_index :exercise_videos, :exercise_id
-    add_index :exercise_videos, :token, unique: true
+    add_index :exercise_videos, :token
+    add_index :exercise_videos, [:token, :video, :exercise_id], unique: true
   end
 end

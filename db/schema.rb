@@ -150,7 +150,8 @@ ActiveRecord::Schema.define(:version => 20140121170320) do
   end
 
   add_index "exercise_videos", ["exercise_id"], :name => "index_exercise_videos_on_exercise_id"
-  add_index "exercise_videos", ["token"], :name => "index_exercise_videos_on_token", :unique => true
+  add_index "exercise_videos", ["token", "video", "exercise_id"], :name => "index_exercise_videos_on_token_and_video_and_exercise_id", :unique => true
+  add_index "exercise_videos", ["token"], :name => "index_exercise_videos_on_token"
 
   create_table "exercises", :force => true do |t|
     t.integer  "context_id"
