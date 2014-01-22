@@ -54,6 +54,7 @@ class Exercise < ActiveRecord::Base
   has_many   :assignments, :as => :assignable, dependent: :destroy
   has_many   :exercise_illustrations,          dependent: :destroy
   has_many   :exercise_images,                 dependent: :destroy
+  has_many   :exercise_videos,                 dependent: :destroy
   belongs_to :api_license
   belongs_to :owner,                           class_name: "User"
   belongs_to :context,                         polymorphic: true
