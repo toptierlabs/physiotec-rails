@@ -7,12 +7,10 @@ module Api
                       :identify_exercise
 
         def identify_exercise
-          @token = false
           @exercise = case params[:exercise_id].represents_number?
           when true
             Exercise.find(params[:exercise_id])
           when false
-            @token = true
             Exercise.find_by_token(params[:exercise_id])
           end
         end
@@ -22,7 +20,7 @@ module Api
         def index
           authorize_request!(:exercise_video, :read)
 
-          exercise_videos = case @token
+          exercise_videos = case @exercise.blank?
           when true
             ExerciseVideo.where(token: params[:exercise_id])
           when false
@@ -35,7 +33,7 @@ module Api
         # GET /exercise_videos/1
         # GET /exercise_videos/1.json
         def show
-          exercise_video = case @token
+          exercise_video = case @exercise.blank?
           when true
             ExerciseVideo.where(token: params[:exercise_id], id: params[:id])
           when false
@@ -51,7 +49,7 @@ module Api
         def create
           # authorize_request!(:exercise_video, :create)
           params[:exercise_video][:token] = params[:exercise_id]
-          @exercise_video = case @token
+          @exercise_video = case @exercise.blank?
           when true
             ExerciseVideo.new(params[:exercise_video])
           when false
@@ -78,7 +76,7 @@ module Api
         # DELETE /exercise_videos/1
         # DELETE /exercise_videos/1.json
         def destroy
-          @exercise_video = case @token
+          @exercise_video = case @exercise.blank?
           when true
             ExerciseVideo.where(token: params[:exercise_id], id: params[:id])
           when false
