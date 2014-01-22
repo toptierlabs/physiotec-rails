@@ -9,7 +9,7 @@ module Api
       def index
         authorize_request!(:exercise, :read)
         @exercises = Exercise.on_api_license(@api_license)
-        render json: { exercises: @exercises.as_json(:include=>[:exercise_images, :exercise_illustrations, :exercise_videos]) }
+        render json: { exercises: @exercises.as_json }
       end
 
       # GET /exercises/1
@@ -17,7 +17,7 @@ module Api
       def show
         @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :read, :model=>@exercise)        
-        render json: @exercise
+        render json: @exercise.as_json(:include=>[:exercise_images, :exercise_illustrations, :exercise_videos])
       end
 
       # POST /exercise
