@@ -27,7 +27,7 @@ class FileUploader < CarrierWave::Uploader::Base
     web_mp4_360_preset_id = "1351620000001-000040"
     #convert the uploaded video
     transcoder = AWS::ElasticTranscoder::Client.new
-    transcoder.create_job(options = {
+    aws_et_job = transcoder.create_job(options = {
       pipeline_id: pipelineid,
       input: {
         key: "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/#{@filename}",
@@ -51,9 +51,14 @@ class FileUploader < CarrierWave::Uploader::Base
       }]
       }
     )
+    puts aws_et_job.job.id
 
     #add converted_ prefix to video's filename attribute
     model.update_column(mounted_as, "converted_#{@filename}")
+    #link the aws elastic transcoder job id with the video
+    model.update_column(:job_id,aws_et_job.job[:id])
+    #set to convering the video status
+    model.update_column(:status, Video::STATES[:converting])
 
   end
 
