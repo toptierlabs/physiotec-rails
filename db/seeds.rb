@@ -144,7 +144,8 @@ profile_scope_permission = [
 														["License administrator", "Section", "Read", ["License"]],
 														["License administrator", "Section", "Modify", ["License"]],
 														["License administrator", "Section", "Delete", ["License"]],
-														["License administrator", "Exercise", "Translate", ["License", "en", "pt", "fr", "own"]],
+														["License administrator", "Section", "Translate", ["License", "en", "pt", "fr", "Api License"]],
+														["License administrator", "Module", "Translate", ["License", "en", "pt", "fr", "License"]],
 
 														["Clinic administrator", "User", "Create", ["Clinic"]],
 														["Clinic administrator", "User", "Read", ["Clinic"]],
@@ -158,6 +159,8 @@ profile_scope_permission = [
 														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Translate", ["Clinic", "en", "pt", "fr", "own"]],
+														["Clinic administrator", "Section", "Translate", ["License", "en", "pt", "fr", "License"]],
+														["Clinic administrator", "Module", "Translate", ["License", "en", "pt", "fr", "License"]],
 
 														["API Administrator", "License", "Create", ["API License"]],
 														["API Administrator", "License", "Read", ["API License"]],
@@ -191,7 +194,9 @@ profile_scope_permission = [
 														["API Administrator", "Profile", "Read", ["Api License"]],
 														["API Administrator", "Profile", "Modify", ["Api License"]],
 														["API Administrator", "Profile", "Delete", ["Api License"]],
-														["API administrator", "Exercise", "Translate", ["License", "en", "pt", "fr", "own"]]
+														["API administrator", "Section", "Translate", ["License", "en", "pt", "fr", "Api License"]],
+														["API administrator", "Module", "Translate", ["License", "en", "pt", "fr", "Api License"]]
+
 
 													]
 
