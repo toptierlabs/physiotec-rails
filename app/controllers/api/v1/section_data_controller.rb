@@ -24,7 +24,7 @@ module Api
 
         render json: section.as_json(include:{ subsection_data:
                                                     { only: [:id],
-                                                      methods: :name } })
+                                                      methods: :translations } })
       end
 
       # POST /sections

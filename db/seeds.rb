@@ -5,7 +5,7 @@
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
 #Initialize the actions
-actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign"]
+actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign", "Translate"]
 
 actions.each do | action |
 	Action.create(name: action)
@@ -37,7 +37,13 @@ permissions = [ ["Translate", Exercise.name],
 								["Scope", Scope.name],
 								["Profile", Profile.name],
 								["Module", Category.name],
-								["Section", SectionDatum.name]]
+								["Section", SectionDatum.name],
+								["ExerciseIllustration",ExerciseIllustration.name],
+								["ExerciseImage", ExerciseImage.name],
+								["ExerciseVideo", ExerciseVideo.name],
+								["Section", Section.name],
+								["SectionDatum", SectionDatum.name]
+							]
 
 permissions.each do | name, model |
 	Permission.create(name: name, model_name: model)
@@ -138,6 +144,7 @@ profile_scope_permission = [
 														["License administrator", "Section", "Read", ["License"]],
 														["License administrator", "Section", "Modify", ["License"]],
 														["License administrator", "Section", "Delete", ["License"]],
+														["License administrator", "Exercise", "Translate", ["License", "en", "pt", "fr", "own"]],
 
 														["Clinic administrator", "User", "Create", ["Clinic"]],
 														["Clinic administrator", "User", "Read", ["Clinic"]],
@@ -149,6 +156,8 @@ profile_scope_permission = [
 														["Clinic administrator", "Exercise", "Read", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Modify", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
+														["Clinic administrator", "Exercise", "Translate", ["Clinic", "en", "pt", "fr", "own"]],
 
 														["API Administrator", "License", "Create", ["API License"]],
 														["API Administrator", "License", "Read", ["API License"]],
@@ -181,7 +190,9 @@ profile_scope_permission = [
 														["API Administrator", "Profile", "Create", ["Api License"]],
 														["API Administrator", "Profile", "Read", ["Api License"]],
 														["API Administrator", "Profile", "Modify", ["Api License"]],
-														["API Administrator", "Profile", "Delete", ["Api License"]]
+														["API Administrator", "Profile", "Delete", ["Api License"]],
+														["API administrator", "Exercise", "Translate", ["License", "en", "pt", "fr", "own"]]
+
 													]
 
 

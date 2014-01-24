@@ -39,7 +39,7 @@ module Api
           when false
             @exercise.exercise_videos.find(params[:id])
           end
-          authorize_request!(:exercise_video, :read, :model=>@exercise_video)
+          authorize_request!(:exercise_video, :read, :model=>exercise_video)
 
           render json: exercise_video
         end
