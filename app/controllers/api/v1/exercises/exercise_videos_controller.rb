@@ -58,11 +58,12 @@ module Api
           
           # Won't validate so we avoid carrierwave error checking
           if @exercise_video.save(:validate=>false)
-            file_name = ActiveRecord::Base.sanitize(params[:exercise_video][:video])
+            file_name = params[:exercise_video][:video]
 
             # Manually update exercise so we avoid carrierwave
-            ActiveRecord::Base.connection.execute("update exercise_videos set video=" + file_name+ " where id=" + @exercise_video.id.to_s)
-            @exercise_video.reload
+            @exercise_video.update_column(:video, file_name)
+            
+            @exercise_video.video.convert_video(file_name)
             # Maybe reprocess the video to get thumbnails?? Naaah
 
             render json: @exercise_video, status: :created

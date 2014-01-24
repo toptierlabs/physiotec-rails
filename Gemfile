@@ -25,6 +25,7 @@ end
 
 gem 'database_cleaner', '~> 0.9.1'
 
+gem "aws-sdk", "~> 1.22.1"
 
 # Gems used only for assets and not required
 # in production environments by default.

@@ -10,11 +10,56 @@ class VideoUploader < CarrierWave::Uploader::Base
   # storage :file
   storage :fog
 
+  #after :store, :convert_video
+
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{model.token}/"
   end
+
+  def convert_video(filename)
+    
+    pipelineid = Rails.env.production? ? "1390495175517-be5lxg" : "1390495175517-be5lxg"
+    
+    puts '*'* 50
+    puts  "uploads/#{model.class.to_s.underscore}/#{model.token}/#{filename}"
+
+    #web_mp4_480_preset_id = "1351620000001-000030"
+    web_mp4_360_preset_id = "1390494482545-d67snb"
+    #convert the uploaded video
+    transcoder = AWS::ElasticTranscoder::Client.new
+    aws_et_job = transcoder.create_job(options = {
+      pipeline_id: pipelineid,
+      input: {  
+        key: "uploads/#{model.class.to_s.underscore}/#{model.token}/#{filename}",
+        frame_rate: 'auto',
+        resolution: 'auto',
+        aspect_ratio: 'auto',
+        interlaced: 'auto',
+        container: 'auto'
+      },
+      outputs: [{ 
+        key: "uploads/#{model.class.to_s.underscore}/#{model.token}/encoded_#{filename}",
+        preset_id: web_mp4_360_preset_id,
+        thumbnail_pattern: "uploads/#{model.class.to_s.underscore}/#{model.token}/thumbnail_{count}",
+        rotate: '0'
+      }
+      ]
+      }
+    )
+   
+    #add converted_ prefix to video's filenam e attribute
+    model.update_column(:video, "converted_#{filename}")
+    
+    #link the aws elastic transcoder job id with the video
+    model.update_column(:job_id,aws_et_job.job[:id])
+    
+    #set to convering the video status
+    model.update_column(:status, ExerciseVideo::STATES[:converting])
+
+  end
+
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
