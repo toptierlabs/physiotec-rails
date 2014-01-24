@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140123184655) do
+ActiveRecord::Schema.define(:version => 20140124140258) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -190,6 +190,16 @@ ActiveRecord::Schema.define(:version => 20140123184655) do
     t.datetime "updated_at",      :null => false
     t.integer  "api_license_id"
     t.string   "company_name"
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.string   "message_id"
+    t.string   "topic_arn"
+    t.string   "subject"
+    t.text     "message"
+    t.text     "extra"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "permissible_scopes", :force => true do |t|

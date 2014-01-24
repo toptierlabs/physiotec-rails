@@ -1,5 +1,8 @@
 PhysiotecV3::Application.routes.draw do
   
+  
+
+
   mount ApiExplorer::Engine => "/api_explorer"
 
   devise_for :users, :controllers => {:confirmations => 'confirmations'}
@@ -83,6 +86,8 @@ PhysiotecV3::Application.routes.draw do
       resources :exercise_images
       resources :exercise_illustrations
       resources :categories, path: 'modules', :controller => 'categories'
+      resources :notifications
+
       resources :profiles do
         member do
           post 'assign_ability'
