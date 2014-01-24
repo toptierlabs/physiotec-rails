@@ -20,6 +20,10 @@ module Api
           render json: @notification.errors.full_messages, status: :unprocessable_entity
         end
       end
+
+      def index 
+        render json: Notification.all
+      end
     end
   end
 end
