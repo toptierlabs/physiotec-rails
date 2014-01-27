@@ -29,9 +29,9 @@ module Api
                                       { sections: { only: [:id], methods: :name } }) }
         end
 
-        # GET /licenses/:id/sections/1
+        # GET /licenses/:id/modules/1
         def show
-           authorize_request! :module,
+          authorize_request! :module,
                               :read,
                               model: @current_category
 
@@ -41,12 +41,12 @@ module Api
 
         # GET /licenses/:id/sections
         def create
+          puts params.to_json
           authorize_request! :module,
                              :create
 
           category = @current_license.categories.new(params[:module])
           category.owner = @current_user
-          category.context = @current_license
 
           if category.save
             render json: category, status: :created

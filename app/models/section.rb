@@ -12,16 +12,10 @@ class Section < ActiveRecord::Base
                   :category_id
         
 
-  delegate   :name, :to => :section_datum
+  delegate   :name,
+             :translations, :to => :section_datum
 
   validates  :category,        presence: true
   validates  :section_datum,   presence: true
-
-  def as_json(options={})
-    aux = super(options).except(:title, :short_title, :description)
-    aux[:translations] = self.translations.as_json(except:[:exercise_id,:created_at,:updated_at])
-    aux[:translated_locales] = self.translated_locales
-    aux
-  end
 
 end

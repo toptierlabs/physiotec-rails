@@ -2,6 +2,8 @@ class SectionDatum < ActiveRecord::Base
 
   include AssignableHelper
 
+  default_scope includes(:translations)
+
   belongs_to :api_license
   belongs_to :context, polymorphic:  true
   has_many   :subsection_data,       dependent:  :destroy,

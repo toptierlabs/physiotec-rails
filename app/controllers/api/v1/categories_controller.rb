@@ -12,7 +12,12 @@ module Api
 
         categories = @api_license.categories
         render json: { modules: categories.as_json(include: 
-                                    { sections: { only: [:id, :cname] } }) }
+                                    { sections: { only: [:id, :name],
+                                                  methods: :translations,
+                                                  include: {
+                                                    subsections: {methods: :translations}
+                               } 
+                        }}) }
       end
 
       # GET /modules/1
@@ -25,9 +30,9 @@ module Api
 
         render json: category.as_json(include: { sections:
                                                   { :only=>[:id, :section_datum_id],
-                                                    methods: :name,
+                                                    methods: :translations,
                                                     include: {subsections: {only: [:id, :subsection_datum_id],
-                                                                            methods: :name} } } })
+                                                                            methods: :translations} } } })
       end
 
       # POST /module
@@ -36,8 +41,8 @@ module Api
         authorize_request! :module,
                            :create
 
+        validate_and_sanitize_context(params[:module])
         category = Category.new(params[:module])
-        category.context = @api_license
         category.owner = @current_user
 
         if category.save
@@ -55,6 +60,8 @@ module Api
         authorize_request! :module,
                            :modify,
                            model: category
+
+        validate_and_sanitize_context(params[:module])
 
         if category.update_attributes(params[:module])
           head :no_content

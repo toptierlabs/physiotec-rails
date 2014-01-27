@@ -1,4 +1,7 @@
 class SubsectionDatum < ActiveRecord::Base
+
+  default_scope includes(:translations)
+  
   belongs_to :section_datum, inverse_of: :subsection_data
 
   attr_accessible :name,

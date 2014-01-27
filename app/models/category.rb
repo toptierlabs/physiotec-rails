@@ -10,11 +10,14 @@ class Category < ActiveRecord::Base
 
   include AssignableHelper
 
+  default_scope includes(:translations)
+
 	belongs_to :owner,                           class_name: "User"
   belongs_to :context,                         polymorphic: true
   belongs_to :api_license
 
-  has_many   :sections,     inverse_of: :category
+  has_many   :sections,     inverse_of: :category,
+                            dependent:  :destroy
   has_many   :section_data, through: :sections
 
   attr_accessible :name,
@@ -26,8 +29,7 @@ class Category < ActiveRecord::Base
 
   translates :name
   
-  validates :name,            uniqueness: { scope: [:context_type, :context_id] },
-                              presence: true
+  validates :name,            presence: true
   validates :context_type,    presence: true
   validates :context_id,      presence: true
   validates :owner_id,        presence: true
@@ -76,5 +78,11 @@ class Category < ActiveRecord::Base
     result
   end
 
+  def as_json(options={})
+    aux = super(options).except(:name)
+    aux[:translations] = self.translations.as_json(except:[:category_id,:created_at,:updated_at])
+    aux[:translated_locales] = self.translated_locales
+    aux
+  end
 
 end

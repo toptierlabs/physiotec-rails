@@ -7,15 +7,22 @@ class ApiLicense < ActiveRecord::Base
                   :name,
                   :licenses
 
-  has_many :languages, :dependent => :destroy
-  has_many :users,     :dependent => :destroy 
-  has_many :profiles,  :dependent => :destroy
-  has_many :clinics,   :dependent => :destroy
-  has_many :licenses,  :dependent => :destroy
-  has_many :exercises, :dependent => :destroy
-  has_many :sections,  :dependent => :destroy
-  has_many :categories, as:        :context,
-                        dependent: :destroy
+  has_many :languages,      :dependent => :destroy
+  has_many :users,          :dependent => :destroy 
+  has_many :profiles,       :dependent => :destroy
+  has_many :clinics,        :dependent => :destroy
+  has_many :licenses,       :dependent => :destroy
+  has_many :exercises,      :dependent => :destroy
+  has_many :sections,       :dependent => :destroy
+  has_many :api_categories, as:        :context,
+                            dependent: :destroy,
+                            class_name: "Category"
+
+  has_many :license_categories, through: :licenses
+  
+  def categories
+    api_categories + license_categories
+  end
 
   #Set the attributes validations
   validates :name,

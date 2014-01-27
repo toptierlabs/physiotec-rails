@@ -6,7 +6,8 @@ class Subsection < ActiveRecord::Base
   has_many   :subsection_exercises
   has_many   :exercises, through: :subsection_exercises
 
-  delegate   :name, to: :subsection_datum
+  delegate   :name,
+            :translations, to: :subsection_datum
 
   attr_accessible :subsection_datum_id
 
