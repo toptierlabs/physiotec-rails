@@ -29,9 +29,10 @@ module Api
 
       # POST /sections
       def create
+        validate_and_sanitize_context(params[:section_datum])
         authorize_request! :section,
                            :create,
-                           scopes: [params[:section_datum][:context_type]]
+                           scopes: params[:section_datum][:context_type].as_sym
 
         section = SectionDatum.new(params[:section_datum])
         section.api_license = @api_license
@@ -50,7 +51,8 @@ module Api
         section = SectionDatum.find(params[:id])
         authorize_request! :section,
                            :modify,
-                           model: section
+                           model: section,
+                           scopes: params[:section_datum][:context_type].as_sym
 
         if section.update_attributes(params[:section_datum])
           head   :no_content

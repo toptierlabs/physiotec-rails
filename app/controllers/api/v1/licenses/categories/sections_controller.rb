@@ -49,8 +49,10 @@ module Api
 
           # POST licenses/:id/modules/:id/sectionss
           def create
+            validate_and_sanitize_context(params[:section])
             authorize_request! :module,
-                               :create
+                               :create,
+                               scopes: params[:section][:context_type]
             section = @current_category.sections.new(params[:section])
             if section.save
               render json:   section, status: :created
@@ -76,7 +78,7 @@ module Api
 
           # DELETE licenses/:id/modules/:id/sections/1
           def destroy        
-            authorize_request! :module,
+            authorize_request! :model,
                                :delete,
                                model: @current_category
 

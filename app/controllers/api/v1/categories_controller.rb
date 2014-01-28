@@ -41,16 +41,18 @@ module Api
         authorize_request! :module,
                            :create
 
+
         validate_and_sanitize_context(params[:module])
         category = Category.new(params[:module])
         category.owner = @current_user
-
+        I18n.locale = params[:module][:translations_attributes].first[:locale]
         if category.save
           render json: category, status: :created
         else
           render json:   category.errors.full_messages,
                  status: :unprocessable_entity
         end
+        I18n.locale = :en
       end
 
       # PUT /module/1
@@ -62,13 +64,14 @@ module Api
                            model: category
 
         validate_and_sanitize_context(params[:module])
-
+        I18n.locale = params[:module][:translations_attributes].first[:locale]
         if category.update_attributes(params[:module])
           head :no_content
         else
           render json:   category.errors.full_messages,
                  status: :unprocessable_entity
         end
+        I18n.locale = :en
       end
 
       # DELETE /module/1
