@@ -40,7 +40,7 @@ module Api
 
           if ((state == "COMPLETED") || (state ==  "WARNING"))   
             video.status = ExerciseVideo::STATES[:completed]
-          elsif (aws_message["state"].upcase == "ERROR")
+          elsif (state == "ERROR")
             video.status = ExerciseVideo::STATES[:failed]
           end
           video.save
