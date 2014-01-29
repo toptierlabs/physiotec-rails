@@ -5,9 +5,8 @@ module Api
       # POST /notifications
       # POST /notifications.json
       def create
-        body = request.body.read()
         aws_request_body = JSON.parse(request.body.read())
-        
+        puts aws_request_body
         aws_message = JSON.parse(aws_request_body["Message"])
         aws_et_job_id= aws_message["jobId"]
 
