@@ -53,7 +53,7 @@ class VideoUploader < CarrierWave::Uploader::Base
     model.update_column(:video, "converted_#{filename}")
     
     #link the aws elastic transcoder job id with the video
-    model.update_column(:job_id,aws_et_job.job[:id])
+    model.update_column(:job_id, aws_et_job.job[:id])
     
     #set to convering the video status
     model.update_column(:status, ExerciseVideo::STATES[:converting])
