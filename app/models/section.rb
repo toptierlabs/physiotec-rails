@@ -9,11 +9,12 @@ class Section < ActiveRecord::Base
 
   attr_accessible :subsection_datum_ids,
                   :section_datum_id,
-                  :category_id
+                  :category_id,
+                  :name
         
 
   delegate   :name,
-             :translations, :to => :section_datum
+             :translations,    to: :section_datum
 
   validates  :category,        presence: true
   validates  :section_datum,   presence: true

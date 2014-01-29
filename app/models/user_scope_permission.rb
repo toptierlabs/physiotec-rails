@@ -6,13 +6,14 @@ class UserScopePermission < ActiveRecord::Base
   end
 
   belongs_to :user
-  belongs_to :scope_permission
-  # attr_accessible :title, :body
+  belongs_to :scope_permission, inverse_of: :user_scope_permissions
+
   attr_accessible :user_id, :scope_permission_id
-  # uniqueness of the permission inside the same scope
+
   validates :scope_permission_id, :uniqueness => {:scope => :user_id}
 
-  validates :scope_permission, :user, :presence => true, :on => :update
+  validates :user,                presence: true
+  validates :scope_permission,    presence: true
 
 
   def datatype

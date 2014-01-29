@@ -15,36 +15,23 @@ class ScopePermission < ActiveRecord::Base
   has_many :profiles, :through=>:profile_scope_permissions
 
   #has many users
-  has_many :user_scope_permissions, :dependent => :destroy
-  has_many :user, :through=>:user_scope_permissions
+  has_many :user_scope_permissions, dependent: :destroy,
+                                    inverse_of: :scope_permission
+
+  has_many :user, through: :user_scope_permissions
 
   #has many scopes, the validation that one Scopepermission
   #can have just one scope is in the scope_permission_group_scope model
 
-  has_many :scope_permission_group_scopes
-  has_many :scopes, :through => :scope_permission_group_scopes
+  has_many :scope_permission_group_scopes, inverse_of: :scope_permission
+  has_many :scopes, through: :scope_permission_group_scopes
 
   accepts_nested_attributes_for :scope_permission_group_scopes, :allow_destroy => true
 
-  #can't be undefined
-  validates :permission, :action, :presence => true
+  validates :permission,      presence: true
+  validates :permission,      presence: true
 
-  
-  class ScopesInScopeGroupsValidator < ActiveModel::Validator
-    def validate(record)
-      record.scopes.each do | spgs |
-
-        if spgs.scope_group.present? &&
-          record.permission.permission_scope_groups.where('scope_group_id = ?', spgs.scope_group.id).blank? &&
-          spgs != record
-          record.errors[:base] << "invalid scopes for the current permission"
-        end
-      end      
-    end
-  end
-  
-  #validates_with ClinicScopeValidator
-  validates_with ScopesInScopeGroupsValidator
+  #validate :validate_scope_permission_uniqueness
 
   #display name for ActiveAdmin
   def datatype
@@ -56,23 +43,25 @@ class ScopePermission < ActiveRecord::Base
     display_scopes
   end
 
-  class EqualScopePermissionValidator < ActiveModel::Validator
-    def validate(record)
-      sp = ScopePermission.includes(:scopes)
-                          .where(action_id: record.action_id,
-                                 permission_id: record.permission_id)
-
-      sp.each do |v|
-        if (v.scopes - record.scopes).blank? &&
-          (record.scopes - v.scopes).blank? && record != v
-          record.errors[:scopes] << "alredy exists ability with the same scopes"
-        end
+  def validate_scope_permission_uniqueness
+    sp = ScopePermission.includes(:scopes)
+                        .where(action_id: self.action_id,
+                               permission_id: self.permission_id)
+    errors = false
+    sp.each do |v|
+      if (self.id != v.id) &&
+      (v.scopes - self.scopes).blank? && (self.scopes - v.scopes).blank?
+        puts '*'*50
+        puts self.to_json
+        puts '-'*10
+        puts v.to_json
+        self.errors[:scopes] << "alredy exists ability with the same scopes"
+        break
       end
-
+      break if errors
     end
+    false if errors
   end
-
-  #validates_with EqualScopePermissionValidator
 
   def display_name
     #concatenates the scopes names linked with the instance

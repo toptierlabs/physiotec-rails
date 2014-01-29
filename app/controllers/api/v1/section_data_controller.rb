@@ -31,8 +31,7 @@ module Api
       def create
         validate_and_sanitize_context(params[:section_datum])
         authorize_request! :section,
-                           :create,
-                           scopes: params[:section_datum][:context_type].as_sym
+                           :create
 
         section = SectionDatum.new(params[:section_datum])
         section.api_license = @api_license
@@ -49,10 +48,9 @@ module Api
       # PUT /sections/1.json
       def update        
         section = SectionDatum.find(params[:id])
-        authorize_request! :section,
+        authorize_request! :section_datum,
                            :modify,
-                           model: section,
-                           scopes: params[:section_datum][:context_type].as_sym
+                           model: section
 
         if section.update_attributes(params[:section_datum])
           head   :no_content
@@ -67,8 +65,7 @@ module Api
       def destroy        
         section = SectionDatum.find(params[:id])
         authorize_request! :section,
-                           :delete,
-                           model: section
+                           :delete
 
         if section.destroy
           head   :no_content

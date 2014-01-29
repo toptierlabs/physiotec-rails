@@ -8,49 +8,65 @@ class User < ActiveRecord::Base
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable and :omniauthable
 	devise :database_authenticatable, :registerable,
-				 :recoverable, :trackable, :confirmable,#, :rememberable, :validatable
+				 :recoverable, :trackable, :confirmable,# :rememberable, :validatable
 				 request_keys: [:api_license_id]
 
-	#Set the attributes validations
-	validates :email, :first_name, :last_name, :api_license, :context,
-						:presence => true
+	attr_accessible :email,
+	                :password,
+	                :password_confirmation,
+	                :remember_me,
+									:first_name,
+									:last_name,
+									:api_license_id,
+									:session_token,
+									:session_token_created_at,
+									:profiles,
+									:user_profiles_attributes,
+									#:user_scope_permissions_attributes,
+									:context_id,
+									:context_type,
+									:profile_ids,
+									:user_profiles,
+									:user_scope_permissions,
+									:scope_permission_ids
 
-	validates :session_token, :uniqueness => true, :allow_blank => true
+	belongs_to :api_license
+	belongs_to :context,     polymorphic: true  
 
-	validates :email, :email => true
+	has_many :user_scope_permissions, inverse_of: :user
+	has_many :scope_permissions, through: :user_scope_permissions
 
-	validates :email, :uniqueness => {:scope => :api_license_id}
+	has_many :user_clinics
+	has_many :clinics, through: :user_clinics
+	
 
-	validates :context, associated: {:message => "reached maximum users"},
+	has_many :user_profiles
+	has_many :profiles, :through => :user_profiles
+
+	validates :email,         presence: true
+	validates :first_name,    presence: true
+	validates :last_name,     presence: true
+	validates :api_license,   presence: true
+	validates :context,       presence: true
+
+	validates :session_token, uniqueness: true,
+	                          allow_blank: true
+
+	validates :email,   email: true
+
+	validates :email,   uniqueness: { :scope => :api_license_id }
+
+	validates :context, associated: { :message => "reached maximum users" },
 											:if => lambda { (self.context_type == License.name) &&
 																			(self.context_id_changed? ||
 																			 self.context_type_changed?) }
 
-	belongs_to :api_license
-	belongs_to :context, :polymorphic => true  
 
-	has_many :user_scope_permissions
-	has_many :scope_permissions, :through=>:user_scope_permissions
-	accepts_nested_attributes_for :user_scope_permissions, :allow_destroy => true
+  accepts_nested_attributes_for :user_clinics,           allow_destroy: true
+	accepts_nested_attributes_for :user_profiles,          allow_destroy: true
+  accepts_nested_attributes_for :user_scope_permissions, allow_destroy: true
 
-	#has many clinics
-	has_many :user_clinics
-	has_many :clinics, :through=>:user_clinics
-	accepts_nested_attributes_for :user_clinics, :allow_destroy => true
 
-	#a user may have many profiles, also it creates the user_scope_permissions
-	# for the user, given the profiles
-	has_many :user_profiles
-	has_many :profiles, :through => :user_profiles
-
-	accepts_nested_attributes_for :user_profiles, :allow_destroy => true
-
-	# Setup accessible (or protected) attributes
-	attr_accessible :email, :password, :password_confirmation, :remember_me,
-									:first_name, :last_name, :api_license_id, :session_token,
-									:session_token_created_at, :profiles,
-									:user_profiles_attributes, :user_scope_permissions_attributes,
-									:context_id, :context_type, :profile_ids, :user_profiles, :scope_permission_ids
 
 	#Set the method to create new session tokens
 	def new_session_token

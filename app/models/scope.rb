@@ -2,6 +2,8 @@ class Scope < ActiveRecord::Base
   before_destroy :confirm_relation_with_scope_permissions
   after_destroy :clean_scope_group
 
+  before_save :underscore_name
+
   belongs_to :scope_group
   has_many :scope_permission_group_scopes, :dependent => :destroy
 
@@ -29,6 +31,10 @@ class Scope < ActiveRecord::Base
         self.errors[:base] << "Can't delete a Scope unless it is not associated with any Scope Permission"
         false
       end
+    end
+
+    def underscore_name
+      self.name = self.name.underscore
     end
 
 end
