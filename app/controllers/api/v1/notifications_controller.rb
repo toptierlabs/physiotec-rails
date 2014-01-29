@@ -5,14 +5,21 @@ module Api
       # POST /notifications
       # POST /notifications.json
       def create
-        puts '('*50
+        logger.info '('*50
         body = request.body.read()
+        logger.info body
+        logger.info '*'* 40
         puts body
-        puts '*'* 40
+        puts params.to_json
+
+        render json: {:body=> body, :params=> params.to_json}
+=begin
         aws_request_body = JSON.parse(body)
-        puts '='*50
-        puts aws_request_body
-        puts '\n','-'*50
+        logger.info '='*50
+        logger.info aws_request_body
+        logger.info '\n','-'*50
+
+
         aws_message = JSON.parse(aws_request_body["Message"])
         aws_et_job_id= aws_message["jobId"]
 
@@ -32,6 +39,7 @@ module Api
         else
           render json: @notification.errors.full_messages, status: :unprocessable_entity
         end
+=end
       end
 
       def index 
