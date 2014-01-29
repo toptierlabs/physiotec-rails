@@ -50,12 +50,14 @@ module Api
 	        when "ApiLicense"
 	          options[:context_id] = @api_license.id
 	        end
-	         
-	        contexts = @current_user.contexts(only: options[:context_type].as_sym)
 
-	        authorized = (options[:context_type] == User.name) ||
-	                     contexts.select{|v| v.id == options[:context_id]}.present?
-	        raise PermissionsHelper::ForbiddenAccess.new unless authorized
+	        if options[:context_type].present?	         
+		        contexts = @current_user.contexts(only: options[:context_type].as_sym) 
+
+		        authorized = (options[:context_type] == User.name) ||
+		                     contexts.select{ |v| v.id == options[:context_id] }.present?
+		        raise PermissionsHelper::ForbiddenAccess.new unless authorized
+		      end
 				end
 
 				def render_forbidden_access(exception)
