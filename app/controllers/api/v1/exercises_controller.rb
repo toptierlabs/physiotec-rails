@@ -3,6 +3,7 @@ module Api
     
     class ExercisesController < Api::V1::ApiController
       before_filter :identify_user
+      before_filter :identify_exercise, except: [:index, :create]
 
       # GET /exercises
       # GET /exercises.json
@@ -15,9 +16,13 @@ module Api
       # GET /exercises/1
       # GET /exercises/1.json
       def show
-        @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :read, :model=>@exercise)        
-        render json: @exercise.as_json(:include=>[:exercise_images, :exercise_illustrations, :exercise_videos])
+        render json: @exercise.as_json(:include=>[:exercise_images,
+                                                  :exercise_illustrations,
+                                                  :exercise_videos,
+                                                  subsections:{methods: [:name],
+                                                               include: {section:{include: {module: {methods: :name}},
+                                                                                  methods: :name}}}])
       end
 
       # POST /exercise
@@ -26,8 +31,8 @@ module Api
         authorize_request!(:exercise, :create)
 
         params[:exercise][:translations_attributes].each do |v|
-          authorize_request!(:translate,
-                            :create,
+          authorize_request!(:exercise,
+                            :translate,
                             scopes: [ v[:locale],
                                       params[:exercise][:context_type]]
                             )
@@ -50,11 +55,10 @@ module Api
       # PUT /exercise/1
       # PUT /exercise/1.json
       def update        
-        @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :modify, :model=>@exercise)
         params[:exercise][:translations_attributes].each do |v|
-          authorize_request!(:translate,
-                            :create,
+          authorize_request!(:exercise,
+                            :translate,
                             scopes: [ v[:locale],
                                       params[:exercise][:context_type]],
                             model: @exercise
@@ -74,10 +78,32 @@ module Api
       # DELETE /exercise/1
       # DELETE /exercise/1.json
       def destroy        
-        @exercise = Exercise.find(params[:id])
         authorize_request!(:exercise, :delete, :model=>@exercise)
-        @exercise.destroy
+        if @exercise.destroy
+          head :no_content
+        else
+          render json: @exercise.errors.full_messages, status: :unprocessable_entity
+        end
+      end
+
+      #POST /exercise/1/subsections
+      def add_to_subsection
+        subsection = Subsection.find(params[:subsection_id])
+        subsection.exercises << @exercise
         head :no_content
+      end
+
+      #DELETE /exercise/1/subsections/:id
+      def remove_from_subsection
+        subsection = Subsection.find(params[:subsection_id])
+        subsection.exercises.delete @exercise
+        head :no_content
+      end
+
+      private
+
+      def identify_exercise
+        @exercise = @api_license.exercises.find(params[:id])
       end
 
     end

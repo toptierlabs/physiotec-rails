@@ -27,8 +27,7 @@ languages.each do |v|
 end
 
 # Creates the permissions
-permissions = [ ["Translate", Exercise.name],
-								["Clinic", Clinic.name],
+permissions = [ ["Clinic", Clinic.name],
 								["Exercise", Exercise.name],
 								["License", License.name],
 								["User", User.name], 
@@ -40,9 +39,7 @@ permissions = [ ["Translate", Exercise.name],
 								["Section", SectionDatum.name],
 								["ExerciseIllustration",ExerciseIllustration.name],
 								["ExerciseImage", ExerciseImage.name],
-								["ExerciseVideo", ExerciseVideo.name],
-								["Section", Section.name],
-								["SectionDatum", SectionDatum.name]
+								["ExerciseVideo", ExerciseVideo.name]
 							]
 
 permissions.each do | name, model |
@@ -68,7 +65,7 @@ scopes.each do | name, scope_group |
 end
 
 #Links the permissions and the scope groups
-permission_scope_group = [["Translate", "Languages"], ["Translate", "Context"], ["Clinic", "Context"],
+permission_scope_group = [["Exercise", "Languages"], ["Module", "Languages"],["Section", "Languages"], ["Clinic", "Context"],
 												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"],
 												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"],["Permission", "Context"],
 												 ["Module", "Context"], ["Section", "Context"]]
@@ -98,20 +95,18 @@ profile_scope_permission = [
 														["Author", "Exercise", "Delete", ["Own"]],
 														["Author", "Exercise", "Read", ["Clinic"]],
 
-														["Translator", "Translate", "Create", ["en", "fr", "Own"]],
-														["Translator", "Translate", "Create", ["pt", "Clinic"]],
-														["Translator", "Translate", "Create", ["es", "License"]],
 														["Translator", "Exercise", "Create", ["Clinic"]],
 														["Translator", "Exercise", "Modify", ["Clinic"]],
 														["Translator", "Exercise", "Delete", ["Own"]],
 														["Translator", "Exercise", "Read", ["Clinic"]],
 														["Translator", "Clinic", "Read", ["License"]],
-														["Translator", "Module", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
 														["Translator", "Section", "Create", ["License"]],
 														["Translator", "Section", "Read", ["License"]],
 														["Translator", "Section", "Modify", ["License"]],
 														["Translator", "Section", "Delete", ["License"]],
+														["Translator", "Module", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
 														["Translator", "Section", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
+														["Translator", "Exercise", "Translate", ["ApiLicense", "en", "pt", "fr", "es"]],
 
 														["License administrator", "User", "Create", ["License"]],
 														["License administrator", "User", "Read", ["License"]],
@@ -135,8 +130,6 @@ profile_scope_permission = [
 														["License administrator", "Section", "Read", ["License"]],
 														["License administrator", "Section", "Modify", ["License"]],
 														["License administrator", "Section", "Delete", ["License"]],
-														["License administrator", "Section", "Translate", ["License", "en", "pt", "fr", "es"]],
-														["License administrator", "Module", "Translate", ["License", "en", "pt", "fr", "es"]],
 
 														["Clinic administrator", "User", "Create", ["Clinic"]],
 														["Clinic administrator", "User", "Read", ["Clinic"]],
@@ -149,23 +142,20 @@ profile_scope_permission = [
 														["Clinic administrator", "Exercise", "Modify", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
 														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Translate", ["Clinic", "en", "pt", "fr", "es"]],
+
 														["Clinic Administrator", "Section", "Create", ["Clinic"]],
 														["Clinic Administrator", "Section", "Read", ["Clinic"]],
 														["Clinic Administrator", "Section", "Modify", ["Clinic"]],
 														["Clinic Administrator", "Section", "Delete", ["Clinic"]],
-														["Clinic administrator", "Section", "Translate", ["Clinic", "en", "pt", "fr", "es"]],
 														["Clinic Administrator", "Module", "Create", ["Clinic"]],
 														["Clinic Administrator", "Module", "Read", ["Clinic"]],
 														["Clinic Administrator", "Module", "Modify", ["Clinic"]],
 														["Clinic Administrator", "Module", "Delete", ["Clinic"]],
-														["Clinic administrator", "Module", "Translate", ["Clinic", "en", "pt", "fr", "es"]],
 
 														["API Administrator", "Section", "Create", ["ApiLicense"]],
 														["API Administrator", "Section", "Read", ["ApiLicense"]],
 														["API Administrator", "Section", "Modify", ["ApiLicense"]],
 														["API Administrator", "Section", "Delete", ["ApiLicense"]],
-														["API administrator", "Section", "Translate", ["en", "pt", "fr", "es", "ApiLicense"]],
 														["API Administrator", "License", "Create", ["ApiLicense"]],
 														["API Administrator", "License", "Read", ["ApiLicense"]],
 														["API Administrator", "License", "Modify", ["ApiLicense"]],
@@ -179,7 +169,6 @@ profile_scope_permission = [
 														["API administrator", "Exercise", "Modify", ["ApiLicense"]],
 														["API administrator", "Exercise", "Delete", ["ApiLicense"]],
 														["API administrator", "Exercise", "Create", ["ApiLicense"]],
-														["API administrator", "Exercise", "Translate", ["ApiLicense", "en", "pt", "fr", "es"]],
 														["API Administrator", "User", "Create", ["ApiLicense"]],
 														["API Administrator", "User", "Read", ["ApiLicense"]],
 														["API Administrator", "User", "Modify", ["ApiLicense"]],
@@ -207,22 +196,37 @@ profile_scope_permission = [
 														["API Administrator", "Module", "Create", ["ApiLicense"]],
 														["API Administrator", "Module", "Read", ["ApiLicense"]],
 														["API Administrator", "Module", "Modify", ["ApiLicense"]],
-														["API Administrator", "Module", "Delete", ["ApiLicense"]],
-														["API administrator", "Module", "Translate", ["en", "pt", "fr", "es","ApiLicense"]]
+														["API Administrator", "Module", "Delete", ["ApiLicense"]]
 
 													]
 
 
 
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
-	#sp = ScopePermission.where( permission_id: Permission.find_by_name( permission ).id,
-															#action_id: Action.find_by_name( action ).id ).firsts
-	sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
-															 action_id: Action.find_by_name( action ).id )# if sp.nil?
-	profile_scopes.each do | scope |
-		ScopePermissionGroupScope.create( scope_permission_id: sp.id,
-		scope_id: Scope.find_by_name(scope).id )
-	end unless profile_scopes.nil?
+	sp = nil
+	exists = false
+	sps = ScopePermission.joins("LEFT JOIN scope_permission_group_scopes ON " <<
+		                   			  "(`scope_permission_group_scopes`.`scope_permission_id` = " <<
+		                   			  "`scope_permissions`.id)")
+									     .where(permission_id: Permission.find_by_name(permission).id,
+												      action_id: Action.find_by_name(action).id )
+	if sps.present?
+		#check if the scopes are equal
+		sps.each do |v|
+			exists = (v.scope_ids - Scope.where(name: profile_scopes).pluck(:id)).empty?
+			sp = v if exists
+			break if exists
+		end		
+	end
+
+	if (sps.empty?) || (!exists)
+		sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
+																 action_id: Action.find_by_name( action ).id )# if sp.nil?
+		profile_scopes.each do | scope |
+			ScopePermissionGroupScope.create( scope_permission_id: sp.id,
+			scope_id: Scope.find_by_name(scope).id )
+		end unless profile_scopes.nil?
+	end
 
 	ProfileScopePermission.create(profile_id: Profile.find_by_name(profile).id,
 																scope_permission_id: sp.id)

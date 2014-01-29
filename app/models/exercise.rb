@@ -7,30 +7,6 @@ class Exercise < ActiveRecord::Base
           where("api_license_id = ? OR api_license_id IS NULL", api_license.id)
         }
 
-  def by_user_scope(user)
-    #get user context
-    #get permission for read exercises
-    result = case user_scope
-    when :api_license
-      #return all exercises
-      where(api_license_id: [api_license.id, nil])
-    when :license
-      #return exercises inside user license and its clinics
-      where(context_type: License.name,
-            context_id: user.context_id) <<
-      where(context_type: Clinic.name,
-            context_id: license.clinics.pluck(:id))
-
-    when :clinic
-      #return exercises inside user clinics
-        where(context_type: Clinic.name,
-        context_id: user.context_id)
-    when :own
-      #return only user's exercises
-    end
-    result
-  end
-
   attr_protected  :owner_id,
                   :api_license_id
 
@@ -55,9 +31,12 @@ class Exercise < ActiveRecord::Base
   has_many   :exercise_illustrations,          dependent: :destroy
   has_many   :exercise_images,                 dependent: :destroy
   has_many   :exercise_videos,                 dependent: :destroy
+  has_many   :subsection_exercises
+  has_many   :subsections,                     through: :subsection_exercises
   belongs_to :api_license
   belongs_to :owner,                           class_name: "User"
   belongs_to :context,                         polymorphic: true
+
 
   accepts_nested_attributes_for :translations,
                                 :exercise_illustrations,

@@ -18,4 +18,8 @@ class Section < ActiveRecord::Base
   validates  :category,        presence: true
   validates  :section_datum,   presence: true
 
+  def module
+    category
+  end
+
 end

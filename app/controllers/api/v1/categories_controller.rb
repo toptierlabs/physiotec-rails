@@ -30,9 +30,9 @@ module Api
 
         render json: category.as_json(include: { sections:
                                                   { :only=>[:id, :section_datum_id],
-                                                    methods: :translations,
+                                                    methods: [:translations, :name],
                                                     include: {subsections: {only: [:id, :subsection_datum_id],
-                                                                            methods: :translations} } } })
+                                                                            methods: [:name, :translations] } } } })
       end
 
       # POST /module

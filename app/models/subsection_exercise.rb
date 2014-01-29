@@ -6,9 +6,9 @@ class SubsectionExercise < ActiveRecord::Base
   attr_accessible :subsection_id,
                   :exercise_id
 
-  validates       :exercise_id,   uniqueness: { scope: :subseciton_id }
+  validates       :exercise_id,   uniqueness: { scope: :subsection_id }
 
-  validates       :subsection_id,
-                  :exercise_id,   presence: true
+  validates       :subsection,
+                  :exercise,   presence: true
 
 end
