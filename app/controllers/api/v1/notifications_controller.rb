@@ -35,15 +35,18 @@ module Api
       private 
 
         def store_status(job_id, state)
-          video = ExerciseVideo.where(job_id: job_id).first
-        
+          puts job_id
 
-          if ((state == "COMPLETED") || (state ==  "WARNING"))   
-            video.status = ExerciseVideo::STATES[:completed]
-          elsif (state == "ERROR")
-            video.status = ExerciseVideo::STATES[:failed]
+          video = ExerciseVideo.where(job_id: job_id).first
+          if !video.nil?
+            if ((state == "COMPLETED") || (state ==  "WARNING"))   
+              video.status = ExerciseVideo::STATES[:completed]
+            elsif (state == "ERROR")
+              video.status = ExerciseVideo::STATES[:failed]
+            end
+            video.save
           end
-          video.save
+          
 
         end 
     end
