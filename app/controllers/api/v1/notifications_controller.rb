@@ -35,7 +35,7 @@ module Api
       private 
 
         def store_status(job_id, state)
-          video = ExerciseVideo.where(job_id: aws_et_job_id).first
+          video = ExerciseVideo.where(job_id: job_id).first
         
 
           if ((state == "COMPLETED") || (state ==  "WARNING"))   
