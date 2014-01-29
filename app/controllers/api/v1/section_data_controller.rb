@@ -48,7 +48,7 @@ module Api
       # PUT /sections/1.json
       def update        
         section = SectionDatum.find(params[:id])
-        authorize_request! :section_datum,
+        authorize_request! :section,
                            :modify,
                            model: section
 

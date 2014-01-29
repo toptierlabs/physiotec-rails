@@ -1,5 +1,4 @@
 module PermissionHelper 
-	attr_accessor :cache_user_permissions
 
 	# def can?(permission, action, extra_args = nil)
 	# 	#sanitize the params
@@ -73,18 +72,15 @@ module PermissionHelper
 			abilities.each do |v| 
 				if check_model && check_scopes
 					result = v.check_scopes(scopes) && (model.clinic_scopes(self).include? v.context_scope.name.as_sym)
-					puts '*'*80
 
-				elsif check_scopes
-					result = v.check_scopes(scopes)
+				elsif check_scopes					
+					result = v.check_scopes(scopes)					
 
 				elsif check_model					
 					if model.respond_to?(:clinic_scopes)
-						puts '#'*80
-						puts model.clinic_scopes(self)
-						puts v.context_scope.name.as_sym
 						puts '*'*80
 						result = model.clinic_scopes(self).include? v.context_scope.name.as_sym
+						puts result
 					else
 						result = true
 					end
@@ -92,8 +88,9 @@ module PermissionHelper
 				else
 					result = true
 				end
-				return result if result
-			end
+				puts result
+				break if result
+			end			
 		end
 		result
 	end

@@ -54,8 +54,8 @@ module Api
 	        if options[:context_type].present?	         
 		        contexts = @current_user.contexts(only: options[:context_type].as_sym) 
 
-		        authorized = (options[:context_type] == User.name) ||
-		                     contexts.select{ |v| v.id == options[:context_id] }.present?
+		        authorized = contexts.select{ |v| v.id == options[:context_id] 
+		                                          v.class.name == options[:context_type] }.present?
 		        raise PermissionsHelper::ForbiddenAccess.new unless authorized
 		      end
 				end
