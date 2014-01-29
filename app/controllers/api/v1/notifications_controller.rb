@@ -5,6 +5,7 @@ module Api
       # POST /notifications
       # POST /notifications.json
       def create
+        puts '('*50
         body = request.body.read()
         puts body
         puts '*'* 40
