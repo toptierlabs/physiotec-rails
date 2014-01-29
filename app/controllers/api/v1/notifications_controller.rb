@@ -5,8 +5,10 @@ module Api
       # POST /notifications
       # POST /notifications.json
       def create
-        puts request.body.read()
-        aws_request_body = JSON.parse(request.body.read())
+        body = request.body.read()
+        puts body
+        puts '*'* 40
+        aws_request_body = JSON.parse(body)
         puts '='*50
         puts aws_request_body
         puts '\n','-'*50
