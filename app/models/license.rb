@@ -83,7 +83,7 @@ class License < ActiveRecord::Base
     end
 
     def confirm_relation_with_clinics
-      if (self.clinics.length > 0)        
+      if (self.clinics.size > 0)        
         self.errors[:base] << "Can't delete a License unless it is not associated with any clinic"
         false
       end

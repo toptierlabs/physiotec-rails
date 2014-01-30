@@ -14,7 +14,6 @@ class Category < ActiveRecord::Base
 
 	belongs_to :owner,                           class_name: "User"
   belongs_to :context,                         polymorphic: true
-  belongs_to :api_license
 
   has_many   :sections,     inverse_of: :category,
                             dependent:  :destroy
