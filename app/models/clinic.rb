@@ -6,9 +6,9 @@ class Clinic < ActiveRecord::Base
 
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
-	belongs_to :license
+	belongs_to :license,    inverse_of: :clinics
 	belongs_to :api_license
-	#multiple associations with exercises
+
 	has_many :exercises, as: :context, :dependent => :destroy
 	has_many :users, as: :context, :dependent => :destroy
 

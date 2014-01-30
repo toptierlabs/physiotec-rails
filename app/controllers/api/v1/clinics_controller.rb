@@ -23,13 +23,17 @@ module Api
       # POST /clinics
       # POST /clinics.json
       def create
-        authorize_request!(:clinic, :create)       
-        @clinic = Clinic.new(params[:clinic])
-        @clinic.api_license_id = @api_license.id
-        if @clinic.save
-          render json: @clinic, status: :created
+        authorize_request!(:clinic, :create)
+        license = License.find(params[:clinic][:license_id])
+        clinic = Clinic.new(params[:clinic])
+
+        #Add the clinic to the license so it's counted during the license validation
+        license.clinics << clinic
+        clinic.api_license_id = @api_license.id
+        if clinic.save
+          render json: clinic, status: :created
         else
-          render json: @clinic.errors.full_messages, status: :unprocessable_entity
+          render json: clinic.errors.full_messages, status: :unprocessable_entity
         end
       end
 

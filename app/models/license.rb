@@ -15,11 +15,12 @@ class License < ActiveRecord::Base
 
   belongs_to :api_license
   
-  has_many :exercises,  as:        :context,
-                        dependent: :destroy
-  has_many :users,      as:        :context,
-                        dependent: :destroy
-  has_many :clinics,    dependent: :destroy
+  has_many :exercises,  as:         :context,
+                        dependent:  :destroy
+  has_many :users,      as:         :context,
+                        dependent:  :destroy
+  has_many :clinics,    dependent:  :destroy,
+                        inverse_of: :license
 
   has_many :license_categories, as:         :context,
                                 class_name: 'Category',
@@ -30,7 +31,7 @@ class License < ActiveRecord::Base
                                 through:    :api_license
 
   def categories
-    license_categories << api_categories
+    license_categories + api_categories
   end
 
   #model validations
@@ -52,7 +53,7 @@ class License < ActiveRecord::Base
   validates :api_license,     presence: true
 
 
-  validate :validate_clinics, :on => :update
+  validate :validate_clinics
 
   validate :validate_users,   :on => :update
 
@@ -73,12 +74,12 @@ class License < ActiveRecord::Base
 
     def validate_clinics
       errors.add(:clinics, "already reached license maximum quota") if (maximum_clinics != 0) &&
-                                          (clinics.size  >= maximum_clinics)
+                                          (clinics.size  > maximum_clinics)
     end
     
     def validate_users
       errors.add(:users, "already reached license maximum quota") if (maximum_users != 0) &&
-                                        (self.users.size >= maximum_users)
+                                        (self.users.size > maximum_users)
     end
 
     def confirm_relation_with_clinics
