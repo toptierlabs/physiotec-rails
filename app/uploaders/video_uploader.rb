@@ -42,7 +42,7 @@ class VideoUploader < CarrierWave::Uploader::Base
       outputs: [{ 
         key: "uploads/#{model.class.to_s.underscore}/#{model.token}/encoded_#{filename}",
         preset_id: web_mp4_360_preset_id,
-        thumbnail_pattern: "uploads/#{model.class.to_s.underscore}/#{model.token}/thumbnail_{count}",
+        thumbnail_pattern: "uploads/#{model.class.to_s.underscore}/#{model.token}/thumb_#{filename}_{count}",
         rotate: '0'
       }
       ]
