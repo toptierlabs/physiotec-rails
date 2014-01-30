@@ -50,7 +50,7 @@ class VideoUploader < CarrierWave::Uploader::Base
     )
    
     #add converted_ prefix to video's filenam e attribute
-    model.update_column(:video, "converted_#{filename}")
+    model.update_column(:video, "encoded_#{filename}")
     
     #link the aws elastic transcoder job id with the video
     model.update_column(:job_id, aws_et_job.job[:id])
