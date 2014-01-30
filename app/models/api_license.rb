@@ -19,9 +19,14 @@ class ApiLicense < ActiveRecord::Base
                             class_name: "Category"
 
   has_many :license_categories, through: :licenses
+  has_many :clinic_categories,  through: :clinics,
+                                source:  :categories
+  has_many :user_categories,    through: :users,
+                                source:  :categories
   
   def categories
-    api_categories + license_categories
+    api_categories + license_categories +
+    clinic_categories + user_categories
   end
 
   #Set the attributes validations

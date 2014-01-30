@@ -22,7 +22,7 @@ module Api
 																
 																context: { 'Clinic'=> @selected_user.contexts(only: :clinic).as_json(only:[:id, :name],:methods => :entity),
 																					 'License'=> @selected_user.contexts(only: :license).as_json(only:[:id, :company_name],:methods => :entity),
-																					 'api_license'=> @selected_user.contexts(only: :api_license).as_json(only:[:id, :name],:methods => :entity),
+																					 'ApiLicense'=> @selected_user.contexts(only: :api_license).as_json(only:[:id, :name],:methods => :entity),
 																					 'Own' => [{id: @selected_user.id, entity: User.name}] }}
 
 					render json: formatted_response

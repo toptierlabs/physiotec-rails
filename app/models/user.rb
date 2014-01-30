@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
 	has_many :user_profiles
 	has_many :profiles, :through => :user_profiles
 
+	has_many :categories,     as: :context
+
 	validates :email,         presence: true
 	validates :first_name,    presence: true
 	validates :last_name,     presence: true

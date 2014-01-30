@@ -9,8 +9,11 @@ class Clinic < ActiveRecord::Base
 	belongs_to :license,    inverse_of: :clinics
 	belongs_to :api_license
 
-	has_many :exercises, as: :context, :dependent => :destroy
-	has_many :users, as: :context, :dependent => :destroy
+	has_many :exercises, as: :context, dependent: :destroy
+	has_many :users,                   as: :context,
+	                                   dependent: :destroy
+	has_many :categories,              as:        :context
+                               
 
 
 	validates :license, :associated => { :message => "reached maximum clinics" },
