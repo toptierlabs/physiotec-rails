@@ -10,8 +10,8 @@ class ProfileScopePermission < ActiveRecord::Base
   validates :scope_permission_id, :uniqueness => {:scope => :profile_id}
 
   # activeadmin, validates the profile when its updated
-  validates :scope_permission, :presence => true
-  validates :profile, :presence => true, :on => :update
+  validates :scope_permission, presence: true
+  validates :profile, presence: true, :on => :update
 
   def datatype
     result = {}

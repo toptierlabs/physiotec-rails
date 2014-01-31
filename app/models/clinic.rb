@@ -6,29 +6,31 @@ class Clinic < ActiveRecord::Base
 
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
-	belongs_to :license,    inverse_of: :clinics
+	belongs_to :license,      inverse_of: :clinics
 	belongs_to :api_license
 
-	has_many :exercises, as: :context, dependent: :destroy
-	has_many :users,                   as: :context,
-	                                   dependent: :destroy
-	has_many :categories,              as:        :context
+	has_many :exercises,      as: :context,
+	                          dependent: :destroy
+	has_many :users,          as: :context,
+														inverse_of: :context,
+	                          dependent: :destroy
+	has_many :categories,     as: :context
                                
 
 
-	validates :license, :associated => { :message => "reached maximum clinics" },
+	validates :license, associated: { message: "reached maximum clinics" },
 											:if => lambda { self.license_id_changed? }
 
-	validates :name, :uniqueness => {:scope => :license_id}
-	validates :name, :license, :api_license, :presence => true
+	validates :name,        uniqueness: { scope: :license_id }
+	validates :name,        presence: true
+	validates :license,     presence: true
+	validates :api_license, presence: true
 
-	attr_accessible :name, :license_id	 
-	attr_protected :api_license_id
+	attr_accessible :name, :license_id
 
 	def clinic
 		self
-	end
-	
+	end	
 
 	def context
 		self.license
@@ -41,11 +43,11 @@ class Clinic < ActiveRecord::Base
 
   private
 
-  def confirm_relation_with_exercises
-    if (self.exercises.size > 0)        
-      self.errors[:base] << "Can't delete a clinic unless it is not associated with any exercise"
-      false
-    end
-  end
+	  def confirm_relation_with_exercises
+	    if (self.exercises.size > 0)        
+	      self.errors[:base] << "Can't delete a clinic unless it is not associated with any exercise"
+	      false
+	    end
+	  end
 
 end

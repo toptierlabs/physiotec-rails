@@ -18,7 +18,8 @@ class License < ActiveRecord::Base
   has_many :exercises,  as:         :context,
                         dependent:  :destroy
   has_many :users,      as:         :context,
-                        dependent:  :destroy
+                        dependent:  :destroy,
+                        inverse_of: :context
   has_many :clinics,    dependent:  :destroy,
                         inverse_of: :license
 
@@ -55,7 +56,7 @@ class License < ActiveRecord::Base
 
   validate :validate_clinics
 
-  validate :validate_users,   :on => :update
+  validate :validate_users
 
   def license
     self
@@ -70,16 +71,20 @@ class License < ActiveRecord::Base
     self.company_name
   end
 
+  def can_add_users?
+    return users_count < maximum_users
+  end
+
   private
 
     def validate_clinics
-      errors.add(:clinics, "already reached license maximum quota") if (maximum_clinics != 0) &&
+      errors.add(:clinics, "reached license maximum quota") if (maximum_clinics != 0) &&
                                           (clinics.size  > maximum_clinics)
     end
     
     def validate_users
-      errors.add(:users, "already reached license maximum quota") if (maximum_users != 0) &&
-                                        (self.users.size > maximum_users)
+      errors.add(:users, "reached license maximum quota") if (maximum_users != 0) &&
+                                        (users.size > maximum_users)
     end
 
     def confirm_relation_with_clinics

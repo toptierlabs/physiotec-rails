@@ -23,7 +23,7 @@ class Profile < ActiveRecord::Base
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
   
-  validates :name, :presence => true
+  validates :name, presence: true
   validates :name, :uniqueness => {:scope => :api_license_id}
 
 

@@ -5,7 +5,7 @@ class Language < ActiveRecord::Base
 	belongs_to :api_license
 	attr_accessible :description, :locale
 
-	validates :description, :locale, :presence => true
+	validates :description, :locale, presence: true
 	validates :locale, :uniqueness => { :scope => :api_license_id }
 
 	def display_name

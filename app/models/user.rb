@@ -3,42 +3,20 @@ class User < ActiveRecord::Base
 	include PermissionHelper
 	include AssignableHelper
 
+	before_save    :add_user_to_license
+	before_destroy :remove_user_from_license
+
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
-	# Include default devise modules. Others available are:
-	# :confirmable, :lockable, :timeoutable and :omniauthable
-	devise :database_authenticatable, :registerable,
-				 :recoverable, :trackable, :confirmable,# :rememberable, :validatable
-				 request_keys: [:api_license_id]
-
-	attr_accessible :email,
-	                :password,
-	                :password_confirmation,
-	                :remember_me,
-									:first_name,
-									:last_name,
-									:api_license_id,
-									:session_token,
-									:session_token_created_at,
-									:profiles,
-									:user_profiles_attributes,
-									#:user_scope_permissions_attributes,
-									:context_id,
-									:context_type,
-									:profile_ids,
-									:user_profiles,
-									:user_scope_permissions,
-									:scope_permission_ids
-
 	belongs_to :api_license
-	belongs_to :context,     polymorphic: true  
+	belongs_to :context,     polymorphic: true,
+	                         inverse_of:  :users
 
 	has_many :user_scope_permissions, inverse_of: :user
 	has_many :scope_permissions, through: :user_scope_permissions
 
 	has_many :user_clinics
-	has_many :clinics, through: :user_clinics
-	
+	has_many :clinics, through: :user_clinics	
 
 	has_many :user_profiles
 	has_many :profiles, :through => :user_profiles
@@ -58,16 +36,44 @@ class User < ActiveRecord::Base
 
 	validates :email,   uniqueness: { :scope => :api_license_id }
 
-	validates :context, associated: { :message => "reached maximum users" },
-											:if => lambda { (self.context_type == License.name) &&
-																			(self.context_id_changed? ||
-																			 self.context_type_changed?) }
+	validate :relation_with_license
 
+  # validates :context, associated: { :message => "reached maximum users" },
+		# 								  # Validate license maximum users if user
+		# 								  # context class is Licence and has changed
+		# 									:if => lambda { (self.context_type == License.name) &&
+		# 																	(self.context_id_changed? ||
+		# 																	 self.context_type_changed?) }
 
   accepts_nested_attributes_for :user_clinics,           allow_destroy: true
 	accepts_nested_attributes_for :user_profiles,          allow_destroy: true
   accepts_nested_attributes_for :user_scope_permissions, allow_destroy: true
 
+
+	# Include default devise modules. Others available are:
+	# :confirmable, :lockable, :timeoutable, :omniauthable
+	# :rememberable and :validatable
+	devise :database_authenticatable, :registerable,
+				 :recoverable, :trackable, :confirmable,
+				 request_keys: [:api_license_id]
+
+	attr_accessible :email,
+	                :password,
+	                :password_confirmation,
+	                :remember_me,
+									:first_name,
+									:last_name,
+									:api_license_id,
+									:session_token,
+									:session_token_created_at,
+									:profiles,
+									:user_profiles_attributes,
+									:context_id,
+									:context_type,
+									:profile_ids,
+									:user_profiles,
+									:user_scope_permissions,
+									:scope_permission_ids
 
 
 	#Set the method to create new session tokens
@@ -196,5 +202,28 @@ class User < ActiveRecord::Base
   		v.set_user_scope_permissions
   	end
   end
+
+  private
+
+    def relation_with_license
+    	unless (self.context_type == License.name) &&
+    	(self.context_id_changed? || self.context_type_changed?) &&
+    	(self.context.can_add_users?)
+    	  self.errors[:context] << "reached maximum users"  		
+    	end
+    end
+
+	 	def add_user_to_license
+	 		if (self.context_type == License.name) &&
+	    	(self.context_id_changed? || self.context_type_changed?)
+	    	context.update_column(:users_count, context.users_count+1)
+	    end
+	 	end
+
+		def remove_user_from_license
+	 		if (self.context_type == License.name)
+	    	context.update_column(:users_count, context.users_count-1)
+	    end
+		end
 
 end

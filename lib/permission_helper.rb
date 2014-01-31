@@ -78,9 +78,7 @@ module PermissionHelper
 
 				elsif check_model					
 					if model.respond_to?(:clinic_scopes)
-						puts '*'*80
 						result = model.clinic_scopes(self).include? v.context_scope.name.as_sym
-						puts result
 					else
 						result = true
 					end

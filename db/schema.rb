@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140124140258) do
+ActiveRecord::Schema.define(:version => 20140131171831) do
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(:version => 20140124140258) do
     t.datetime "updated_at",      :null => false
     t.integer  "api_license_id"
     t.string   "company_name"
+    t.integer  "users_count"
   end
 
   create_table "notifications", :force => true do |t|

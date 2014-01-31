@@ -7,13 +7,16 @@ class ApiLicense < ActiveRecord::Base
                   :name,
                   :licenses
 
-  has_many :languages,      :dependent => :destroy
-  has_many :users,          :dependent => :destroy 
-  has_many :profiles,       :dependent => :destroy
-  has_many :clinics,        :dependent => :destroy
-  has_many :licenses,       :dependent => :destroy
-  has_many :exercises,      :dependent => :destroy
-  has_many :sections,       :dependent => :destroy
+  has_many :languages,      dependent: :destroy
+  has_many :api_users,      dependent: :destroy,
+                            class_name: "User"
+  has_many :users,          as: :context,
+                            inverse_of: :context
+  has_many :profiles,       dependent: :destroy
+  has_many :clinics,        dependent: :destroy
+  has_many :licenses,       dependent: :destroy
+  has_many :exercises,      dependent: :destroy
+  has_many :sections,       dependent: :destroy
   has_many :api_categories, as:        :context,
                             dependent: :destroy,
                             class_name: "Category"
@@ -33,7 +36,7 @@ class ApiLicense < ActiveRecord::Base
   validates :name,
             :description,
             :public_api_key,
-            :secret_api_key,   :presence => true
+            :secret_api_key,   presence: true
 
   validates :name,
             :public_api_key,

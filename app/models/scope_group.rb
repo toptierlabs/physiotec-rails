@@ -8,7 +8,7 @@ class ScopeGroup < ActiveRecord::Base
   has_many :permission_scope_group, :dependent => :destroy
 
   validates :name, :uniqueness => true
-  validates :name, :presence => true
+  validates :name, presence: true
 
   attr_accessible :description, :name
 

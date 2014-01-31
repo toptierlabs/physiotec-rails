@@ -24,7 +24,6 @@ CarrierWave.configure do |config|
   config.cache_dir = "#{Rails.root}/tmp/uploads"
  
   config.fog_directory    = S3_CONFIG['S3_BUCKET_NAME']
-  config.fog_attributes = { 'Cache-Control'=>'max-age=315576000' }
+  config.fog_attributes = { 'Cache-Control' => 'max-age=315576000' }
 
 end
-

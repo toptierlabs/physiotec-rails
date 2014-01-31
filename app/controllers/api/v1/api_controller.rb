@@ -51,11 +51,12 @@ module Api
 	          options[:context_id] = @api_license.id
 	        end
 
-	        if options[:context_type].present?	         
-		        contexts = @current_user.contexts(only: options[:context_type].as_sym) 
+	        if options[:context_type].present?	  
+	        	puts @current_user.to_yaml
+	        	puts options[:context_type].as_sym  
+		        contexts = @current_user.contexts(only: options[:context_type].as_sym) || []
 
-		        authorized = contexts.select{ |v| v.id == options[:context_id] 
-		                                          v.class.name == options[:context_type] }.present?
+		        authorized = contexts.select{ |v| v.id == options[:context_id] }.present?
 		        raise PermissionsHelper::ForbiddenAccess.new unless authorized
 		      end
 				end

@@ -47,7 +47,7 @@ class Exercise < ActiveRecord::Base
             :owner,
             :code,
             :context_type,
-            :context_id,       :presence => true
+            :context_id,       presence: true
   validates :code,             :uniqueness => { :scope => :api_license_id }
   
   def link_orphan_media
@@ -73,7 +73,7 @@ class Exercise < ActiveRecord::Base
   end
 
   class Translation
-    validates :title,      :presence => true
+    validates :title,      presence: true
     validates :locale,     :uniqueness => {:scope => :exercise_id}
   end
 

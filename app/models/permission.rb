@@ -10,7 +10,7 @@ class Permission < ActiveRecord::Base
   accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
 
   validates :name, :uniqueness => true
-  validates :name, :presence => true
+  validates :name, presence: true
 
   attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
                   :model_name, :scope_group_ids
