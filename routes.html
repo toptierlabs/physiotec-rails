@@ -1,0 +1,575 @@
+<html><head><title>Your APP</title>
+         <style type='text/css'>
+         body { background-color: #333; color: #FFF; }
+         table { border: 1px solid #777; background-color: #111; }
+         td, th { font-size: 11pt; text-align: left; padding-right: 10px; }
+         th { font-size: 12pt; }
+         pre { maring: 0; padding: 0; }
+         .contrl_head { font-size: 14pt; padding: 15px 0 5px 0; }
+         .contrl_name { color: #ACE; }
+         .punct { color: #99F; font-weight: bold; }
+         .symbol { color: #7DD; }
+         .regex { color: #F66; }
+         .string { color: #F99; }4
+         </style></head>
+         <body>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/languages</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_languages</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/languages</td>
+  <td width='80%'>Get the list of languages</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/languages</td>
+  <td width='80%'>Create a language</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_language</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/languages/:id</td>
+  <td width='80%'>Get information of a language</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/languages/:id</td>
+  <td width='80%'>Update a language</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/languages/:id</td>
+  <td width='80%'>Delete a language</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/licenses</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_licenses</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses</td>
+  <td width='80%'>Get list of licenses</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses</td>
+  <td width='80%'>Create a license</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Get information of a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Update a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Delete a license</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/clinics</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_clinics</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/clinics</td>
+  <td width='80%'>Get list of clinics</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/clinics</td>
+  <td width='80%'>Create a clinic</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_clinic</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/clinics/:id</td>
+  <td width='80%'>Get information of a clinic</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/clinics/:id</td>
+  <td width='80%'>Update a clinic</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/clinics/:id</td>
+  <td width='80%'>Delete a clinic</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/scope_permissions</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_permissions</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_permissions</td>
+  <td width='80%'>Get list of abilities</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_permissions</td>
+  <td width='80%'>Create ability</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_permission</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_permissions/:id</td>
+  <td width='80%'>Get information of a ability</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_permissions/:id</td>
+  <td width='80%'>Update ability</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_permissions/:id</td>
+  <td width='80%'>Delete ability</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/permissions</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_permissions</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/permissions</td>
+  <td width='80%'>Get list of permissions</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/permissions</td>
+  <td width='80%'>Create permission</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_permission</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/permissions/:id</td>
+  <td width='80%'>Get information of a permission</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/permissions/:id</td>
+  <td width='80%'>Delete permission</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercise_images</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_images</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_images</td>
+  <td width='80%'>Get list of exercise images</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_images</td>
+  <td width='80%'>Create exercise image</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_image</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_images/:id</td>
+  <td width='80%'>Get information of exercise image</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_images/:id</td>
+  <td width='80%'>Update exercise image</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_images/:id</td>
+  <td width='80%'>Delete exercise image</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercise_illustrations</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_illustrations</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_illustrations</td>
+  <td width='80%'>Get list of exercise illustrations</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_illustrations</td>
+  <td width='80%'>Create exercise illustration</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_illustration</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_illustrations/:id</td>
+  <td width='80%'>Get information of exercise illustration</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_illustrations/:id</td>
+  <td width='80%'>Update exercise illustration</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercise_illustrations/:id</td>
+  <td width='80%'>Delete exercise illustration</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/categories</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_categories</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/modules</td>
+  <td width='80%'>Get list of modules</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/modules</td>
+  <td width='80%'>Create module</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_category</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/modules/:id</td>
+  <td width='80%'>Show information of a module</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/modules/:id</td>
+  <td width='80%'>Update information of a module</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/modules/:id</td>
+  <td width='80%'>Delete module</td></tr>
+</table>
+
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/profiles</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>assign_ability_api_v1_profile</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles/:id/assign_ability</td>
+  <td width='80%'>Assign ability to profile</td></tr>
+  <tr><td width='12%' class='string'><b>unassign_ability_api_v1_profile</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles/:id/unassign_ability</td>
+  <td width='80%'>Unassign ability from profile</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_profiles</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles</td>
+  <td width='80%'>Get list of profiles</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles</td>
+  <td width='80%'>Create profile</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_profile</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles/:id</td>
+  <td width='80%'>Get information of profile</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles/:id</td>
+  <td width='80%'>Update profile</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/profiles/:id</td>
+  <td width='80%'>Delete profile</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/actions</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_actions</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/actions</td>
+  <td width='80%'>Get list of actions</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_action</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/actions/:id</td>
+  <td width='80%'>Show information of actions</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/scope_groups/scopes</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_group_scopes</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:scope_group_id/scopes</td>
+  <td width='80%'>Get list of scopes of a scope group</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:scope_group_id/scopes</td>
+  <td width='80%'>Create scope within a scope group</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_group_scope</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:scope_group_id/scopes/:id</td>
+  <td width='80%'>Get description of a scope within a scope group</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:scope_group_id/scopes/:id</td>
+  <td width='80%'>Update scope information within a scope group</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:scope_group_id/scopes/:id</td>
+  <td width='80%'>Remove a scope from a scope group</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/scope_groups</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_groups</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups</td>
+  <td width='80%'>Get list of scope groups</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups</td>
+  <td width='80%'>Create scope group</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_scope_group</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:id</td>
+  <td width='80%'>Get information of a scope group</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:id</td>
+  <td width='80%'>Update scope group</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/scope_groups/:id</td>
+  <td width='80%'>Delete scope group</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/users</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>assign_profile_api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id/assign_profile</td>
+  <td width='80%'>Assign profile to user</td></tr>
+  <tr><td width='12%' class='string'><b>unassign_profile_api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id/unassign_profile</td>
+  <td width='80%'>Unassign profile from user</td></tr>
+  <tr><td width='12%' class='string'><b>assign_ability_api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id/assign_ability</td>
+  <td width='80%'>Assign ability to user</td></tr>
+  <tr><td width='12%' class='string'><b>unassign_ability_api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id/unassign_ability</td>
+  <td width='80%'>Unassign ability from user</td></tr>
+  <tr><td width='12%' class='string'><b>assignable_profiles_api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id/assignable_profiles</td>
+  <td width='80%'>List of profiles that a specific user can assign to other users (if permitted)</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/users/user_scope_permissions</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_user_user_scope_permissions</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:user_id/user_scope_permissions</td>
+  <td width='80%'>Get list of user abilities</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_user_user_scope_permission</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:user_id/user_scope_permissions/:id</td>
+  <td width='80%'>Get information of a user ability</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/users/user_profiles</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_user_user_profiles</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:user_id/user_profiles</td>
+  <td width='80%'>Get list of user profiles</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_user_user_profile</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:user_id/user_profiles/:id</td>
+  <td width='80%'>Get information of a specific user profile</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/users</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>login_api_v1_users</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users/login</td>
+  <td width='80%'>LLogin webservice</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_users</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users</td>
+  <td width='80%'>Get list of users</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/users</td>
+  <td width='80%'>Create user</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_user</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id</td>
+  <td width='80%'>Get information of a user</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id</td>
+  <td width='80%'>Update user</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/users/:id</td>
+  <td width='80%'>Delete user</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/section_data</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_section_data</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/section_data</td>
+  <td width='80%'>Get list of sectors data</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/section_data</td>
+  <td width='80%'>Create sector data</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_section_datum</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/section_data/:id</td>
+  <td width='80%'>Get information of a specific sector data</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/section_data/:id</td>
+  <td width='80%'>Update a sector data</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/section_data/:id</td>
+  <td width='80%'>Delete a sector data</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/licenses/categories/sections/subsections</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_category_section_subsections</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:section_id/subsections</td>
+  <td width='80%'>Get list of subsectors on a sector</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:section_id/subsections</td>
+  <td width='80%'>Create subsector within a sector</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_category_section_subsection</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:section_id/subsections/:id</td>
+  <td width='80%'>Get information of a specific subsector within a secotr</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:section_id/subsections/:id</td>
+  <td width='80%'>Update subsector within a sector</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:section_id/subsections/:id</td>
+  <td width='80%'>Remove a subsector from a sector</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/licenses/categories/sections</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_category_sections</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections</td>
+  <td width='80%'>Get the list of sectors within a module</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections</td>
+  <td width='80%'>Create a sector within a module</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_category_section</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:id</td>
+  <td width='80%'>Get information of a sector within a module</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:id</td>
+  <td width='80%'>Update sector within a module</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:category_id/sections/:id</td>
+  <td width='80%'>Remove a sector from a module</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/licenses/categories</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_categories</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules</td>
+  <td width='80%'>Get modules from a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules</td>
+  <td width='80%'>Create a module within a license</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_license_category</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:id</td>
+  <td width='80%'>Get the information of a module within a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:id</td>
+  <td width='80%'>Update the information of a module within a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:license_id/modules/:id</td>
+  <td width='80%'>Delete the module from the license</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/licenses</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses</td>
+  <td width='80%'>Get the list of licenses</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses</td>
+  <td width='80%'>Create a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Get information of a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Update a license</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/licenses/:id</td>
+  <td width='80%'>Delete a license</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercises</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>add_to_subsection_api_v1_exercise</b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:id/subsections</td>
+  <td width='80%'>Get list of subsectors related to a exercise</td></tr>
+  <tr><td width='12%' class='string'><b>remove_from_subsection_api_v1_exercise</b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:id/subsections/:subsection_id</td>
+  <td width='80%'>Remove the relation between a subsector and a exercise</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercises/exercise_images</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_images</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_images</td>
+  <td width='80%'>List the images of a exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_images</td>
+  <td width='80%'>Create an image for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_image</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_images/:id</td>
+  <td width='80%'>Get information for an image from an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_images/:id</td>
+  <td width='80%'>Update information of an image for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_images/:id</td>
+  <td width='80%'>Delete an image from an exercise</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercises/exercise_illustrations</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_illustrations</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_illustrations</td>
+  <td width='80%'>List the illustrations of a exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_illustrations</td>
+  <td width='80%'>Create an illustration for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_illustration</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_illustrations/:id</td>
+  <td width='80%'>Get information for an illustration from an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_illustrations/:id</td>
+  <td width='80%'>Update information of an illustration for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_illustrations/:id</td>
+  <td width='80%'>Delete an illustration from an exercise</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercises/exercise_videos</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_videos</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_videos</td>
+  <td width='80%'>List the videos of a exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_videos</td>
+  <td width='80%'>Create a video for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise_exercise_video</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_videos/:id</td>
+  <td width='80%'>Get information for a video from an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_videos/:id</td>
+  <td width='80%'>Update information of a video for an exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:exercise_id/exercise_videos/:id</td>
+  <td width='80%'>Delete a video from an exercise</td></tr>
+</table>
+<div class='contrl_head'><b>Controller: <span class='contrl_name'>api/v1/exercises</span></b></div>
+<table width='100%' border='0'><tr><th>Name</th><th>Verb</th><th>Path</th><th>Description</th></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercises</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises</td>
+  <td width='80%'>List the exercises</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>POST</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises</td>
+  <td width='80%'>Create a exercise</td></tr>
+  <tr><td width='12%' class='string'><b>api_v1_exercise</b></td>
+  <td width='5%' class='symbol'><b>GET</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:id</td>
+  <td width='80%'>Show the information of a exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>PUT</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:id</td>
+  <td width='80%'>Update a exercise</td></tr>
+  <tr><td width='12%' class='string'><b></b></td>
+  <td width='5%' class='symbol'><b>DELETE</b></td>
+  <td width='3%' class='regex'>/api/v1/exercises/:id</td>
+  <td width='80%'>Delete a exercise</td></tr>
+</table>
+</body></html>

@@ -12,7 +12,7 @@ gem 'thin', '~> 1.6.1'
 gem "carrierwave", "~> 0.9.0"
 gem "fog", "~> 1.3.1"
 gem "mini_magick", "~> 3.7.0"
-
+gem 'syntax', "~> 1.1.0"
 #gem "squeel", "~> 1.1.1" # SQL queries improved
 
 #gem 'sqlite3'
