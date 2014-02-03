@@ -205,10 +205,7 @@ profile_scope_permission = [
 profile_scope_permission.each do | profile, permission, action, profile_scopes |
 	sp = nil
 	exists = false
-	sps = ScopePermission.joins("LEFT JOIN scope_permission_group_scopes ON " <<
-		                   			  "(`scope_permission_group_scopes`.`scope_permission_id` = " <<
-		                   			  "`scope_permissions`.id)")
-									     .where(permission_id: Permission.find_by_name(permission).id,
+	sps = ScopePermission.where(permission_id: Permission.find_by_name(permission).id,
 												      action_id: Action.find_by_name(action).id )
 	if sps.present?
 		#check if the scopes are equal

@@ -109,13 +109,13 @@ module Api
 					hash = request.headers["X-URL-HASH"] 
 					unauthorized = false
 
-					if !api_key.nil? && (!hash.nil? || AUTH_CONFIG['bypass_api_key_verification'])
+					if api_key.present? && (hash.present? || AUTH_CONFIG['bypass_api_key_verification'])
 						api_license = ApiLicense.find_by_public_api_key(api_key.strip)
 						
 						# Check if bypass api verification is enabled
 						# check config/auth_config.yml and config/initializers/authentication.rb
 						if !AUTH_CONFIG['bypass_api_key_verification']
-							if !api_license.nil?
+							if api_license.present?
 								matches = check_api_token(api_license.secret_api_key, request.original_url, hash)
 
 								@api_license = api_license if matches
@@ -137,10 +137,12 @@ module Api
 					user_token = read_user_token
 					unauthorized = false
 
-					if !user_id.nil? && (!user_token.nil? || AUTH_CONFIG['bypass_token_verification'])
+					if user_id.present? && (user_token.present? || AUTH_CONFIG['bypass_token_verification'])
 						user = User.find(user_id)
 						if !AUTH_CONFIG['bypass_token_verification']
 							if user.session_token == user_token
+								puts "ok 1"
+								puts "*"*80
 								@current_user = user
 							else 
 								unauthorized = true

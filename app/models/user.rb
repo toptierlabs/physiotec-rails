@@ -197,18 +197,17 @@ class User < ActiveRecord::Base
   end
 
   def apply_profiles
-  	it = UserProfile.where(user_id: self.id)
-  	it.each do |v|
-  		v.set_user_scope_permissions
+  	profiles.each do |v|
+  		self.scope_permission_ids = (self.scope_permission_ids + v.scope_permission_ids).uniq
   	end
   end
 
   private
 
     def relation_with_license
-    	unless (self.context_type == License.name) &&
+    	if (self.context_type == License.name) &&
     	(self.context_id_changed? || self.context_type_changed?) &&
-    	(self.context.can_add_users?)
+    	(!self.context.can_add_users?)
     	  self.errors[:context] << "reached maximum users"  		
     	end
     end

@@ -186,11 +186,11 @@ ActiveRecord::Schema.define(:version => 20140131171831) do
     t.string   "last_name"
     t.string   "email"
     t.string   "phone"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "api_license_id"
     t.string   "company_name"
-    t.integer  "users_count"
+    t.integer  "users_count",     :default => 0, :null => false
   end
 
   create_table "notifications", :force => true do |t|

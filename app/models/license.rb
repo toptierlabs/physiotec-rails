@@ -52,6 +52,7 @@ class License < ActiveRecord::Base
                                               greater_than_or_equal_to: 0 }
   validates :phone,           presence: true
   validates :api_license,     presence: true
+  validates :users_count,     presence: true
 
 
   validate :validate_clinics
