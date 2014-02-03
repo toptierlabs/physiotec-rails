@@ -210,7 +210,8 @@ profile_scope_permission.each do | profile, permission, action, profile_scopes |
 	if sps.present?
 		#check if the scopes are equal
 		sps.each do |v|
-			exists = (v.scope_ids - Scope.where(name: profile_scopes).pluck(:id)).empty?
+			exists = (v.scope_ids - Scope.where(name: profile_scopes).pluck(:id)).empty? &&
+			         (Scope.where(name: profile_scopes).pluck(:id) - v.scope_ids).empty?
 			sp = v if exists
 			break if exists
 		end		

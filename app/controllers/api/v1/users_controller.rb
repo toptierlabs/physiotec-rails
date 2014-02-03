@@ -1,7 +1,7 @@
  module Api
 	module V1
 		class UsersController < Api::V1::ApiController
-			# @selected_user will hold the identified user
+			# @current_user will hold the identified user
 			before_filter :identify_user, :except=>[:login]
 
 			before_filter :read_user, :except =>[:index, :login, :create]
@@ -36,7 +36,7 @@
 				if (user.present?) && (user.valid_password?(params[:password]))
 					#creates a session token
 					session_token = user.new_session_token
-					render json: { token: session_token, user_id: user.id }, status: :created
+					render json: {token: session_token, user_id: user.id, public_key: @api_license.public_api_key}, status: :created
 				else
 					render json: {:error => "Wrong user or password"}, status: 401 #unauthorized
 				end

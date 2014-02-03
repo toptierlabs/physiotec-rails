@@ -3,9 +3,6 @@ class User < ActiveRecord::Base
 	include PermissionHelper
 	include AssignableHelper
 
-	before_save    :add_user_to_license
-	before_destroy :remove_user_from_license
-
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
 	belongs_to :api_license
@@ -197,9 +194,13 @@ class User < ActiveRecord::Base
   end
 
   def apply_profiles
-  	profiles.each do |v|
-  		self.scope_permission_ids = (self.scope_permission_ids + v.scope_permission_ids).uniq
+  	new_scope_permimission_ids = []
+   	profiles.each do |v|
+  		new_scope_permimission_ids += v.scope_permission_ids
   	end
+  	new_scope_permimission_ids + self.scope_permission_ids
+  	new_scope_permimission_ids.uniq!
+  	self.scope_permission_ids = new_scope_permimission_ids
   end
 
   private
@@ -212,17 +213,5 @@ class User < ActiveRecord::Base
     	end
     end
 
-	 	def add_user_to_license
-	 		if (self.context_type == License.name) &&
-	    	(self.context_id_changed? || self.context_type_changed?)
-	    	context.update_column(:users_count, context.users_count+1)
-	    end
-	 	end
-
-		def remove_user_from_license
-	 		if (self.context_type == License.name)
-	    	context.update_column(:users_count, context.users_count-1)
-	    end
-		end
 
 end

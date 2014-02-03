@@ -73,7 +73,7 @@ class License < ActiveRecord::Base
   end
 
   def can_add_users?
-    return users_count < maximum_users
+    return users.size < maximum_users
   end
 
   private

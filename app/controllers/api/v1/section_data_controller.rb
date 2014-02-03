@@ -35,13 +35,14 @@ module Api
 
         section = SectionDatum.new(params[:section_datum])
         section.api_license = @api_license
-
+        I18n.locale = params[:section_datum][:translations_attributes].first[:locale]
         if section.save
           render json: section, status: :created
         else
           render json:   section.errors.full_messages,
                  status: :unprocessable_entity
         end
+        I18n.locale = :en
       end
 
       # PUT /sections/1

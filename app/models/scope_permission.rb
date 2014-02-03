@@ -31,7 +31,7 @@ class ScopePermission < ActiveRecord::Base
   validates :permission,      presence: true
   validates :permission,      presence: true
 
-  #validate :validate_scope_permission_uniqueness
+  validate :validate_scope_permission_uniqueness
 
   #display name for ActiveAdmin
   def datatype
@@ -50,17 +50,12 @@ class ScopePermission < ActiveRecord::Base
     errors = false
     sp.each do |v|
       if (self.id != v.id) &&
-      (v.scopes - self.scopes).blank? && (self.scopes - v.scopes).blank?
-        puts '*'*50
-        puts self.to_json
-        puts '-'*10
-        puts v.to_json
+      ((v.scope_ids - self.scope_ids).blank? && (self.scope_ids - v.scope_ids).blank?)
         self.errors[:scopes] << "alredy exists ability with the same scopes"
-        break
+        errors = true
       end
       break if errors
     end
-    false if errors
   end
 
   def display_name
