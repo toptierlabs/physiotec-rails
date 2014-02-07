@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: categories
+#
+#  id           :integer          not null, primary key
+#  owner_id     :integer
+#  context_id   :integer          not null
+#  context_type :string(255)      not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
   # create_table "categories", :force => true do |t|
   #   t.integer  "owner_id"
   #   t.integer  "context_id",   :null => false
@@ -8,7 +20,7 @@
 
 class Category < ActiveRecord::Base
 
-  include AssignableHelper
+  include Assignable
 
   default_scope includes(:translations)
 

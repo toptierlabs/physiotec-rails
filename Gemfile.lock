@@ -39,6 +39,9 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
+    annotate (2.6.1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
     api_explorer (0.0.7)
       coderay (~> 1.1.0)
       jquery-rails
@@ -229,6 +232,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin (~> 0.6.2)
+  annotate (>= 2.6.0)
   api_explorer (~> 0.0.6)
   aws-sdk (~> 1.22.1)
   aws-ses (~> 0.5.0)

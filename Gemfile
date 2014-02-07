@@ -21,6 +21,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.2.0', :require => false
   gem 'factory_girl-seeds', '~> 1.0.1', :require => false
   gem 'database_cleaner', '~> 0.9.1'
+  gem 'annotate', ">=2.6.0"
 end
 
 gem 'database_cleaner', '~> 0.9.1'
@@ -74,5 +75,6 @@ gem "haml-rails", "~> 0.4"
 gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'
 
 gem 'globalize', '~> 3.0.2'
+
 #gem 'globalize', :github => 'toptierlabs/globalize', :branch => '3-0-stable'
 #gem 'globalize', :path => "/Users/TopTierlabs/Desktop/proyectos/globalize"

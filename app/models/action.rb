@@ -1,27 +1,54 @@
-class Action < ActiveRecord::Base
-  attr_accessible :name
+class Action
+  @@actions = []
 
-  has_many :scope_permissions, :dependent => :destroy
-
-  validates :name, :uniqueness => true, presence: true
-
-  def name_as_sym #no test for nil
-  	#returns a symbol representation of the string
-  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  def name
+    @name
   end
 
-  def self.read_action #no test for nil
-  	#returns a symbol representation of the string
-  	action = self.find_by_name("Read")
-  	action.name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  def id
+    @id
   end
 
-  def self.assign
-    self.find_by_name("Assign")
+  def self.all
+    @@actions
   end
 
-  def self.unassign
-    self.find_by_name("Unassign")
+  def self.find_by_id(value)
+    @@actions[value]
   end
+
+  def self.find_by_name(value)
+    @@actions[TYPES[value]]
+  end
+
+  private
+
+    def initialize(params = {})
+      @id = params[:action_id]
+      @name = TYPES.keys[@id]
+    end
+
+    TYPES = { create: 0, show: 1, update: 2, destroy: 3, translate: 4 }
+
+    TYPES.each do |k, v|
+      #for each action creates a new method for finding abilities with the given action
+      define_singleton_method("#{k}_abilities".as_sym) {
+        Ability.where(:action=> v)
+      }
+
+      define_singleton_method("#{k}_action") { 
+        Action.new action_id: v
+      }
+
+      #for each action creates a new method for getting the action id
+      define_singleton_method("#{k}_action_id".as_sym) { v }
+
+      define_method("is_#{k}?") { 
+        @id == v
+      }
+
+      @@actions << self.new(action_id: v)
+
+    end
 
 end

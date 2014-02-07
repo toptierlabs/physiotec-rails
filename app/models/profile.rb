@@ -1,31 +1,46 @@
+# == Schema Information
+#
+# Table name: profiles
+#
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  api_license_id :integer
+#
+
 class Profile < ActiveRecord::Base
 
   before_destroy :check_protection
 
   scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
 
-  attr_accessible :name, :profile_scope_permissions, :profile_assignment, :profile_assignment_attributes,
-                  :destination_profiles_attributes, :scope_permissions_attributes, :source_profiles,
-                  :profile_scope_permissions_attributes, :destination_profiles,
-                  :scope_permissions, :destination_profile_ids, :scope_permission_ids, :api_license_id
+  attr_accessible :name,
+                  :profile_assignment,
+                  :profile_assignment_attributes,
+                  :destination_profiles_attributes,
+                  :scope_permissions_attributes,
+                  :source_profiles,
+                  :profile_scope_permissions_attributes,
+                  :destination_profiles,
+                  :scope_permissions,
+                  :api_license_id
 
-  belongs_to :api_license#, :unless => lambda { self.api_license_id.blank? }
+  belongs_to :api_license
 
-  has_many :profile_scope_permissions, :dependent => :destroy
-  has_many :scope_permissions, :through => :profile_scope_permissions
+  has_many :profile_abilities, :dependent => :destroy
+  has_many :abilities, :through => :profile_abilities
 
-  accepts_nested_attributes_for :profile_scope_permissions, :allow_destroy => true
   # a profile may have multiple profiles, this relation is used when a
   # new user is created, or a user wants to assign to another user a profile
-
   has_many :profile_assignment, :dependent => :destroy
   has_many :destination_profiles, :through => :profile_assignment
 
-  accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
-  
   validates :name, presence: true
-  validates :name, :uniqueness => {:scope => :api_license_id}
+  validates :name, :uniqueness => { :scope => :api_license_id }
 
+  accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
+  accepts_nested_attributes_for :profile_abilities,  :allow_destroy => true
 
   def permissions_pretty_list
   	ppl = []
@@ -34,7 +49,6 @@ class Profile < ActiveRecord::Base
   	end
   	ppl
   end
-
 
   def self.license_administrator_profile
     self.find_by_name("License administrator")

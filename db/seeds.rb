@@ -4,13 +4,6 @@
 # Create a default user if there isn't any 
 AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password') if AdminUser.find_by_email('admin@example.com').nil?
 
-#Initialize the actions
-actions = ["Create", "Read", "Modify", "Delete", "Assign", "Unassign", "Translate"]
-
-actions.each do | action |
-	Action.create(name: action)
-end
-
 #Creates the default ApiLicense
 api_lic = ApiLicense.create(name: "Test ApiLicense", description: "Test License")
 api_lic.public_api_key = "PUBLIC_KEY" 
@@ -27,53 +20,23 @@ languages.each do |v|
 end
 
 # Creates the permissions
-permissions = [ ["Clinic", Clinic.name],
-								["Exercise", Exercise.name],
-								["License", License.name],
-								["User", User.name], 
-								["Permission", Permission.name],
-								["ScopeGroup", ScopeGroup.name],
-								["Scope", Scope.name],
-								["Profile", Profile.name],
-								["Module", Category.name],
-								["Section", SectionDatum.name],
-								["ExerciseIllustration",ExerciseIllustration.name],
-								["ExerciseImage", ExerciseImage.name],
-								["ExerciseVideo", ExerciseVideo.name]
+permissions = [ ["Clinic", Clinic.name, Scope.api_license_scope.id, Scope.license_scope.id],
+								["Exercise", Exercise.name, Scope.api_license_scope.id, Scope.own_scope.id],
+								["License", License.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
+								["User", User.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
+								["Permission", Permission.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
+								["Profile", Profile.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
+								["Module", Category.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
+								["Section", SectionDatum.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
+								["ExerciseIllustration",ExerciseIllustration.name, Scope.api_license_scope.id, Scope.own_scope.id],
+								["ExerciseImage", ExerciseImage.name, Scope.api_license_scope.id, Scope.own_scope.id],
+								["ExerciseVideo", ExerciseVideo.name, Scope.api_license_scope.id, Scope.own_scope.id]
 							]
 
-permissions.each do | name, model |
-	Permission.create(name: name, model_name: model)
+permissions.each do | name, model, maxs, mins |
+	Permission.create(name: name, model_name: model, maximum_scope_id: maxs, minimum_scope_id: mins)
 end
 
-# Creates the scope groups
-scope_groups = [["Languages", "A Group of different languages."],
-								["Context", "Privileges over the clinic."]]
-
-scope_groups.each do | name, description |
-	ScopeGroup.create(name: name, description: description)
-end
-
-# Creates the scopes
-scopes = [["en","Languages"], ["fr", "Languages"], ["pt", "Languages"],
-				 ["es", "Languages"], ["Own", "Context"], ["Clinic", "Context"],
-				 ["License", "Context"], ["ApiLicense", "Context"],
-				 ["Module", "Context"], ["Section", "Context"]]
-
-scopes.each do | name, scope_group |
-	Scope.create(name: name, scope_group_id: ScopeGroup.find_by_name(scope_group).id)
-end
-
-#Links the permissions and the scope groups
-permission_scope_group = [["Exercise", "Languages"], ["Module", "Languages"],["Section", "Languages"], ["Clinic", "Context"],
-												 ["Exercise", "Context"], ["License", "Context"], ["User", "Context"], ["Profile", "Context"],
-												 ["ScopeGroup", "Context"], ["Scope", "Context"], ["Profile", "Context"],["Permission", "Context"],
-												 ["Module", "Context"], ["Section", "Context"]]
-
-permission_scope_group.each do | permission, scope_group |
-	PermissionScopeGroup.create(permission_id: Permission.find_by_name(permission).id,
-															scope_group_id: ScopeGroup.find_by_name(scope_group).id )
-end
 
 #Creation of profiles
 profiles_list = [["Author", ApiLicense.first], ["Translator", ApiLicense.first], ["Physiotherapist", ApiLicense.first], ["Media", ApiLicense.first],
@@ -82,155 +45,155 @@ profiles_list = [["Author", ApiLicense.first], ["Translator", ApiLicense.first],
 profiles_list.each do | v |
 	p = Profile.new(name: v[0])
 	p.api_license = v[1]
-	p.protected = v[2]
+	#p.protected = v[2]
 	p.save
 end
 
 #Link scopes and permissions with a profile
 #[ Profile, Permission, Action, [ *Scope ] ]
 
-profile_scope_permission = [
-														["Author", "Exercise", "Create", ["Clinic"]],
-														["Author", "Exercise", "Modify", ["Clinic"]],
-														["Author", "Exercise", "Delete", ["Own"]],
-														["Author", "Exercise", "Read", ["Clinic"]],
+# profile_scope_permission = [
+# 														["Author", "Exercise", "Create", ["Clinic"]],
+# 														["Author", "Exercise", "Modify", ["Clinic"]],
+# 														["Author", "Exercise", "Delete", ["Own"]],
+# 														["Author", "Exercise", "Read", ["Clinic"]],
 
-														["Translator", "Exercise", "Create", ["Clinic"]],
-														["Translator", "Exercise", "Modify", ["Clinic"]],
-														["Translator", "Exercise", "Delete", ["Own"]],
-														["Translator", "Exercise", "Read", ["Clinic"]],
-														["Translator", "Clinic", "Read", ["License"]],
-														["Translator", "Section", "Create", ["License"]],
-														["Translator", "Section", "Read", ["License"]],
-														["Translator", "Section", "Modify", ["License"]],
-														["Translator", "Section", "Delete", ["License"]],
-														["Translator", "Module", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
-														["Translator", "Section", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
-														["Translator", "Exercise", "Translate", ["ApiLicense", "en", "pt", "fr", "es"]],
+# 														["Translator", "Exercise", "Create", ["Clinic"]],
+# 														["Translator", "Exercise", "Modify", ["Clinic"]],
+# 														["Translator", "Exercise", "Delete", ["Own"]],
+# 														["Translator", "Exercise", "Read", ["Clinic"]],
+# 														["Translator", "Clinic", "Read", ["License"]],
+# 														["Translator", "Section", "Create", ["License"]],
+# 														["Translator", "Section", "Read", ["License"]],
+# 														["Translator", "Section", "Modify", ["License"]],
+# 														["Translator", "Section", "Delete", ["License"]],
+# 														["Translator", "Module", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
+# 														["Translator", "Section", "Translate", ["en", "pt", "es", "fr", "ApiLicense"]],
+# 														["Translator", "Exercise", "Translate", ["ApiLicense", "en", "pt", "fr", "es"]],
 
-														["License administrator", "User", "Create", ["License"]],
-														["License administrator", "User", "Read", ["License"]],
-														["License administrator", "User", "Modify", ["License"]],
-														["License administrator", "User", "Delete", ["License"]],
-														["License administrator", "Clinic", "Create", ["License"]],
-														["License administrator", "Clinic", "Delete", ["License"]],
-														["License administrator", "Clinic", "Read", ["License"]],
-														["License administrator", "Clinic", "Modify", ["License"]],
-														["License administrator", "Profile", "Assign", ["License"]],
-														["License administrator", "Profile", "Unassign", ["License"]],
-														["License administrator", "Exercise", "Create", ["License"]],
-														["License administrator", "Exercise", "Read", ["License"]],
-														["License administrator", "Exercise", "Modify", ["License"]],
-														["License administrator", "Exercise", "Delete", ["License"]],
-														["License administrator", "Module", "Create", ["License"]],
-														["License administrator", "Module", "Read", ["License"]],
-														["License administrator", "Module", "Modify", ["License"]],
-														["License administrator", "Module", "Delete", ["License"]],
-														["License administrator", "Section", "Create", ["License"]],
-														["License administrator", "Section", "Read", ["License"]],
-														["License administrator", "Section", "Modify", ["License"]],
-														["License administrator", "Section", "Delete", ["License"]],
+# 														["License administrator", "User", "Create", ["License"]],
+# 														["License administrator", "User", "Read", ["License"]],
+# 														["License administrator", "User", "Modify", ["License"]],
+# 														["License administrator", "User", "Delete", ["License"]],
+# 														["License administrator", "Clinic", "Create", ["License"]],
+# 														["License administrator", "Clinic", "Delete", ["License"]],
+# 														["License administrator", "Clinic", "Read", ["License"]],
+# 														["License administrator", "Clinic", "Modify", ["License"]],
+# 														["License administrator", "Profile", "Assign", ["License"]],
+# 														["License administrator", "Profile", "Unassign", ["License"]],
+# 														["License administrator", "Exercise", "Create", ["License"]],
+# 														["License administrator", "Exercise", "Read", ["License"]],
+# 														["License administrator", "Exercise", "Modify", ["License"]],
+# 														["License administrator", "Exercise", "Delete", ["License"]],
+# 														["License administrator", "Module", "Create", ["License"]],
+# 														["License administrator", "Module", "Read", ["License"]],
+# 														["License administrator", "Module", "Modify", ["License"]],
+# 														["License administrator", "Module", "Delete", ["License"]],
+# 														["License administrator", "Section", "Create", ["License"]],
+# 														["License administrator", "Section", "Read", ["License"]],
+# 														["License administrator", "Section", "Modify", ["License"]],
+# 														["License administrator", "Section", "Delete", ["License"]],
 
-														["Clinic administrator", "User", "Create", ["Clinic"]],
-														["Clinic administrator", "User", "Read", ["Clinic"]],
-														["Clinic administrator", "User", "Modify", ["Clinic"]],
-														["Clinic administrator", "User", "Delete", ["Clinic"]],
-														["Clinic administrator", "Profile", "Assign", ["Clinic"]],
-														["Clinic administrator", "Profile", "Unassign", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Read", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Modify", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
-														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
+# 														["Clinic administrator", "User", "Create", ["Clinic"]],
+# 														["Clinic administrator", "User", "Read", ["Clinic"]],
+# 														["Clinic administrator", "User", "Modify", ["Clinic"]],
+# 														["Clinic administrator", "User", "Delete", ["Clinic"]],
+# 														["Clinic administrator", "Profile", "Assign", ["Clinic"]],
+# 														["Clinic administrator", "Profile", "Unassign", ["Clinic"]],
+# 														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
+# 														["Clinic administrator", "Exercise", "Read", ["Clinic"]],
+# 														["Clinic administrator", "Exercise", "Modify", ["Clinic"]],
+# 														["Clinic administrator", "Exercise", "Delete", ["Clinic"]],
+# 														["Clinic administrator", "Exercise", "Create", ["Clinic"]],
 
-														["Clinic Administrator", "Section", "Create", ["Clinic"]],
-														["Clinic Administrator", "Section", "Read", ["Clinic"]],
-														["Clinic Administrator", "Section", "Modify", ["Clinic"]],
-														["Clinic Administrator", "Section", "Delete", ["Clinic"]],
-														["Clinic Administrator", "Module", "Create", ["Clinic"]],
-														["Clinic Administrator", "Module", "Read", ["Clinic"]],
-														["Clinic Administrator", "Module", "Modify", ["Clinic"]],
-														["Clinic Administrator", "Module", "Delete", ["Clinic"]],
+# 														["Clinic Administrator", "Section", "Create", ["Clinic"]],
+# 														["Clinic Administrator", "Section", "Read", ["Clinic"]],
+# 														["Clinic Administrator", "Section", "Modify", ["Clinic"]],
+# 														["Clinic Administrator", "Section", "Delete", ["Clinic"]],
+# 														["Clinic Administrator", "Module", "Create", ["Clinic"]],
+# 														["Clinic Administrator", "Module", "Read", ["Clinic"]],
+# 														["Clinic Administrator", "Module", "Modify", ["Clinic"]],
+# 														["Clinic Administrator", "Module", "Delete", ["Clinic"]],
 
-														["API Administrator", "Section", "Create", ["ApiLicense"]],
-														["API Administrator", "Section", "Read", ["ApiLicense"]],
-														["API Administrator", "Section", "Modify", ["ApiLicense"]],
-														["API Administrator", "Section", "Delete", ["ApiLicense"]],
-														["API Administrator", "License", "Create", ["ApiLicense"]],
-														["API Administrator", "License", "Read", ["ApiLicense"]],
-														["API Administrator", "License", "Modify", ["ApiLicense"]],
-														["API Administrator", "License", "Delete", ["ApiLicense"]],
-														["API Administrator", "Clinic", "Create", ["ApiLicense"]],
-														["API Administrator", "Clinic", "Delete", ["ApiLicense"]],
-														["API Administrator", "Clinic", "Read", ["ApiLicense"]],
-														["API Administrator", "Clinic", "Modify", ["ApiLicense"]],
-														["API administrator", "Exercise", "Create", ["ApiLicense"]],
-														["API administrator", "Exercise", "Read", ["ApiLicense"]],
-														["API administrator", "Exercise", "Modify", ["ApiLicense"]],
-														["API administrator", "Exercise", "Delete", ["ApiLicense"]],
-														["API administrator", "Exercise", "Create", ["ApiLicense"]],
-														["API Administrator", "User", "Create", ["ApiLicense"]],
-														["API Administrator", "User", "Read", ["ApiLicense"]],
-														["API Administrator", "User", "Modify", ["ApiLicense"]],
-														["API Administrator", "User", "Delete", ["ApiLicense"]],
-														["API Administrator", "Permission", "Create", ["ApiLicense"]],
-														["API Administrator", "Permission", "Delete", ["ApiLicense"]],
-														["API Administrator", "Permission", "Read", ["ApiLicense"]],
-														["API Administrator", "Permission", "Modify", ["ApiLicense"]],
-														["API Administrator", "Permission", "Assign", ["ApiLicense"]],
-														["API Administrator", "Permission", "Unassign", ["ApiLicense"]],
-														["API Administrator", "ScopeGroup", "Create", ["ApiLicense"]],
-														["API Administrator", "ScopeGroup", "Delete", ["ApiLicense"]],
-														["API Administrator", "ScopeGroup", "Read", ["ApiLicense"]],
-														["API Administrator", "ScopeGroup", "Modify", ["ApiLicense"]],
-														["API Administrator", "Scope", "Create", ["ApiLicense"]],
-														["API Administrator", "Scope", "Delete", ["ApiLicense"]],
-														["API Administrator", "Scope", "Read", ["ApiLicense"]],
-														["API Administrator", "Scope", "Modify", ["ApiLicense"]],
-														["API Administrator", "Profile", "Assign"],
-														["API Administrator", "Profile", "Unassign"],
-														["API Administrator", "Profile", "Create", ["ApiLicense"]],
-														["API Administrator", "Profile", "Read", ["ApiLicense"]],
-														["API Administrator", "Profile", "Modify", ["ApiLicense"]],
-														["API Administrator", "Profile", "Delete", ["ApiLicense"]],
-														["API Administrator", "Module", "Create", ["ApiLicense"]],
-														["API Administrator", "Module", "Read", ["ApiLicense"]],
-														["API Administrator", "Module", "Modify", ["ApiLicense"]],
-														["API Administrator", "Module", "Delete", ["ApiLicense"]]
+# 														["API Administrator", "Section", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Section", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Section", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Section", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "License", "Create", ["ApiLicense"]],
+# 														["API Administrator", "License", "Read", ["ApiLicense"]],
+# 														["API Administrator", "License", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "License", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Clinic", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Clinic", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Clinic", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Clinic", "Modify", ["ApiLicense"]],
+# 														["API administrator", "Exercise", "Create", ["ApiLicense"]],
+# 														["API administrator", "Exercise", "Read", ["ApiLicense"]],
+# 														["API administrator", "Exercise", "Modify", ["ApiLicense"]],
+# 														["API administrator", "Exercise", "Delete", ["ApiLicense"]],
+# 														["API administrator", "Exercise", "Create", ["ApiLicense"]],
+# 														["API Administrator", "User", "Create", ["ApiLicense"]],
+# 														["API Administrator", "User", "Read", ["ApiLicense"]],
+# 														["API Administrator", "User", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "User", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Assign", ["ApiLicense"]],
+# 														["API Administrator", "Permission", "Unassign", ["ApiLicense"]],
+# 														["API Administrator", "ScopeGroup", "Create", ["ApiLicense"]],
+# 														["API Administrator", "ScopeGroup", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "ScopeGroup", "Read", ["ApiLicense"]],
+# 														["API Administrator", "ScopeGroup", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Scope", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Scope", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Scope", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Scope", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Profile", "Assign"],
+# 														["API Administrator", "Profile", "Unassign"],
+# 														["API Administrator", "Profile", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Profile", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Profile", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Profile", "Delete", ["ApiLicense"]],
+# 														["API Administrator", "Module", "Create", ["ApiLicense"]],
+# 														["API Administrator", "Module", "Read", ["ApiLicense"]],
+# 														["API Administrator", "Module", "Modify", ["ApiLicense"]],
+# 														["API Administrator", "Module", "Delete", ["ApiLicense"]]
 
-													]
+# 													]
 
 
 
-profile_scope_permission.each do | profile, permission, action, profile_scopes |
-	sp = nil
-	exists = false
-	sps = ScopePermission.where(permission_id: Permission.find_by_name(permission).id,
-												      action_id: Action.find_by_name(action).id )
-	if sps.present?
-		#check if the scopes are equal
-		sps.each do |v|
-			exists = (v.scope_ids - Scope.where(name: profile_scopes).pluck(:id)).empty? &&
-			         (Scope.where(name: profile_scopes).pluck(:id) - v.scope_ids).empty?
-			sp = v if exists
-			break if exists
-		end		
-	end
+# profile_scope_permission.each do | profile, permission, action, profile_scopes |
+# 	sp = nil
+# 	exists = false
+# 	sps = ScopePermission.where(permission_id: Permission.find_by_name(permission).id,
+# 												      action_id: Action.find_by_name(action).id )
+# 	if sps.present?
+# 		#check if the scopes are equal
+# 		sps.each do |v|
+# 			exists = (v.scope_ids - Scope.where(name: profile_scopes).pluck(:id)).empty? &&
+# 			         (Scope.where(name: profile_scopes).pluck(:id) - v.scope_ids).empty?
+# 			sp = v if exists
+# 			break if exists
+# 		end		
+# 	end
 
-	if (sps.empty?) || (!exists)
-		sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
-																 action_id: Action.find_by_name( action ).id )# if sp.nil?
-		profile_scopes.each do | scope |
-			ScopePermissionGroupScope.create( scope_permission_id: sp.id,
-			scope_id: Scope.find_by_name(scope).id )
-		end unless profile_scopes.nil?
-	end
+# 	if (sps.empty?) || (!exists)
+# 		sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
+# 																 action_id: Action.find_by_name( action ).id )# if sp.nil?
+# 		profile_scopes.each do | scope |
+# 			ScopePermissionGroupScope.create( scope_permission_id: sp.id,
+# 			scope_id: Scope.find_by_name(scope).id )
+# 		end unless profile_scopes.nil?
+# 	end
 
-	ProfileScopePermission.create(profile_id: Profile.find_by_name(profile).id,
-																scope_permission_id: sp.id)
-end
+# 	ProfileScopePermission.create(profile_id: Profile.find_by_name(profile).id,
+# 																scope_permission_id: sp.id)
+# end
 
-#Creates the relationship between a profile and his destination profiles (profile assignment)
+# #Creates the relationship between a profile and his destination profiles (profile assignment)
 
 profile_assignment = [
 											["License administrator", "Clinic Administrator"],
@@ -308,7 +271,7 @@ for i in 0..5
 		u.profiles << Profile.find_by_name('Clinic administrator')
 		u.context = clinics[i%clinics.length]
 	end
-	u.apply_profiles
+	#u.apply_profiles
 	u.save
 	users << u
 end

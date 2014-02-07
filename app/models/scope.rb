@@ -1,34 +1,60 @@
-class Scope < ActiveRecord::Base
-  before_destroy :confirm_relation_with_scope_permissions
-  after_destroy :clean_scope_group
+class Scope
+  @@scopes = []
 
-  belongs_to :scope_group
-  has_many :scope_permission_group_scopes, :dependent => :destroy
+	include Comparable
 
-  #uniqueness of the name inside a scope group
-  validates :name, :uniqueness => { :scope => :scope_group_id }
-  validates :name, presence: true
-
-  attr_accessible :name, :scope_group_id
-
-  def name_as_sym #no test for nil
-  	#returns a symbol representation of the string
-  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  def name
+    @name
   end
+
+  def id
+  	@id.to_i
+  end
+
+  def <=> value
+    @id <=> value.id
+  end
+
+  def self.all
+    @@scopes
+  end
+
+  def self.find_by_id(value)
+    @@scopes[value]
+  end
+
 
   private
 
-    def clean_scope_group
-      if self.scope_group.scopes.length == 0
-        self.scope_group.destroy
-      end
+    def initialize(params = {})
+      @id = params[:scope_id]
+      @name = TYPES.keys[@id]
     end
 
-    def confirm_relation_with_scope_permissions
-      if (self.scope_permission_group_scopes.length > 0)        
-        self.errors[:base] << "Can't delete a Scope unless it is not associated with any Scope Permission"
-        false
-      end
+    TYPES = { own: 0, clinic: 1, license: 2, api_license: 3 }
+
+    TYPES.each do |k, v|
+      #for each scope creates a new method for finding abilities with the given scope
+      define_singleton_method("#{k}_user_abilities".as_sym) {
+        UserAbility.where(scope: v)
+      }
+
+      define_singleton_method("#{k}_profile_abilities".as_sym) {
+        ProfileAbility.where(scope: v)
+      }
+
+      define_singleton_method("#{k}_scope") { 
+        @@scopes[v]
+      }
+
+      define_method("is_#{k}?") { 
+        @id == v
+      }
+
+      #for each action creates a new method for getting the scope id
+      define_singleton_method("#{k}_scope_id".as_sym) { v }
+
+      @@scopes << self.new(scope_id: v)
     end
 
 end

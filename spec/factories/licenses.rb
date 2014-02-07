@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: licenses
+#
+#  id              :integer          not null, primary key
+#  maximum_clinics :integer
+#  maximum_users   :integer
+#  first_name      :string(255)
+#  last_name       :string(255)
+#  email           :string(255)
+#  phone           :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  api_license_id  :integer
+#  company_name    :string(255)
+#  users_count     :integer          default(0), not null
+#
+
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do

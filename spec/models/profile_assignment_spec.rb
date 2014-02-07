@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: profile_assignments
+#
+#  id                     :integer          not null, primary key
+#  profile_id             :integer
+#  destination_profile_id :integer
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
+
 require 'spec_helper' 
 
 describe ProfileAssignment do 

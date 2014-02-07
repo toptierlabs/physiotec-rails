@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: exercises
+#
+#  id             :integer          not null, primary key
+#  context_id     :integer
+#  context_type   :string(255)
+#  owner_id       :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  api_license_id :integer
+#  code           :string(255)
+#  token          :string(255)
+#
+
 require 'spec_helper' 
 
 describe Exercise do 

@@ -1,27 +1,47 @@
+# == Schema Information
+#
+# Table name: permissions
+#
+#  id               :integer          not null, primary key
+#  name             :string(255)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  model_name       :string(255)
+#  minimum_scope_id :integer
+#  maximum_scope_id :integer
+#
+
 class Permission < ActiveRecord::Base
+
+  attr_accessible :name,
+                  :model_name,
+                  :minimum_scope_id,
+                  :maximum_scope_id
   
-  #has many scope_permissions
-  has_many :scope_permissions, :dependent => :destroy
+  has_many  :abilities,  dependent: :destroy
 
-  #has many scope_groups
-  has_many :permission_scope_groups, :dependent => :destroy
-  has_many :scope_groups, :through => :permission_scope_groups
-  #nested attributes
-  accepts_nested_attributes_for :permission_scope_groups, :allow_destroy => true
+  validates :name,       uniqueness: true,
+                         presence: true
+  validates :model_name, uniqueness: true,
+                         presence: true,
+                         inclusion: {
+                          # Must exist an active record model with the given name
+                          in: lambda {|v| ActiveRecord::Base.descendants.map{ |v| v.name } }
+                        }
 
-  validates :name, :uniqueness => true
-  validates :name, presence: true
+  validate :domain_scope_consistency
 
-  attr_accessible :name, :permission_scope_groups, :permission_scope_groups_attributes,
-                  :model_name, :scope_group_ids
-  
-  def name_as_sym #no test for nil
-  	#returns a symbol representation of the string
-  	name.gsub(/\s+/, '_').parameterize.underscore.to_sym
+  def is_translatable?
+    model_name.constantize.respond_to? :translation_class
   end
 
-   def self.profile
-    self.find_by_name("Profile")
-   end
+  private
+
+    def domain_scope_consistency
+      if Scope.find_by_id(minimum_scope_id) > Scope.find_by_id(maximum_scope_id)
+        self.errors[:maximum_scope] << "must be greater or equal than minimum scope"
+        false
+      end
+    end
 
 end

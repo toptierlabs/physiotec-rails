@@ -1,6 +1,18 @@
+# == Schema Information
+#
+# Table name: clinics
+#
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  license_id     :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  api_license_id :integer
+#
+
 class Clinic < ActiveRecord::Base
 
-	include AssignableHelper
+	include Assignable
 
 	before_destroy :confirm_relation_with_exercises
 

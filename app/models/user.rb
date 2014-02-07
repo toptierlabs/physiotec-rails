@@ -1,50 +1,88 @@
-class User < ActiveRecord::Base
+# == Schema Information
+#
+# Table name: users
+#
+#  id                       :integer          not null, primary key
+#  first_name               :string(255)      not null
+#  last_name                :string(255)      not null
+#  api_license_id           :integer          not null
+#  email                    :string(255)      default(""), not null
+#  encrypted_password       :string(255)      default(""), not null
+#  reset_password_token     :string(255)
+#  reset_password_sent_at   :datetime
+#  remember_created_at      :datetime
+#  sign_in_count            :integer          default(0), not null
+#  current_sign_in_at       :datetime
+#  last_sign_in_at          :datetime
+#  current_sign_in_ip       :string(255)
+#  last_sign_in_ip          :string(255)
+#  confirmation_token       :string(255)
+#  confirmed_at             :datetime
+#  confirmation_sent_at     :datetime
+#  unconfirmed_email        :string(255)
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  session_token            :string(255)
+#  session_token_created_at :date
+#
 
-	include PermissionHelper
-	include AssignableHelper
+class User < ActiveRecord::Base
+	require 'concerns/assignable'
+	require 'concerns/permissiable'
+
+  include Assignable
+	include Permissiable
+	
 
 	scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
 	belongs_to :api_license
-	belongs_to :context,     polymorphic: true,
-	                         inverse_of:  :users
+	belongs_to :context,      polymorphic: true,
+	                          inverse_of:  :users
 
-	has_many :user_scope_permissions, inverse_of: :user
-	has_many :scope_permissions, through: :user_scope_permissions
+	has_many :user_abilities, inverse_of: :user
+	has_many :abilities,      through: :user_abilities
 
 	has_many :user_clinics
-	has_many :clinics, through: :user_clinics	
+	has_many :clinics,        through: :user_clinics	
 
 	has_many :user_profiles
-	has_many :profiles, :through => :user_profiles
+	has_many :profiles,       through: :user_profiles
 
 	has_many :categories,     as: :context
 
-	validates :email,         presence: true
-	validates :first_name,    presence: true
-	validates :last_name,     presence: true
-	validates :api_license,   presence: true
-	validates :context,       presence: true
+	has_many :user_contexts
 
-	validates :session_token, uniqueness: true,
-	                          allow_blank: true
+	has_many :api_licenses,    through: :user_contexts,
+														 source:  :context,
+														 source_type: 'ApiLicense'
+	has_many :licenses,        through: :user_contexts,
+														 source:  :context,
+														 source_type: 'License'
+	has_many :clinics,         through: :user_contexts,
+														 source:  :context,
+														 source_type: 'Clinic'
 
-	validates :email,   email: true
+  def contexts
+  	api_licenses + licenses + clinics
+  end
 
-	validates :email,   uniqueness: { :scope => :api_license_id }
 
-	validate :relation_with_license
+	validates :email,          presence: true
+	validates :first_name,     presence: true
+	validates :last_name,      presence: true
+	validates :api_license,    presence: true
 
-  # validates :context, associated: { :message => "reached maximum users" },
-		# 								  # Validate license maximum users if user
-		# 								  # context class is Licence and has changed
-		# 									:if => lambda { (self.context_type == License.name) &&
-		# 																	(self.context_id_changed? ||
-		# 																	 self.context_type_changed?) }
+	validates :session_token,  uniqueness: true,
+	                           allow_blank: true
 
-  accepts_nested_attributes_for :user_clinics,           allow_destroy: true
-	accepts_nested_attributes_for :user_profiles,          allow_destroy: true
-  accepts_nested_attributes_for :user_scope_permissions, allow_destroy: true
+	validates :email,          email: true
+	validates :email,          uniqueness: { scope: :api_license_id }
+
+	#validate :relation_with_license
+
+	accepts_nested_attributes_for :user_profiles,  allow_destroy: true
+	accepts_nested_attributes_for :user_abilities, allow_destroy: true
 
 
 	# Include default devise modules. Others available are:
@@ -65,13 +103,8 @@ class User < ActiveRecord::Base
 									:session_token_created_at,
 									:profiles,
 									:user_profiles_attributes,
-									:context_id,
-									:context_type,
 									:profile_ids,
-									:user_profiles,
-									:user_scope_permissions,
-									:scope_permission_ids
-
+									:user_profiles
 
 	#Set the method to create new session tokens
 	def new_session_token
@@ -124,11 +157,6 @@ class User < ActiveRecord::Base
 		ppl
 	end
 
-	def api_administrator?
-		self.profiles.where(id: Profile.api_license_administrator_profile.id).present?
-	end
-
-
 	def assignable_profiles
 		res = []
 		self.profiles.each do |p|
@@ -138,70 +166,10 @@ class User < ActiveRecord::Base
 		res.uniq
 	end
 
-	def scope_permission_for_read(permission)
-		# Get the permission for the given class_name
-		result = nil
-		self.scope_permissions.includes(:permission,:action).each do |v|
-			if (v.permission.name_as_sym == permission) && (v.action.name_as_sym == Action.read_action)
-				result = v
-			end
-			break if result
-		end
-		result
-	end
-
-	# returns all the contexts related to the user
-	def contexts(params = nil)
-		if self.context.class == Clinic
-
-			[self.context] if params.blank? || (params[:only] == Clinic.name.as_sym)
-		elsif self.context.class == License
-
-			response = []
-			response += self.context.clinics 	if params.blank? || (params[:only] == Clinic.name.as_sym)
-			response << self.context 					if params.blank? || (params[:only] == License.name.as_sym)
-			response
-		elsif self.context.class == ApiLicense
-
-			auxiliar = self.context.licenses.includes(:clinics)
-			response = []
-			response += auxiliar											if params.blank? || (params[:only] == License.name.as_sym)
-			if params.blank? || (params[:only] == Clinic.name.as_sym)
-				auxiliar.each do |v|
-					response += v.clinics.map{ |v| v }
-				end
-			end
-			response << self.context 									if params.blank? || (params[:only] == ApiLicense.name.as_sym)
-			response
-		end
-	end
-
-	def abilities_by_permission_and_action(permission, action)
-		if permission == Permission.profile && ([Action.assign,Action.unassign].include? action)
-			sp = []
-			assignable_profiles.each do |v|
-				sp << Scope.new(name: v.name)
-			end
-			sp
-		else
-			scope_permissions.includes(:action,:permission,:scopes)
-			.where(actions:{name: action.name},permissions:{name: permission.name})
-		end
-	end
-
   def self.find_for_authentication(warden_conditions)
     where(:email => warden_conditions[:email], :api_license_id => warden_conditions[:api_license_id]).first
   end
 
-  def apply_profiles
-  	new_scope_permimission_ids = []
-   	profiles.each do |v|
-  		new_scope_permimission_ids += v.scope_permission_ids
-  	end
-  	new_scope_permimission_ids + self.scope_permission_ids
-  	new_scope_permimission_ids.uniq!
-  	self.scope_permission_ids = new_scope_permimission_ids
-  end
 
   private
 

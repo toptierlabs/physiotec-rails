@@ -1,6 +1,21 @@
+# == Schema Information
+#
+# Table name: exercises
+#
+#  id             :integer          not null, primary key
+#  context_id     :integer
+#  context_type   :string(255)
+#  owner_id       :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  api_license_id :integer
+#  code           :string(255)
+#  token          :string(255)
+#
+
 class Exercise < ActiveRecord::Base
 	
-  include AssignableHelper
+  include Assignable
   after_create :link_orphan_media
 
   scope :on_api_license, ->(api_license) {
