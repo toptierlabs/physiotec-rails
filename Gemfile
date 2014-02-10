@@ -47,7 +47,8 @@ gem 'mysql2'
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+gem "jbuilder", "~> 2.0.2"
+gem "yajl-ruby", "~> 1.2.0"
 
 # Use unicorn as the app server
 # gem 'unicorn'

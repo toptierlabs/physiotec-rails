@@ -17,7 +17,7 @@ class ExerciseIllustration < ActiveRecord::Base
 	validates :exercise, :illustration, presence: :true
 
 	attr_accessible :exercise_id, :illustration, :token
-	mount_uploader :illustration, ImageUploader
+	mount_uploader  :illustration, ImageUploader
 
 
 end

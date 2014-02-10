@@ -2,7 +2,6 @@ module Api
   module V1
     
     class ClinicsController < Api::V1::ApiController
-      before_filter :identify_user
 
       # GET /clinics
       # GET /clinics.json

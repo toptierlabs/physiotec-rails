@@ -6,7 +6,7 @@ module Permissiable
     languages = extra_args.present? ? extra_args[:langauges] : []
     permission = nil
     if ((subject.class == Symbol) || (subject.class == String))
-      permission = Permission.where(name: subject)
+      permission = Permission.where(name: subject).first
       subject = nil
     else
       permission = Permission.where(model_name: subject.class.name).first
@@ -19,14 +19,13 @@ module Permissiable
 
     return false unless abilities.present?
     return true if subject.blank? && scope.blank? && languages.blank?
-
+    puts "llega 1"
     result = false
     abilities.each do |v|
       puts v.to_json
       if subject.present?
-        puts "entra"
         puts subject.minimum_scope_for(self).id
-        result = (subject.minimum_scope_for(self) <= Scope.find_by_id(v.scope_id))
+        result = (subject.minimum_scope_for(self) <= Scope.find(v.scope_id))
         result &&= (languages - v.laguages).empty? if languages.present? && permission.is_translatable?
       elsif scope.present?
         result = v.scope >= scope

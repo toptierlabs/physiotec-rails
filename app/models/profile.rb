@@ -37,7 +37,7 @@ class Profile < ActiveRecord::Base
   has_many :destination_profiles, :through => :profile_assignment
 
   validates :name, presence: true
-  validates :name, :uniqueness => { :scope => :api_license_id }
+  validates :name, uniqueness: { scope: :api_license_id }
 
   accepts_nested_attributes_for :profile_assignment, :allow_destroy => true
   accepts_nested_attributes_for :profile_abilities,  :allow_destroy => true

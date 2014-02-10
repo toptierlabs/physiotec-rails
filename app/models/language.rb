@@ -12,19 +12,22 @@
 
 class Language < ActiveRecord::Base
 
-	scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
+  scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
 
-	has_many :user_ability_languages, inverse_of: :languages,
-	    															dependent:  :destroy
+  has_many :user_ability_languages,    inverse_of: :language,
+                                       dependent:  :destroy
 
-	belongs_to :api_license
-	attr_accessible :description, :locale
+  has_many :profile_ability_languages, inverse_of: :language,
+                                       dependent:  :destroy
 
-	validates :description, :locale, presence: true
-	validates :locale, :uniqueness => { :scope => :api_license_id }
+  belongs_to :api_license
+  attr_accessible :description, :locale
 
-	def display_name
-		self.description
-	end
+  validates :description, :locale, presence: true
+  validates :locale, uniqueness: { scope: :api_license_id }
+
+  def display_name
+    self.description
+  end
 
 end

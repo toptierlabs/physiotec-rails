@@ -26,11 +26,4 @@ class SubsectionDatum < ActiveRecord::Base
 
   accepts_nested_attributes_for :translations,        allow_destroy: true
 
-  def as_json(options={})
-    aux = super(options).except(:name)
-    aux[:translations] = self.translations.as_json(except:[:subsection_datum_id,:created_at,:updated_at])
-    aux[:translated_locales] = self.translated_locales
-    aux
-  end
-
 end

@@ -1,8 +1,6 @@
  module Api
 	module V1
 		class UsersController < Api::V1::ApiController
-			# @current_user will hold the identified user
-			before_filter :identify_user, :except=>[:login]
 
 			before_filter :read_user, :except =>[:index, :login, :create]
 
@@ -16,7 +14,6 @@
 			def index
 				authorize_request!(:user, :read)
 				@users = User.on_api_license(@api_license)
-				render json:  { users: @users.as_json }
 			end
 
 			# GET /users/1
@@ -24,7 +21,6 @@
 			def show
 				@user = User.includes(:profiles).find(params[:id])
 				authorize_request!(:user, :read, :model=>@user)
-				render json: @user.as_json(:include=>{profiles:{only:[:id, :name]}, scope_permissions:{only:[:id, :name]} } )
 			end
 
 

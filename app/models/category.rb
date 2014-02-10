@@ -10,14 +10,6 @@
 #  updated_at   :datetime         not null
 #
 
-  # create_table "categories", :force => true do |t|
-  #   t.integer  "owner_id"
-  #   t.integer  "context_id",   :null => false
-  #   t.string   "context_type", :null => false
-  #   t.datetime "created_at",   :null => false
-  #   t.datetime "updated_at",   :null => false
-  # end
-
 class Category < ActiveRecord::Base
 
   include Assignable

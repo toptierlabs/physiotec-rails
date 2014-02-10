@@ -63,7 +63,7 @@ class Exercise < ActiveRecord::Base
             :code,
             :context_type,
             :context_id,       presence: true
-  validates :code,             :uniqueness => { :scope => :api_license_id }
+  validates :code,             uniqueness: { scope: :api_license_id }
   
   def link_orphan_media
     ExerciseImage.where("exercise_id is null && token=?", self.token).each do |ei|
@@ -89,7 +89,7 @@ class Exercise < ActiveRecord::Base
 
   class Translation
     validates :title,      presence: true
-    validates :locale,     :uniqueness => {:scope => :exercise_id}
+    validates :locale,     uniqueness: {scope: :exercise_id}
   end
 
 end

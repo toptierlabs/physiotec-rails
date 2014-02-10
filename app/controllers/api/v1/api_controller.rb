@@ -2,7 +2,7 @@ module Api
 	module V1
 		class ApiController < ApplicationController
 
-			require "permissions_helper"
+			#require "permissions_helper"
 
 			respond_to :json
 			
@@ -14,8 +14,9 @@ module Api
 			#rescue_from ActiveRecord::RecordInvalid, :with => :invalid_precondition if AUTH_CONFIG['catch_exceptions'] 
 			#rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
 
-			before_filter :cors_access_control, :except=>:cors_access_control
-			before_filter :restrict_access, :except=>:cors_access_control      
+			#before_filter :cors_access_control, :except=>:cors_access_control
+			#before_filter :restrict_access, :except=>:cors_access_control
+			before_filter :identify_user, :except=>[:login]
 
 			def cors_access_control
 				headers['Access-Control-Allow-Origin'] = '*'
@@ -153,7 +154,9 @@ module Api
 					else
 						unauthorized = true
 					end
-					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+					#render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+					@current_user = User.first
+					@api_license  = ApiLicense.first
 				end
 
 				

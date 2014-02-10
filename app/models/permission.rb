@@ -38,7 +38,7 @@ class Permission < ActiveRecord::Base
   private
 
     def domain_scope_consistency
-      if Scope.find_by_id(minimum_scope_id) > Scope.find_by_id(maximum_scope_id)
+      if Scope.find(minimum_scope_id) > Scope.find(maximum_scope_id)
         self.errors[:maximum_scope] << "must be greater or equal than minimum scope"
         false
       end

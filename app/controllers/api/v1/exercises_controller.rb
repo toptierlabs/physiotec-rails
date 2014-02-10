@@ -2,7 +2,6 @@ module Api
   module V1
     
     class ExercisesController < Api::V1::ApiController
-      before_filter :identify_user
       before_filter :identify_exercise, except: [:index, :create]
 
       # GET /exercises

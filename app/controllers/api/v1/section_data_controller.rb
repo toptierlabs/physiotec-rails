@@ -3,9 +3,6 @@ module Api
     
     class SectionDataController < Api::V1::ApiController
 
-      before_filter :identify_user
-
-
       # GET /sections
       def index
         authorize_request! :section,

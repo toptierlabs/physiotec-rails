@@ -4,14 +4,7 @@ module Api
 
 			class UserProfilesController <  Api::V1::ApiController
 
-
-				before_filter :identify_user, :read_user
-
-
-				# @selected_user will hold the user identified by the url parameters
-				def read_user
-					@selected_user = User.find( params[:id] )
-				end
+				before_filter :read_user
 
 				# Returns all the profiles linked with the selected user
 				def index
@@ -25,6 +18,12 @@ module Api
 					@profile = @selected_user.profiles.find(params[:id])
 					render json:  { users: @profile.as_json }
 				end
+
+				private
+
+					def read_user
+						@selected_user = User.find( params[:id] )
+					end
 
 			end 
 		end

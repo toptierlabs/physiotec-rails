@@ -53,7 +53,7 @@ class ApiLicense < ActiveRecord::Base
 
   validates :name,
             :public_api_key,
-            :secret_api_key,   :uniqueness => true
+            :secret_api_key,   uniqueness: true
   
   def api_license
     self

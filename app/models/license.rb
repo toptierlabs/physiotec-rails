@@ -57,9 +57,9 @@ class License < ActiveRecord::Base
 
   validates :email,           presence: true,
                               email: true,
-                              :uniqueness => { :scope => :api_license_id }
+                              uniqueness: { scope: :api_license_id }
   validates :company_name,    presence: true,
-                              :uniqueness => { :scope => :api_license_id }
+                              uniqueness: { scope: :api_license_id }
   validates :first_name,      presence: true
   validates :last_name,       presence: true
   validates :maximum_clinics, presence: true,

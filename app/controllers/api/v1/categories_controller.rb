@@ -2,7 +2,6 @@ module Api
   module V1
     
     class CategoriesController < Api::V1::ApiController
-      before_filter :identify_user
 
       # GET /modules
       # GET /modules.json

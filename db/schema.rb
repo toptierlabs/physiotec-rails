@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140206165406) do
+ActiveRecord::Schema.define(:version => 20140207164732) do
 
   create_table "abilities", :force => true do |t|
     t.integer  "permission_id"
@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(:version => 20140206165406) do
     t.datetime "updated_at",                               :null => false
     t.string   "session_token"
     t.date     "session_token_created_at"
+    t.integer  "maximum_context_cache",    :default => 0,  :null => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_api_license_admins_on_confirmation_token", :unique => true

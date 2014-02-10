@@ -80,8 +80,7 @@ PhysiotecV3::Application.routes.draw do
       resources :languages
       resources :licenses
       resources :clinics
-      resources :scope_permissions
-      resources :permissions, :except => :update
+      resources :permissions, :except => [:new, :create, :update]
       resources :exercise_images
       resources :exercise_illustrations
       resources :categories, path: 'modules', :controller => 'categories'
@@ -94,21 +93,10 @@ PhysiotecV3::Application.routes.draw do
         end
       end
       resources :actions, :only => [:index, :show]
-
-      resources :scope_groups do
-        resources :scopes, :controller => 'scope_groups/scopes'
-      end
+      resources :scopes,  :only => [:index, :show]
 
       resources :users do
-        member do
-          post 'assign_profile'
-          post 'unassign_profile'
-          post 'assign_ability'
-          post 'unassign_ability'
-          get 'assignable_profiles'
-        end
-        resources :user_scope_permissions,
-                                  controller: 'users/user_scope_permissions',
+        resources :abilities,     controller: 'users/abilities',
                                   only:       [:index, :show]
         resources :user_profiles, controller: 'users/user_profiles',
                                   only: [:index, :show]
