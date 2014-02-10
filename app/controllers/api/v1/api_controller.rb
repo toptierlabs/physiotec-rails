@@ -14,8 +14,8 @@ module Api
 			#rescue_from ActiveRecord::RecordInvalid, :with => :invalid_precondition if AUTH_CONFIG['catch_exceptions'] 
 			#rescue_from Exception, :with => :render_error if AUTH_CONFIG['catch_exceptions']
 
-			#before_filter :cors_access_control, :except=>:cors_access_control
-			#before_filter :restrict_access, :except=>:cors_access_control
+			before_filter :cors_access_control, :except=>:cors_access_control
+			before_filter :restrict_access, :except=>:cors_access_control
 			before_filter :identify_user, :except=>[:login]
 
 			def cors_access_control

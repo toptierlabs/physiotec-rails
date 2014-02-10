@@ -23,7 +23,7 @@ module Permissiable
     abilities.each do |v|
       if subject.present?
         result = (subject.minimum_scope_for(self) <= Scope.find(v.scope_id))
-        result &&= (languages - v.laguages).empty? if languages.present? && permission.is_translatable?
+        result &&= (languages - v.languages).empty? if languages.present? && permission.is_translatable?
       elsif scope.present?
         result = v.scope >= scope
       end
