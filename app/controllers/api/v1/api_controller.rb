@@ -154,9 +154,7 @@ module Api
 					else
 						unauthorized = true
 					end
-					#render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-					@current_user = User.first
-					@api_license  = ApiLicense.first
+					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
 				end
 
 				

@@ -3,7 +3,7 @@ module Permissiable
   def can?(action, subject, extra_args = {})
     #sanitize the params
     scope = extra_args.present? ? extra_args[:scope] : nil
-    languages = extra_args.present? ? extra_args[:langauges] : []
+    languages = extra_args.present? ? extra_args[:languages] : []
     permission = nil
     if ((subject.class == Symbol) || (subject.class == String))
       permission = Permission.where(name: subject).first
@@ -19,12 +19,9 @@ module Permissiable
 
     return false unless abilities.present?
     return true if subject.blank? && scope.blank? && languages.blank?
-    puts "llega 1"
     result = false
     abilities.each do |v|
-      puts v.to_json
       if subject.present?
-        puts subject.minimum_scope_for(self).id
         result = (subject.minimum_scope_for(self) <= Scope.find(v.scope_id))
         result &&= (languages - v.laguages).empty? if languages.present? && permission.is_translatable?
       elsif scope.present?

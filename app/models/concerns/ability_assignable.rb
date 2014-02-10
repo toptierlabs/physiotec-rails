@@ -77,7 +77,7 @@ module AbilityAssignable
 
 
 		  	def show_action_greater_or_equal_scope
-		  		unless Action.find_by_id(action_id).is_show?
+		  		unless Action.find(action_id).is_show?
 		  			show_ability = self.class.joins(:ability)
 		  			    .where("#{self.class.name[0..-(Ability.name.length+1)]}_id = ? AND " << 
 		  			     	     "permission_id = ? AND " <<
@@ -85,7 +85,7 @@ module AbilityAssignable
 		  			           self.method("#{self.class.name[0..-(Ability.name.length+1)].underscore}").call.id,
 		  			           self.permission_id,
 		  			           Action.show_action.id).first
-		  			if show_ability.present? && Action.find_by_id(self.action_id) < Action.find_by_id(show_ability.action_id)
+		  			if show_ability.present? && Action.find(self.action_id) < Action.find(show_ability.action_id)
 		  				errors[:scope_id] << "must be equal or greater than permission show scope"
 		  			end
 		  		end
