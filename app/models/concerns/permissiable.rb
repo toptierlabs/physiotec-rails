@@ -15,7 +15,7 @@ module Permissiable
     abilities = self.user_abilities
                   .joins(:ability)
                   .where(abilities: { permission_id: permission.id,
-                                      action_id: Action.find_by_name(action).id })
+                                      action_id: Action.find_by(name: action).id })
 
     return false unless abilities.present?
     return true if subject.blank? && scope.blank? && languages.blank?

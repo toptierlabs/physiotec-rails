@@ -2,9 +2,9 @@ module Assignable
 
   def minimum_scope_for(user)
     if !self.respond_to?(:context)
-      return Scope.own_scope
+      return Scope.user_scope
     elsif self.respond_to?(:owner) && (self.owner == user)
-      return Scope.own_scope
+      return Scope.user_scope
     else
       if self.context.class == Clinic
         if user.contexts.any? { |v| v == self.context }

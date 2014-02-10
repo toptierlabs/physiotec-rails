@@ -49,7 +49,7 @@ class Action
       }
 
       define_singleton_method("#{k}_action") { 
-        Action.new action_id: v
+        @@actions[v-1]
       }
 
       #for each action creates a new method for getting the action id

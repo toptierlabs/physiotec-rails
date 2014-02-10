@@ -60,7 +60,7 @@ class Scope
       }
 
       define_singleton_method("#{k}_scope") { 
-        @@scopes[v]
+        @@scopes[v-1]
       }
 
       define_method("is_#{k}?") { 

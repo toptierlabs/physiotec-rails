@@ -28,7 +28,7 @@ class Ability < ActiveRecord::Base
   private
 
     def translation_action # validator
-      if Action.find_by_id(action_id).is_translate? && !permission.is_translatable?
+      if Action.find(action_id).is_translate? && !permission.is_translatable?
         errors.add :section, "permission is not translatable"
       end
     end

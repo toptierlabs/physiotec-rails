@@ -21,16 +21,16 @@ end
 
 # Creates the permissions
 permissions = [ ["Clinic", Clinic.name, Scope.api_license_scope.id, Scope.license_scope.id],
-								["Exercise", Exercise.name, Scope.api_license_scope.id, Scope.own_scope.id],
+								["Exercise", Exercise.name, Scope.api_license_scope.id, Scope.user_scope.id],
 								["License", License.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
 								["User", User.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
 								["Permission", Permission.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
 								["Profile", Profile.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
 								["Module", Category.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
 								["Section", SectionDatum.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
-								["ExerciseIllustration",ExerciseIllustration.name, Scope.api_license_scope.id, Scope.own_scope.id],
-								["ExerciseImage", ExerciseImage.name, Scope.api_license_scope.id, Scope.own_scope.id],
-								["ExerciseVideo", ExerciseVideo.name, Scope.api_license_scope.id, Scope.own_scope.id]
+								["ExerciseIllustration",ExerciseIllustration.name, Scope.api_license_scope.id, Scope.user_scope.id],
+								["ExerciseImage", ExerciseImage.name, Scope.api_license_scope.id, Scope.user_scope.id],
+								["ExerciseVideo", ExerciseVideo.name, Scope.api_license_scope.id, Scope.user_scope.id]
 							]
 
 permissions.each do | name, model, maxs, mins |
@@ -169,7 +169,7 @@ end
 # 	sp = nil
 # 	exists = false
 # 	sps = ScopePermission.where(permission_id: Permission.find_by_name(permission).id,
-# 												      action_id: Action.find_by_name(action).id )
+# 												      action_id: Action.find(name:(action).id )
 # 	if sps.present?
 # 		#check if the scopes are equal
 # 		sps.each do |v|
@@ -182,7 +182,7 @@ end
 
 # 	if (sps.empty?) || (!exists)
 # 		sp = ScopePermission.create( permission_id: Permission.find_by_name(permission).id,
-# 																 action_id: Action.find_by_name( action ).id )# if sp.nil?
+# 																 action_id: Action.find(name:( action ).id )# if sp.nil?
 # 		profile_scopes.each do | scope |
 # 			ScopePermissionGroupScope.create( scope_permission_id: sp.id,
 # 			scope_id: Scope.find_by_name(scope).id )
@@ -279,9 +279,11 @@ end
 contexts = [c1,c2,c3, l, l2, ApiLicense.first]
 #Create exercises
 for i in 0..20
-	e = Exercise.new(title: "test exercise #{i+1}", description: 'test description', owner_id: users[i%5].id)
+	e = Exercise.new(title: "test exercise #{i+1}", description: 'test description')
+	e.owner = users[i%5]
 	e.api_license =  ApiLicense.first
 	e.context = contexts[i%6]
+	e.code = "code_#{i}"
 	e.save
 end
 
