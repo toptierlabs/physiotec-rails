@@ -95,8 +95,6 @@ class User < ActiveRecord::Base
   validates :email,          email: true
   validates :email,          uniqueness: { scope: :api_license_id }
 
-  #validate :relation_with_license
-
   accepts_nested_attributes_for :user_profiles,  allow_destroy: true
   accepts_nested_attributes_for :user_abilities, allow_destroy: true
 
@@ -115,8 +113,6 @@ class User < ActiveRecord::Base
                   :first_name,
                   :last_name,
                   :api_license_id,
-                  # :session_token,
-                  # :session_token_created_at,
                   :user_abilities_attributes,
                   :profile_ids,
                   :contexts
@@ -155,12 +151,12 @@ class User < ActiveRecord::Base
 
   #name for activeadmin
   def name
-    self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
+    "#{self.email} (#{self.first_name} #{self.last_name})"
   end
 
   #display name for ActiveAdmin
   def datatype
-    self.email + ' (' + self.first_name + ' ' + self.last_name + ')'
+    "#{self.email} (#{self.first_name} #{self.last_name})"
   end
 
   #used for active admin
@@ -193,15 +189,15 @@ class User < ActiveRecord::Base
     # then get the maximum ability by comparing their scope
     profile_abilitities_group.each do |k, v|
       if v.size == 1
-        profile_abilities << v.first.attributes
+        profile_abilities << v.first.as_json(methods: :language_ids)
       else
-        profile_abilities << v.max_by(&:scope_id).attributes
+        profile_abilities << v.max_by(&:scope_id).as_json(methods: :language_ids)
       end
     end
 
     # Just get the ability_id and the scope_id from the profile abilities
     profile_abilities.map! do |v|
-      v.slice!("ability_id", "scope_id")
+      v.slice!("ability_id", "scope_id", :language_ids)
       v["scope_id"] = [Scope.find(v["scope_id"]), self.maximum_context_cache].min.id
       v
     end
@@ -220,17 +216,6 @@ class User < ActiveRecord::Base
     profile_abilities -= delete_list
     self.user_abilities_attributes = profile_abilities
   end
-
-
-  private
-
-    def relation_with_license
-      if (self.context_type == License.name) &&
-      (self.context_id_changed? || self.context_type_changed?) &&
-      (!self.context.can_add_users?)
-        self.errors[:context] << "reached maximum users"      
-      end
-    end
 
 
 end

@@ -29,11 +29,11 @@ module Assignable
       end
       if self.context.class == ApiLicense
         if user.contexts.any? { |v| v == self.context }
-          return Scope.api_scope              
+          return Scope.api_license_scope              
         end
       end
     end
-    return Scope.api_scope
+    return Scope.api_license_scope
   end
 
   private

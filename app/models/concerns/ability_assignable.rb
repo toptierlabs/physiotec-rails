@@ -7,6 +7,7 @@ module AbilityAssignable
     extend ActiveHash::Associations::ActiveRecordExtensions
 
     default_scope eager_load(:ability)
+    default_scope eager_load(:languages)
 
     _owner_class_name = "#{self.name[0..-(Ability.name.length+1)]}".as_sym
     _singular_class_name = "#{self.name.underscore}".as_sym

@@ -80,3 +80,4 @@ gem "globalize-accessors", "~> 0.1.3"
 
 # Use clasees like activerecord but tableless
 gem "active_hash", "~> 1.0.2"
+gem "insensitive_hash", "~> 0.3.3"

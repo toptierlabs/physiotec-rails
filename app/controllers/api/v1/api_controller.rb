@@ -17,6 +17,7 @@ module Api
 			before_filter :cors_access_control, :except=>:cors_access_control
 			before_filter :restrict_access, :except=>:cors_access_control
 			before_filter :identify_user, :except=>[:login, :cors_access_control]
+			before_filter :print_class_name
 
 			def cors_access_control
 				headers['Access-Control-Allow-Origin'] = '*'
@@ -28,6 +29,14 @@ module Api
 
 
 	protected
+
+				def print_class_name
+					action = params[:action].to_sym
+					permission =  params[:controller].split("/")[-1].singularize.to_sym
+					puts action
+					puts permission
+					puts @current_user.can? action, permission
+				end
 
 				def authorize_request(permission, action, params)
 					entity = params[:model] if params.present? && params[:model].present?

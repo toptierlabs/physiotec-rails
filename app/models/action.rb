@@ -1,15 +1,16 @@
 class Action < ActiveHash::Base
 
+  require 'insensitive_hash'
   include ActiveHash::Associations
 
   self.data = [
-    { :id => 1, :name => "Create" },
-    { :id => 2, :name => "Show" },
-    { :id => 3, :name => "Update" },
-    { :id => 4, :name => "Destroy" },
-    { :id => 5, :name => "Translate" },
-    { :id => 6, :name => "Assign" },
-    { :id => 7, :name => "Unassign" }
+    { :id => 1, :name => "create" }.insensitive,
+    { :id => 2, :name => "show" }.insensitive,
+    { :id => 3, :name => "update" }.insensitive,
+    { :id => 4, :name => "destroy" }.insensitive,
+    { :id => 5, :name => "translate" }.insensitive,
+    { :id => 6, :name => "assign" }.insensitive,
+    { :id => 7, :name => "unassign" }.insensitive
   ]
 
   has_many :user_abilities
