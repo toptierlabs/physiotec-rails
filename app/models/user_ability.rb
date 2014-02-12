@@ -12,6 +12,7 @@
 
 class UserAbility < ActiveRecord::Base
 
+  require 'concerns/ability_assignable'
 	include AbilityAssignable
 	
   # belongs_to :user,      inverse_of: :user_abilities

@@ -26,8 +26,7 @@ class Clinic < ActiveRecord::Base
 	has_many :users,          as: :context,
 														inverse_of: :context,
 	                          dependent: :destroy
-	has_many :categories,     as: :context
-                               
+	has_many :categories,     as: :context                               
 
 
 	validates :license, associated: { message: "reached maximum clinics" },
@@ -39,19 +38,6 @@ class Clinic < ActiveRecord::Base
 	validates :api_license, presence: true
 
 	attr_accessible :name, :license_id
-
-	def clinic
-		self
-	end	
-
-	def context
-		self.license
-	end
-
-  #returns object class name, required for returning user's context
-  def entity
-    self.class.name
-  end
 
   private
 

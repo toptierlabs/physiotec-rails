@@ -16,6 +16,8 @@
 class Exercise < ActiveRecord::Base
 	
   include Assignable
+  default_scope includes(:translations)
+
   after_create :link_orphan_media
 
   scope :on_api_license, ->(api_license) {
@@ -40,7 +42,7 @@ class Exercise < ActiveRecord::Base
                   :exercise_images_attributes
 
   translates    :title, :short_title, :description
-  default_scope includes(:translations)
+  globalize_accessors
 
   has_many   :assignments, :as => :assignable, dependent: :destroy
   has_many   :exercise_illustrations,          dependent: :destroy

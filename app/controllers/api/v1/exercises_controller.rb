@@ -32,8 +32,8 @@ module Api
         params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:exercise,
                             :translate,
-                            scopes: [ v[:locale],
-                                      params[:exercise][:context_type]]
+                            locales: [ v[:locale] ],
+                            scope:    params[:exercise][:context_type]
                             )
         end
         validate_and_sanitize_context(params[:exercise])
@@ -58,9 +58,9 @@ module Api
         params[:exercise][:translations_attributes].each do |v|
           authorize_request!(:exercise,
                             :translate,
-                            scopes: [ v[:locale],
-                                      params[:exercise][:context_type]],
-                            model: @exercise
+                            locales: [ v[:locale] ],
+                            scope:    params[:exercise][:context_type],
+                            model: @exercise                            
                             )
         end
         validate_and_sanitize_context(params[:exercise])

@@ -30,11 +30,8 @@ module Api
 	protected
 
 				def authorize_request(permission, action, params)
-					if AUTH_CONFIG['super_user'] || @current_user.can?(action, permission, params)
-						true
-					else
-						false
-					end
+					entity = params[:model] if params.present? && params[:model].present?
+					AUTH_CONFIG['super_user'] || @current_user.can?(action, entity, params)
 				end
 
 				def authorize_request!(permission, action, scopes=nil)

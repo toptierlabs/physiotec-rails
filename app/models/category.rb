@@ -31,6 +31,7 @@ class Category < ActiveRecord::Base
                   :sections_attributes
 
   translates :name
+  globalize_accessors
   
   validates :name,            presence: true
   validates :context_type,    presence: true

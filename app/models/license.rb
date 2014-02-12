@@ -77,15 +77,6 @@ class License < ActiveRecord::Base
 
   validate :validate_users
 
-  def license
-    self
-  end
-
-  #returns object class name, required for returning user's context
-  def entity
-    self.class.name
-  end
-
   def display_name
     self.company_name
   end

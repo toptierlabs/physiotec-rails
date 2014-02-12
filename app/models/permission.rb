@@ -50,7 +50,8 @@ class Permission < ActiveRecord::Base
     classes = model_name.underscore.split("_")
     classes.each do |v|
       return false unless Object.const_defined?(v.camelize)
-      return false unless model_name.constantize.respond_to? v.to_sym
+      return false unless model_name.constantize.new.respond_to? v.to_sym
+
     end
     true
   end

@@ -76,9 +76,7 @@ gem "haml-rails", "~> 0.4"
 gem "aws-ses", "~> 0.5.0", :require => 'aws/ses'
 
 gem 'globalize', '~> 3.0.2'
+gem "globalize-accessors", "~> 0.1.3"
 
 # Use clasees like activerecord but tableless
 gem "active_hash", "~> 1.0.2"
-
-#gem 'globalize', :github => 'toptierlabs/globalize', :branch => '3-0-stable'
-#gem 'globalize', :path => "/Users/TopTierlabs/Desktop/proyectos/globalize"

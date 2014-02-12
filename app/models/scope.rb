@@ -7,7 +7,7 @@ class Scope < ActiveHash::Base
     {:id => 1, :name => "User"},
     {:id => 2, :name => "Clinic"},
     {:id => 3, :name => "License"},
-    {:id => 4, :name => "ApiLicense"},
+    {:id => 4, :name => "ApiLicense"}
   ]
 
   has_many :user_abilities
