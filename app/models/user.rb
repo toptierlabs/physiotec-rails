@@ -104,6 +104,7 @@ class User < ActiveRecord::Base
                   :session_token_created_at,
                   :profiles,
                   :user_profiles_attributes,
+                  :user_abilities_attributes,
                   :profile_ids,
                   :user_profiles
 
@@ -169,6 +170,38 @@ class User < ActiveRecord::Base
 
   def self.find_for_authentication(warden_conditions)
     where(:email => warden_conditions[:email], :api_license_id => warden_conditions[:api_license_id]).first
+  end
+
+  def apply_profiles_abilities
+    profile_abilities = ProfileAbility.where(profile_id: self.profile_ids)
+    profile_abilitities_group = profile_abilities.group_by(&:ability_id)
+    profile_abilities = []
+    # If there are repeated abilities between each profile,
+    # then get the maximum ability by comparing their scope
+    profile_abilitities_group.each do |k, v|
+      if v.size == 1
+        profile_abilities << v.first.attributes
+      else
+        profile_abilities << v.max_by(&:scope_id).attributes
+      end
+    end
+
+    # Just get the ability_id and the scope_id from the profile abilities
+    profile_abilities.map!{ |v| v.extract!("ability_id", "scope_id")}
+
+    delete_list = []
+    self.user_abilities.each do |user_ability|      
+      profile_ability = profile_abilities.detect do |v|
+        v["ability_id"] == user_ability.ability_id        
+      end
+      
+      if profile_ability.present?
+        delete_list << profile_ability
+        user_ability.scope_id = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
+      end
+    end
+    profile_abilities -= delete_list
+    self.user_abilities_attributes = profile_abilities
   end
 
 

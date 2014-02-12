@@ -16,7 +16,7 @@ module Api
 
 			before_filter :cors_access_control, :except=>:cors_access_control
 			before_filter :restrict_access, :except=>:cors_access_control
-			before_filter :identify_user, :except=>[:login]
+			before_filter :identify_user, :except=>[:login, :cors_access_control]
 
 			def cors_access_control
 				headers['Access-Control-Allow-Origin'] = '*'
@@ -29,8 +29,8 @@ module Api
 
 	protected
 
-				def authorize_request(permission, action, scopes=nil)
-					if AUTH_CONFIG['super_user'] || @current_user.can?(permission, action, scopes)
+				def authorize_request(permission, action, params)
+					if AUTH_CONFIG['super_user'] || @current_user.can?(action, permission, params)
 						true
 					else
 						false

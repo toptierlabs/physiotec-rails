@@ -13,6 +13,8 @@
 
 class Permission < ActiveRecord::Base
 
+  extend ActiveHash::Associations::ActiveRecordExtensions
+
   attr_accessible :name,
                   :model_name,
                   :minimum_scope_id,
@@ -29,17 +31,35 @@ class Permission < ActiveRecord::Base
                           in: lambda {|v| ActiveRecord::Base.descendants.map{ |v| v.name } }
                         }
 
+  belongs_to_active_hash :minimum_scope,
+                         class_name: "Scope",
+                         foreign_key: "minimum_scope_id"
+
+  belongs_to_active_hash :maximum_scope,
+                         class_name: "Scope",
+                         foreign_key: "maximum_scope_id"
+
+
   validate :domain_scope_consistency
 
   def is_translatable?
     model_name.constantize.respond_to? :translation_class
   end
 
+  def is_assignable?
+    classes = model_name.underscore.split("_")
+    classes.each do |v|
+      return false unless Object.const_defined?(v.camelize)
+      return false unless model_name.constantize.respond_to? v.to_sym
+    end
+    true
+  end
+
   private
 
     def domain_scope_consistency
-      if Scope.find(minimum_scope_id) > Scope.find(maximum_scope_id)
-        self.errors[:maximum_scope] << "must be greater or equal than minimum scope"
+      if minimum_scope > maximum_scope
+        self.errors[:maximum_scope_id] << "must be greater or equal than minimum scope"
         false
       end
     end

@@ -11,19 +11,8 @@
 #
 
 class ProfileAbility < ActiveRecord::Base
-  # belongs_to :profile,  inverse_of: :profile_abilities
-  # belongs_to :ability,  inverse_of: :profile_abilities
 
-  # validates :profile,   presence: true
-  # validates :ability,   presence: true
-  # validates :scope,     presence: true
-
-  # validates :scope,     uniqueness: { scope: [:profile_id, :ability_id] }
-  
-  # def scope
-  #   @scope ||= Scope.new scope_id: self[:scope]
-  # end
-
+  require 'concerns/ability_assignable'
   include AbilityAssignable
 
 end
