@@ -1,3 +1,3 @@
-json.Scope do |json|
+json.scope do |json|
     json.extract! @scope, :id, :name
 end

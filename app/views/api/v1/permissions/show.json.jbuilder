@@ -1,4 +1,4 @@
-json.Permission do |json|
+json.permission do |json|
     json.extract! @permission, :id, :name
     json.translatable @permission.is_translatable?
     json.assignable permission.is_assignable?

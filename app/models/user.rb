@@ -24,7 +24,7 @@
 #  updated_at               :datetime         not null
 #  session_token            :string(255)
 #  session_token_created_at :date
-#  maximum_context_cache    :string(255)
+#  maximum_context_cache_id :integer          default(1), not null
 #
 
 class User < ActiveRecord::Base
@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
 
   include Assignable
   include Permissiable
+  extend ActiveHash::Associations::ActiveRecordExtensions
   
 
   scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
@@ -64,8 +65,22 @@ class User < ActiveRecord::Base
                             source:  :context,
                             source_type: 'Clinic'
 
+  belongs_to_active_hash :maximum_context_cache,
+                         class_name: "Scope",
+                         foreign_key: "maximum_context_cache_id"
+
   def contexts
-    api_licenses + licenses + clinics
+    { 
+      api_license_ids: api_license_ids,
+      license_ids:     license_ids,
+      clinic_ids:      clinic_ids
+    }
+  end
+
+  def contexts=(value)
+      self.api_license_ids = value[:api_license_ids] if value.has_key? :api_license_ids
+      self.license_ids = value[:license_ids] if value.has_key? :license_ids
+      self.clinic_ids = value[:clinic_ids] if value.has_key? :clinic_ids
   end
 
 
@@ -100,13 +115,11 @@ class User < ActiveRecord::Base
                   :first_name,
                   :last_name,
                   :api_license_id,
-                  :session_token,
-                  :session_token_created_at,
-                  :profiles,
-                  :user_profiles_attributes,
+                  # :session_token,
+                  # :session_token_created_at,
                   :user_abilities_attributes,
                   :profile_ids,
-                  :user_profiles
+                  :contexts
 
   #Set the method to create new session tokens
   def new_session_token
@@ -187,7 +200,11 @@ class User < ActiveRecord::Base
     end
 
     # Just get the ability_id and the scope_id from the profile abilities
-    profile_abilities.map!{ |v| v.extract!("ability_id", "scope_id")}
+    profile_abilities.map! do |v|
+      v.slice!("ability_id", "scope_id")
+      v["scope_id"] = [Scope.find(v["scope_id"]), self.maximum_context_cache].min.id
+      v
+    end
 
     delete_list = []
     self.user_abilities.each do |user_ability|      
@@ -197,7 +214,7 @@ class User < ActiveRecord::Base
       
       if profile_ability.present?
         delete_list << profile_ability
-        user_ability.scope_id = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
+        user_ability.scope = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
       end
     end
     profile_abilities -= delete_list

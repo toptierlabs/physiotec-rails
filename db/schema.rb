@@ -406,7 +406,7 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
     t.datetime "updated_at",                               :null => false
     t.string   "session_token"
     t.date     "session_token_created_at"
-    t.integer  "maximum_context_cache",    :default => 0,  :null => false
+    t.integer  "maximum_context_cache_id", :default => 1,  :null => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_api_license_admins_on_confirmation_token", :unique => true

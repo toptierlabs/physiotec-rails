@@ -29,18 +29,17 @@ class UserContext < ActiveRecord::Base
   private
 
     def update_user_maximum_context_cache
-      current_scope = Scope.find(self.user.maximum_context_cache)
-      self_scope = Scope.find_by name: self.context_type
-      if self_scope > current_scope
-        self.user.maximum_context_cache = self_scope.id
+      self_scope = Scope.find_by_name(self.context_type)
+      if self_scope > self.user.maximum_context_cache
+        self.user.maximum_context_cache = self_scope
         self.user.save!
       end
     end
 
     def recalculate_user_maximum_context_cache
       user_contexts = UserContext.where(user_id: self.user_id).pluck(:context_type)
-      max_user_context = user_contexts.map!{ |v| Scope.find_by(name: v).id }.max
-      self.user.maximum_context_cache = max_user_context || 0
+      max_user_context = user_contexts.map!{ |v| Scope.find_by_name(v).id }.max
+      self.user.maximum_context_cache = max_user_context || Scope.user_scope
       self.user.save!
     end
 

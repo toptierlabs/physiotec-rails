@@ -1,4 +1,4 @@
-json.Ability do |json|
+json.ability do |json|
   json.extract! @ability, :id
   json.permission do
     json.extract! @ability.permission, :id, :name

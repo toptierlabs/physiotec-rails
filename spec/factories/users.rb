@@ -24,7 +24,7 @@
 #  updated_at               :datetime         not null
 #  session_token            :string(255)
 #  session_token_created_at :date
-#  maximum_context_cache    :string(255)
+#  maximum_context_cache_id :integer          default(1), not null
 #
 
 FactoryGirl.define do 

@@ -6,6 +6,8 @@ module AbilityAssignable
 
     extend ActiveHash::Associations::ActiveRecordExtensions
 
+    default_scope eager_load(:ability)
+
     _owner_class_name = "#{self.name[0..-(Ability.name.length+1)]}".as_sym
     _singular_class_name = "#{self.name.underscore}".as_sym
     _pluralized_class_name = "#{self.name.underscore.pluralize}".as_sym
@@ -45,8 +47,6 @@ module AbilityAssignable
                     :language_ids,
                     :ability_id
 
-    default_scope eager_load(:ability)
-
     def action_id
       @action_id ||= self.ability.action_id
     end
@@ -67,10 +67,8 @@ module AbilityAssignable
     end
 
     def self_scope_less_or_equal_than_users_contexts
-      if self.class == User && self.scope_id.present?
-        user_chached_scope = Scope.find_by_id(self.user.maximum_context_cache)
-        self_scope = Scope.find_by_id(self.scope_id)
-        if self_scope > user_chached_scope
+      if self.respond_to? :user
+        if self.scope > self.user.maximum_context_cache
           puts 'is invalid'
           errors[:scope_id] << "must be less or equal than the maximum user contexts"
         end

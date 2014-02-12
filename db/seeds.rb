@@ -258,7 +258,7 @@ c3.save
 #Creates a default user
 
 users = []
-clinics = [c1,c2,c3, l, l2, ApiLicense.first]
+clinics = [c1,c2,c3, l, l2]
 licenses = [l, l2]
 for i in 0..5
   u = User.create :email => "test-#{i+1}@email.com",
@@ -273,16 +273,16 @@ for i in 0..5
   if (i%3==0)
     u.profiles << Profile.find_by_name('API Administrator')
     u.profiles << Profile.find_by_name('Translator')
-    u.context = ApiLicense.first
+    u.api_licenses << ApiLicense.first
 
 
   elsif (i%3==1)
     u.profiles << Profile.find_by_name('License administrator')
     u.profiles << Profile.find_by_name('Translator')
-    u.context = licenses[i%licenses.length]
+    u.licenses << licenses[i%licenses.length]
   else
     u.profiles << Profile.find_by_name('Clinic administrator')
-    u.context = clinics[i%clinics.length]
+    u.clinics << clinics[i%clinics.length]
   end
   u.apply_profiles_abilities
   u.save
