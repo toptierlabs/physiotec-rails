@@ -16,13 +16,15 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
   create_table "abilities", :force => true do |t|
     t.integer  "permission_id"
     t.integer  "action_id"
+    t.integer  "scope_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
   add_index "abilities", ["action_id"], :name => "index_abilities_on_action_id"
-  add_index "abilities", ["permission_id", "action_id"], :name => "index_abilities_on_permission_id_and_action_id", :unique => true
+  add_index "abilities", ["permission_id", "action_id", "scope_id"], :name => "index_abilities_on_permission_id_and_action_id_and_scope_id", :unique => true
   add_index "abilities", ["permission_id"], :name => "index_abilities_on_permission_id"
+  add_index "abilities", ["scope_id"], :name => "index_abilities_on_scope_id"
 
   create_table "actions", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -219,29 +221,13 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
   create_table "profile_abilities", :force => true do |t|
     t.integer  "profile_id"
     t.integer  "ability_id"
-    t.integer  "scope_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   add_index "profile_abilities", ["ability_id"], :name => "index_profile_abilities_on_ability_id"
-  add_index "profile_abilities", ["profile_id", "ability_id", "scope_id"], :name => "index_profile_abilities_on_profile_and_ability_and_scope", :unique => true
+  add_index "profile_abilities", ["profile_id", "ability_id"], :name => "index_profile_abilities_on_profile_and_ability_and_scope", :unique => true
   add_index "profile_abilities", ["profile_id"], :name => "index_profile_abilities_on_profile_id"
-  add_index "profile_abilities", ["scope_id"], :name => "index_profile_abilities_on_scope_id"
-
-  create_table "profile_ability_languages", :force => true do |t|
-    t.integer  "profile_ability_id"
-    t.integer  "language_id"
-    t.integer  "ability_id"
-    t.integer  "profile_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-  end
-
-  add_index "profile_ability_languages", ["ability_id"], :name => "index_profile_ability_languages_on_ability_id"
-  add_index "profile_ability_languages", ["language_id"], :name => "index_profile_ability_languages_on_language_id"
-  add_index "profile_ability_languages", ["profile_ability_id"], :name => "index_profile_ability_languages_on_profile_ability_id"
-  add_index "profile_ability_languages", ["profile_id"], :name => "index_profile_ability_languages_on_profile_id"
 
   create_table "profile_assignments", :force => true do |t|
     t.integer  "profile_id"
@@ -339,29 +325,13 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
   create_table "user_abilities", :force => true do |t|
     t.integer  "user_id"
     t.integer  "ability_id"
-    t.integer  "scope_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   add_index "user_abilities", ["ability_id"], :name => "index_user_abilities_on_ability_id"
-  add_index "user_abilities", ["scope_id"], :name => "index_user_abilities_on_scope_id"
-  add_index "user_abilities", ["user_id", "ability_id", "scope_id"], :name => "index_user_abilities_on_user_id_and_ability_id_and_scope_id", :unique => true
+  add_index "user_abilities", ["user_id", "ability_id"], :name => "index_user_abilities_on_user_id_and_ability_id", :unique => true
   add_index "user_abilities", ["user_id"], :name => "index_user_abilities_on_user_id"
-
-  create_table "user_ability_languages", :force => true do |t|
-    t.integer  "user_ability_id"
-    t.integer  "language_id"
-    t.integer  "ability_id"
-    t.integer  "user_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
-  add_index "user_ability_languages", ["ability_id"], :name => "index_user_ability_languages_on_ability_id"
-  add_index "user_ability_languages", ["language_id"], :name => "index_user_ability_languages_on_language_id"
-  add_index "user_ability_languages", ["user_ability_id"], :name => "index_user_ability_languages_on_user_ability_id"
-  add_index "user_ability_languages", ["user_id"], :name => "index_user_ability_languages_on_user_id"
 
   create_table "user_contexts", :force => true do |t|
     t.integer  "user_id"

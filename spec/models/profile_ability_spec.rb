@@ -5,7 +5,6 @@
 #  id         :integer          not null, primary key
 #  profile_id :integer
 #  ability_id :integer
-#  scope_id   :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

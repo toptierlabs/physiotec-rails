@@ -1,15 +1,13 @@
 class Scope < ActiveHash::Base
 
-  require 'insensitive_hash'
-
   include ActiveHash::Associations
   include Comparable
 
   self.data = [
-    {:id => 1, :name => "User"}.insensitive,
-    {:id => 2, :name => "Clinic"}.insensitive,
-    {:id => 3, :name => "License"}.insensitive,
-    {:id => 4, :name => "ApiLicense"}.insensitive
+    {id: 1, name: "User"},
+    {id: 2, name: "Clinic"},
+    {id: 3, name: "License"},
+    {id: 4, name: "ApiLicense"}
   ]
 
   has_many :user_abilities

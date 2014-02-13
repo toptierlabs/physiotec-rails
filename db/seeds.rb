@@ -52,160 +52,160 @@ profiles_list.each do | v |
 end
 
 
-profile_abilities = {
-  :"Api Administrator" =>
-    [
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+# profile_abilities = {
+#   :"Api Administrator" =>
+#     [
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("License").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("License").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("License").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("License").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("License").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("License").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("License").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("License").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      { permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       { permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.assign_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.unassign_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.assign_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.unassign_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id}
-    ],
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id}
+#     ],
 
-  :"License Administrator" =>
-    [
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#   :"License Administrator" =>
+#     [
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("UserContexts").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("License").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id}
-    ],
+#       {permission_id: Permission.find_by_name("License").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id}
+#     ],
 
-  :"Clinic Administrator" =>
-    [
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#   :"Clinic Administrator" =>
+#     [
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Profile").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.assign_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("AssignProfile").id, action_id: Action.unassign_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.clinic_scope.id}
-    ],
+#       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.clinic_scope.id}
+#     ],
 
-  :"Author" =>
-    [
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+#   :"Author" =>
+#     [
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.user_scope.id},
-    ],
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.user_scope.id},
+#     ],
 
-  :"Translator" =>
-    [
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
+#   :"Translator" =>
+#     [
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
 
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Section").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Section").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
 
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Module").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+#       {permission_id: Permission.find_by_name("Module").id, action_id: Action.translate_action.id, scope_id: Scope.license_scope.id, language_ids: Language.pluck(:id)},
 
-      {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.user_scope.id}
-    ]
-  }
+#       {permission_id: Permission.find_by_name("User").id, action_id: Action.show_action.id, scope_id: Scope.user_scope.id}
+#     ]
+#   }
 
-profile_abilities.each do |k, v|
-  p = Profile.find_by_name(k)
-  p.profile_abilities_attributes=v
-  p.save
+# profile_abilities.each do |k, v|
+#   p = Profile.find_by_name(k)
+#   p.profile_abilities_attributes=v
+#   p.save
 
-end
+# end
 
 
 profile_assignment = [

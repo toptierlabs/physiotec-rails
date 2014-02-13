@@ -39,50 +39,19 @@ class User < ActiveRecord::Base
   scope :on_api_license, ->(api_license) { where("api_license_id = ?", api_license.id) }
 
   belongs_to :api_license
-  belongs_to :context,      polymorphic: true,
-                            inverse_of:  :users
 
   has_many :user_abilities, inverse_of: :user
   has_many :abilities,      through: :user_abilities
-
-  has_many :user_clinics
-  has_many :clinics,        through: :user_clinics  
 
   has_many :user_profiles
   has_many :profiles,       through: :user_profiles
 
   has_many :categories,     as: :context
 
-  has_many :user_contexts,  inverse_of: :user
-
-  has_many :api_licenses,   through: :user_contexts,
-                            source:  :context,
-                            source_type: 'ApiLicense'
-  has_many :licenses,       through: :user_contexts,
-                            source:  :context,
-                            source_type: 'License'
-  has_many :clinics,        through: :user_contexts,
-                            source:  :context,
-                            source_type: 'Clinic'
 
   belongs_to_active_hash :maximum_context_cache,
                          class_name: "Scope",
                          foreign_key: "maximum_context_cache_id"
-
-  def contexts
-    { 
-      api_license_ids: api_license_ids,
-      license_ids:     license_ids,
-      clinic_ids:      clinic_ids
-    }
-  end
-
-  def contexts=(value)
-      self.api_license_ids = value[:api_license_ids] if value.has_key? :api_license_ids
-      self.license_ids = value[:license_ids] if value.has_key? :license_ids
-      self.clinic_ids = value[:clinic_ids] if value.has_key? :clinic_ids
-  end
-
 
   validates :email,          presence: true
   validates :first_name,     presence: true
@@ -182,39 +151,39 @@ class User < ActiveRecord::Base
   end
 
   def apply_profiles_abilities
-    profile_abilities = ProfileAbility.where(profile_id: self.profile_ids)
-    profile_abilitities_group = profile_abilities.group_by(&:ability_id)
-    profile_abilities = []
-    # If there are repeated abilities between each profile,
-    # then get the maximum ability by comparing their scope
-    profile_abilitities_group.each do |k, v|
-      if v.size == 1
-        profile_abilities << v.first.as_json(methods: :language_ids)
-      else
-        profile_abilities << v.max_by(&:scope_id).as_json(methods: :language_ids)
-      end
-    end
+    # profile_abilities = ProfileAbility.where(profile_id: self.profile_ids)
+    # profile_abilitities_group = profile_abilities.group_by(&:ability_id)
+    # profile_abilities = []
+    # # If there are repeated abilities between each profile,
+    # # then get the maximum ability by comparing their scope
+    # profile_abilitities_group.each do |k, v|
+    #   if v.size == 1
+    #     profile_abilities << v.first.as_json(methods: :language_ids)
+    #   else
+    #     profile_abilities << v.max_by(&:scope_id).as_json(methods: :language_ids)
+    #   end
+    # end
 
-    # Just get the ability_id and the scope_id from the profile abilities
-    profile_abilities.map! do |v|
-      v.slice!("ability_id", "scope_id", :language_ids)
-      v["scope_id"] = [Scope.find(v["scope_id"]), self.maximum_context_cache].min.id
-      v
-    end
+    # # Just get the ability_id and the scope_id from the profile abilities
+    # profile_abilities.map! do |v|
+    #   v.slice!("ability_id", "scope_id", :language_ids)
+    #   v["scope_id"] = [Scope.find(v["scope_id"]), self.maximum_context_cache].min.id
+    #   v
+    # end
 
-    delete_list = []
-    self.user_abilities.each do |user_ability|      
-      profile_ability = profile_abilities.detect do |v|
-        v["ability_id"] == user_ability.ability_id        
-      end
+    # delete_list = []
+    # self.user_abilities.each do |user_ability|      
+    #   profile_ability = profile_abilities.detect do |v|
+    #     v["ability_id"] == user_ability.ability_id        
+    #   end
       
-      if profile_ability.present?
-        delete_list << profile_ability
-        user_ability.scope = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
-      end
-    end
-    profile_abilities -= delete_list
-    self.user_abilities_attributes = profile_abilities
+    #   if profile_ability.present?
+    #     delete_list << profile_ability
+    #     user_ability.scope = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
+    #   end
+    # end
+    # profile_abilities -= delete_list
+    # self.user_abilities_attributes = profile_abilities
   end
 
 

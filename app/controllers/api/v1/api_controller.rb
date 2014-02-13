@@ -30,11 +30,13 @@ module Api
 
 	protected
 
-				def print_class_name
+				def print_class_name(model = nil)
+					# Sanitize the params, gets the action and the permission from params
 					action = params[:action].to_sym
 					permission =  params[:controller].split("/")[-1].singularize.to_sym
-					puts action
-					puts permission
+					permission = :show if permission == :index
+					# If
+					element = model || permission
 					puts @current_user.can? action, permission
 				end
 
@@ -136,8 +138,7 @@ module Api
 					else
 						unauthorized = true
 					end
-					#render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-					@api_license = ApiLicense.first
+					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
 				end
 
 				def identify_user
@@ -161,8 +162,7 @@ module Api
 					else
 						unauthorized = true
 					end
-					#render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-					@current_user = User.first
+					render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
 				end
 
 				

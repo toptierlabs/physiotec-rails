@@ -18,18 +18,20 @@ class Ability < ActiveRecord::Base
 
   validates :permission,    presence: true
   validates :action_id,     presence: true
-  validates :permission_id, uniqueness: { scope: :action_id }
+  validates :scope_id,      presence: true
+  validates :permission_id, uniqueness: { scope: [:action_id, :scope_id] }
 
   validate :translation_action
 
   attr_accessible :action_id,
-                  :permission_id
+                  :permission_id,
+                  :scope_id
 
   private
 
     def translation_action # validator
       if Action.find(action_id).is_translate? && !permission.is_translatable?
-        errors.add :section, "permission is not translatable"
+        errors.add :action_id, "permission is not translatable"
       end
     end
 
