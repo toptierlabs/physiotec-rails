@@ -26,8 +26,21 @@ class Language < ActiveRecord::Base
   validates :description, :locale, presence: true
   validates :locale, uniqueness: { scope: :api_license_id }
 
-  def display_name
+  after_create :set_language_action
+  after_create :add_to_I18n_available_locales
+
+  def name
     self.description
   end
+
+  private
+
+    def set_language_action
+      Action.create_by_language(self)
+    end
+
+    def add_to_I18n_available_locales
+      I18n.available_locales << self.locale.to_sym
+    end
 
 end

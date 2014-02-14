@@ -56,6 +56,10 @@ class Permission < ActiveRecord::Base
     true
   end
 
+  def model_class
+    self.model_name.constantize
+  end
+
   private
 
     def domain_scope_consistency

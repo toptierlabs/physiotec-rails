@@ -13,6 +13,7 @@
 			# GET /users.json
 			def index
 				authorize_request!(:user, :read)
+				puts current_user
 				@users = User.on_api_license(@api_license)
 			end
 

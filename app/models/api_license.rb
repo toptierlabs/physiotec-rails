@@ -20,11 +20,14 @@ class ApiLicense < ActiveRecord::Base
                   :name,
                   :licenses
 
+  has_many :user_contexts, dependent: :destroy,
+                           as: :context
+
+  has_many :users,         through: :user_contexts
+
   has_many :languages,      dependent: :destroy
   has_many :api_users,      dependent: :destroy,
                             class_name: "User"
-  has_many :users,          as: :context,
-                            inverse_of: :context
   has_many :profiles,       dependent: :destroy
   has_many :clinics,        dependent: :destroy
   has_many :licenses,       dependent: :destroy

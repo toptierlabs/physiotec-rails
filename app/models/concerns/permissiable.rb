@@ -6,19 +6,27 @@ module Permissiable
 
     has_many :user_contexts,  inverse_of: :user
 
-    has_many :api_licenses,   through: :user_contexts,
-                              source:  :context,
-                              source_type: 'ApiLicense'
-    has_many :licenses,       through: :user_contexts,
-                              source:  :context,
-                              source_type: 'License'
-    has_many :clinics,        through: :user_contexts,
-                              source:  :context,
-                              source_type: 'Clinic'
+    has_many :contexts,       through: :user_contexts
+
+    has_many :context_api_licenses,   through: :user_contexts,
+                                      source:  :context,
+                                      source_type: 'ApiLicense'
+    has_many :context_licenses,       through: :user_contexts,
+                                       source:  :context,
+                                       source_type: 'License'
+    has_many :context_clinics,        through: :user_contexts,
+                                       source:  :context,
+                                       source_type: 'Clinic'
+
+    has_many :users,          through: :contexts
+
+    has_many_through_contexts :exercises
+    #has_many_through_contexts :clinics
+    has_many_through_contexts :categories
 
   end
 
-  def contexts
+  def context_ids
     { 
       api_license_ids: api_license_ids,
       license_ids:     license_ids,
@@ -26,19 +34,42 @@ module Permissiable
     }
   end
 
-  def contexts=(value)
-      self.api_license_ids = value[:api_license_ids] if value.has_key? :api_license_ids
-      self.license_ids = value[:license_ids] if value.has_key? :license_ids
-      self.clinic_ids = value[:clinic_ids] if value.has_key? :clinic_ids
-  end
+  module ClassMethods
 
+    def has_many_through_contexts(value)
+      define_method(value) do      
+        class_object = value.to_s.singularize.camelize.constantize
+        #Get the user contexts with them ids
+        if class_object.method_defined? :context
+          if self.context_api_licenses.present?
+            return class_object.where("api_license_id IN (?)", self.context_api_licenses.pluck(:id))
+          end
+          elements = []
+          license_ids = []
+          clinic_ids = []
+          if self.context_licenses.present?
+            license_ids = self.context_licenses.pluck(:id)
+            elements << class_object.where("context_type = 'License' AND context_id IN (?)", license_ids)
+            clinic_ids = Clinic.where("license_id IN (?)", license_ids).pluck(:id)
+            elements << class_object.where("context_type = 'Clinic' AND context_id IN (?)", clinic_ids)
+          end
+          if self.context_clinics.present?
+            # Append to elements only the context_clinics that are not the user context_licenses
+            clinic_ids = clinic_ids - self.context_clinics.all.map(&:id)
+            elements << class_object.where("context_type = 'Clinic' AND context_id IN (?)", clinic_ids)
+          end
+          elements          
+        end
+      end
+
+    end
+
+  end
 
   def can?(action, subject, extra_args = {})
     #sanitize the params
-    action = action.to_s
+    action = action.to_s.titleize
     scope = extra_args[:scope] || nil
-    locales = Language.where(locale: extra_args[:locales]).pluck(:id) || []
-    return false if extra_args[:locales].present? && (locales.size != extra_args[:locales].size)
     permission = nil
     if ((subject.class == Symbol) || (subject.class == String))
       permission = Permission.where(name: subject).first
@@ -47,26 +78,25 @@ module Permissiable
       permission = Permission.where(model_name: subject.class.name).first
     end
 
-    abilities = self.user_abilities
+    ability = self.user_abilities
                   .joins(:ability)
                   .where(abilities: { permission_id: permission.id,
-                                      action_id: Action.find_by_name(action).id })
+                                      action_id: Action.find_by_name(action).id }
+                        ).first
 
-    return false unless abilities.present?
-    return true if subject.blank? && scope.blank? && locales.blank?
-    result = true
-    abilities.each do |v|
-      if subject.present?
-        result = (subject.minimum_scope_for(self) <= Scope.find(v.scope_id))
-      elsif scope.present?
-        result = v.scope >= scope
-      end
-      if locales.present?
-        result &&= (locales - v.languages.pluck(:id)).empty? if locales.present? && permission.is_translatable?
-      end
-      return true if result
+    if ability.blank?
+      return false
+    elsif subject.blank? && scope.blank? #from here to below ability is present
+      return true 
+    elsif subject.present? && (subject.minimum_scope_for(self) <= Scope.find(ability.scope_id))
+      return true
+    elsif scope.present? && (ability.scope >= scope)
+      return true
     end
     false
   end
+
+
+
 
 end

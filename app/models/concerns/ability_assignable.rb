@@ -15,7 +15,7 @@ module AbilityAssignable
 
     extend ActiveHash::Associations::ActiveRecordExtensions
 
-    default_scope eager_load(:ability)
+    default_scope joins(:ability)
 
     _owner_class_name = "#{self.name[0..-(Ability.name.length+1)]}".as_sym
     _singular_class_name = "#{self.name.underscore}".as_sym
@@ -83,25 +83,23 @@ module AbilityAssignable
   private
 
     def ensure_self_scope_is_less_or_equal_than_users_contexts
-      if (permission.minimum_scope..permission.maximum_scope).cover? self.scope
-        entity = self.method("#{self.class.name[0..-(Ability.name.length+1)].underscore}").call
-        if entity.class == User
-         self.scope = [entity.maximum_context_cache, self.scope].max 
-        end
+      if self.respond_to?(:user) && ((permission.minimum_scope..permission.maximum_scope).cover?(self.scope))
+        self.scope = [self.user.maximum_context_cache, self.scope].min 
       end
     end
 
     def scope_inside_permission_domain
       unless (permission.minimum_scope..permission.maximum_scope).cover? self.scope
         errors[:scope_id] << "not valid for the given permission"
+        puts "not valid for the given permission"
       end
     end
 
     def self_scope_less_or_equal_than_users_contexts
       if self.respond_to? :user
         if self.scope > self.user.maximum_context_cache
-          puts 'is invalid'
           errors[:scope_id] << "must be less or equal than the maximum user contexts"
+          puts "must be less or equal than the maximum user contexts"
         end
       end
     end
@@ -118,6 +116,7 @@ module AbilityAssignable
           Action.show_action.id).first
         if show_ability.present? && (self.scope > show_ability.scope)
           errors[:scope_id] << "must be equal or greater than permission show scope"
+          puts "must be equal or greater than permission show scope"
         end
       end
     end

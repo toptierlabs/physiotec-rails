@@ -14,7 +14,7 @@ class Ability < ActiveRecord::Base
   has_many :user_abilities,    inverse_of: :ability
   has_many :profile_abilities, inverse_of: :ability
 
-  belongs_to :permission#,   inverse_of: :permissions
+  belongs_to :permission
 
   validates :permission,    presence: true
   validates :action_id,     presence: true

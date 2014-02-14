@@ -151,6 +151,27 @@ class User < ActiveRecord::Base
   end
 
   def apply_profiles_abilities
+
+    user_abilities_attributes = UserAbility.find_by_sql(
+      [
+        "SELECT `profile_abilities`.ability_id, permission_id, action_id, MAX(scope_id) AS scope_id, `user_abilities`.id " <<
+        "FROM `abilities` JOIN `profile_abilities` " <<
+        "ON (`abilities`.id = `profile_abilities`.ability_id) " <<
+        "LEFT JOIN `user_abilities` " <<
+        "ON (`abilities`.id = `user_abilities`.ability_id AND `user_abilities`.user_id = :user_id) " <<
+        "WHERE `profile_abilities`.profile_id IN (:profile_ids)" <<
+        "GROUP BY  `profile_abilities`.ability_id, permission_id, action_id, `user_abilities`.id",
+        { profile_ids: self.profile_ids, user_id: self.id }
+      ]
+    )
+    user_abilities_attributes.map! do |v|
+      v = v.attributes
+      v.extract!("ability_id")
+      v.extract!("id") if v["id"].blank?
+      v
+    end
+    self.user_abilities_attributes = user_abilities_attributes
+
     # profile_abilities = ProfileAbility.where(profile_id: self.profile_ids)
     # profile_abilitities_group = profile_abilities.group_by(&:ability_id)
     # profile_abilities = []
