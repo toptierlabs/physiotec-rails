@@ -87,6 +87,7 @@ module Permissiable
     scope = extra_args[:scope] || nil
     permission = nil
     if ((subject.class == Symbol) || (subject.class == String))
+      subject = subject.parameterize.singularize
       permission = Permission.where(name: subject).first
       subject = nil
     else

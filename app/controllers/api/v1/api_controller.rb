@@ -17,7 +17,7 @@ module Api
       before_filter :cors_access_control, :except=>:cors_access_control
       before_filter :restrict_access, :except=>:cors_access_control
       before_filter :identify_user, :except=>[:login, :cors_access_control]
-      #before_filter :authorize_requestv2
+      before_filter :load_resources_and_authorize_request
 
       def cors_access_control
         headers['Access-Control-Allow-Origin'] = '*'
@@ -30,74 +30,83 @@ module Api
 
   protected
 
-        def authorize_requestv2(model = nil)
+        def authorize_requestv2(action, entity, params = {})
+          check_translations = params[:check_translations] || false
+          entity_class = case entity
+          when is_a?(String)
+            entity.singularize.camelize.constantize
+          when is_a?(Symbol)
+            entity.to_s.singularize.camelize.constantize
+          else
+            entity.class
+          end
+          puts action
+          puts entity.as_json
+          unless AUTH_CONFIG['super_user'] || @current_user.can?(action, entity)
+            raise PermissionsHelper::ForbiddenAccess.new 
+          end
 
-          #{"format"=>"json", "action"=>"index", "controller"=>"api/v1/users/abilities", "user_id"=>"1"}
+          if check_translations && entity_class.translates?
+            globalized_attributes = entity.class.globalize_attribute_names
+            globalized_attributes -= params["#{entity_class.name.constantize}"].keys
+            if globalized_attributes.present?
+              globalized_attributes.map{ |v| v.split("_").last.to_sym }
+              translate_actions = Action.where(locale: globalized_attributes)
+              translate_actions.each do |v|
+                puts v.name
+                puts entity.as_json
+                unless @current_user.can? v.name, entity
+
+                  raise PermissionsHelper::ForbiddenAccess.new 
+                end
+              end
+            end
+          end
+          true
+        end
+
+        def load_resources_and_authorize_request
 
           # Sanitize the params, gets the action and the permission from params
           puts params.as_json
-          action = params[:action].to_sym
+          controller_action = params[:action].to_sym
+          action = (controller_action == :index) ? :show : controller_action
 
-          # Get the instance that may load from resources, to accomplish
-          # this action, it searches all keys in params that end with _id
-          instance_to_load_ids = params.select{ |k,v| k.ends_with?("_id") }
+          # Load resources. The Class name of the elements to load are obtained from param[:controller].
+          # The ids of the # elements are read from params[:resource_id]
 
-          # Loads the instances depending on the URL order
           ordered_instances = params[:controller].split("/").drop(2) # drops "api/v1" from the URL
-          ordered_instances.map!(&:singularize)
 
-          puts ordered_instances.as_json
-          puts '*'*40
-          puts instance_to_load_ids.as_json
-          loaded_instances = {}
-          _element = nil
-          _parent_element = nil
-          ordered_instances.each_cons(2) do |v, w|
-            if loaded_instances[v].blank?
-              _element = @current_user.method("#{v.pluralize}.find(#{instance_to_load_ids[v+"_id"]})").call
-              self.instance_variable_set("@selected_#{v}", _element)
-              loaded_instances[v] = true
-            end
-            if loaded_instances[w].blank?
-              _parent_element = self.instance_variable_get("@selected_#{v}")
-              _element = _parent_element.method("#{w.pluralize}.find(#{instance_to_load_ids[w"_id"]})").call
-              self.instance_variable_set("@selected_#{w}", _element)
-              loaded_instances[w] = true
-            end
-            puts loaded_instances.to_json
+          last_resource = ordered_instances.pop # Last object will be read at the end, according to the action
+
+          authorize_requestv2(action, last_resource)
+
+          # Start getting the objects
+          object_colleciton = @api_license # Place to search the first object
+          ordered_instances.each do |v|
+            element_id = params["#{v.singularize}_id"]
+            element = object_colleciton.instance_eval("#{v}.find(#{element_id})")
+
+            authorize_requestv2(action, element)
+
+            # Element holds the object with class v and id element_id
+            # Now the next object to load must be loaded from element
+            object_colleciton = element
           end
 
+          # Loads the last element according to the controller action
+          case controller_action
+          when :index #loads the collection
+            instance = object_colleciton.send(last_resource) # calls method with name last_resource
+            instance_variable_set("@#{last_resource}", instance)
+          when :show || :update || :destroy
+            instance = object_colleciton.instance_eval("#{last_resource}.find(#{params[:id]})")
 
+            authorize_requestv2(action, instance, check_translations: true)
 
-
-          # Load class name and class
-          class_name =  params[:controller].split("/").drop(2)
-          class_name = class_name.map!(&:singularize).join("_").camelize
-          class_instance = class_name.constantize
-
-          # Load Resource
-          minified_class_name = class_name.underscore.pluralize
-          if action == :index
-            instance = @current_user.method(minified_class_name.to_sym).call
-            self.instance_variable_set("@#{minified_class_name.pluralize}", instance)
-          elsif (action != :create) && params[:id].present?
-            instance = @current_user.method("#{minified_class_name..find(params[:id])}".to_sym).call
-            self.instance_variable_set("@#{minified_class_name}", instance)
+            instance_variable_set("@#{last_resource.singularize}", instance)
           end
 
-          # # If model is translatable then it searches for translation locales
-          # # sent in the params attributes
-          # permission = Permission.find_by_model_name(model_name)
-          # if permission.is_translatable?
-          #   localized_attr = permission.model_class.globalize_attribute_names
-          #   recv_localized_attr = params[permission].keys.select{ |v| localized_attr.include? v }
-          #   recv_localized_attr.map!{ |v| v.split("_").last }.uniq!
-          #   actions = Action.where(locale: recv_localized_attr)
-          # end
-
-          
-          # element = model || permission
-          # puts @current_user.can? action, element
         end
 
         def authorize_request(permission, action, params)
