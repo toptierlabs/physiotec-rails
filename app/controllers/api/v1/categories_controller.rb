@@ -6,11 +6,7 @@ module Api
       # GET /modules
       # GET /modules.json
       def index
-        authorize_request! :module,
-                           :read
-
-        categories = @api_license.categories
-        render json: { modules: categories.as_json(include: 
+        render json: { modules: @categories.as_json(include: 
                                     { sections: { only: [:id, :name],
                                                   methods: :translations,
                                                   include: {
@@ -22,12 +18,7 @@ module Api
       # GET /modules/1
       # GET /modules/1.json
       def show
-        category = Category.find(params[:id])
-        authorize_request! :module,
-                           :read,
-                           model: category
-
-        render json: category.as_json(include: { sections:
+        render json: @category.as_json(include: { sections:
                                                   { :only=>[:id, :section_datum_id],
                                                     methods: [:translations, :name],
                                                     include: {subsections: {only: [:id, :subsection_datum_id],
@@ -37,37 +28,26 @@ module Api
       # POST /module
       # POST /module.json
       def create
-        authorize_request! :module,
-                           :create
-
-
         validate_and_sanitize_context(params[:module])
         category = Category.new(params[:module])
         category.owner = @current_user
-        I18n.locale = params[:module][:translations_attributes].first[:locale]
         if category.save
           render json: category, status: :created
         else
           render json:   category.errors.full_messages,
                  status: :unprocessable_entity
         end
-        I18n.locale = :en
       end
 
       # PUT /module/1
       # PUT /module/1.json
-      def update        
-        category = Category.find(params[:id])
-        authorize_request! :module,
-                           :modify,
-                           model: category
-
+      def update
         validate_and_sanitize_context(params[:module])
         I18n.locale = params[:module][:translations_attributes].first[:locale]
-        if category.update_attributes(params[:module])
+        if @category.update_attributes(params[:module])
           head :no_content
         else
-          render json:   category.errors.full_messages,
+          render json:   @category.errors.full_messages,
                  status: :unprocessable_entity
         end
         I18n.locale = :en
@@ -75,16 +55,11 @@ module Api
 
       # DELETE /module/1
       # DELETE /module/1.json
-      def destroy        
-        category = Category.find(params[:id])
-        authorize_request! :module,
-                           :delete,
-                           model: category
-
-        if category.destroy
+      def destroy
+        if @category.destroy
           head :no_content
         else
-          render json:   category.errors.full_messages,
+          render json:   @category.errors.full_messages,
                  status: :unprocessable_entity
         end
       end

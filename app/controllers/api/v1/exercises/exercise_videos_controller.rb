@@ -3,51 +3,38 @@ module Api
     module Exercises
     
       class ExerciseVideosController < Api::V1::ApiController
-        before_filter :identify_user,
-                      :identify_exercise
-
-        def identify_exercise
-          @exercise = case params[:exercise_id].represents_number?
-          when true
-            Exercise.find(params[:exercise_id])
-          when false
-            Exercise.find_by_token(params[:exercise_id])
-          end
-        end
 
         # GET /exercise_videos
         # GET /exercise_videos.json
-        def index
-          authorize_request!(:exercise_video, :read)
+        def index         
 
-          exercise_videos = case @exercise.blank?
+          @exercise_videos = case @exercise.blank?
           when true
             ExerciseVideo.where(token: params[:exercise_id])
           when false
             @exercise.exercise_videos
           end
 
-          render json: { exercises: exercise_videos.as_json }
+          render json: { exercises: @exercise_videos.as_json }
         end
 
         # GET /exercise_videos/1
         # GET /exercise_videos/1.json
         def show
-          exercise_video = case @exercise.blank?
+          @exercise_video = case @exercise.blank?
           when true
             ExerciseVideo.where(token: params[:exercise_id], id: params[:id])
           when false
             @exercise.exercise_videos.find(params[:id])
-          end
-          authorize_request!(:exercise_video, :read, :model=>exercise_video)
+          end           
 
-          render json: exercise_video
+          render json: @exercise_video
         end
 
         # POST /exercise_videos
         # POST /exercise_videos.json
         def create
-          # authorize_request!(:exercise_video, :create)
+          # 
           params[:exercise_video][:token] = params[:exercise_id]
           @exercise_video = case @exercise.blank?
           when true
@@ -83,7 +70,7 @@ module Api
           when false
             @exercise.exercise_videos.find(params[:id])
           end
-          authorize_request!(:exercise_video, :delete, :model=>@exercise_video)
+          
           @exercise_video.destroy
           head :no_content
         end

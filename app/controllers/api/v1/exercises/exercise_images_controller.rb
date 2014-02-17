@@ -3,51 +3,38 @@ module Api
     module Exercises
     
       class ExerciseImagesController < Api::V1::ApiController
-        before_filter :identify_user,
-                      :identify_exercise
-
-        def identify_exercise
-          @exercise = case params[:exercise_id].represents_number?
-          when true
-            Exercise.find(params[:exercise_id])
-          when false
-            Exercise.find_by_token(params[:exercise_id])
-          end
-        end
 
         # GET /exercise_images
         # GET /exercise_images.json
-        def index
-          authorize_request!(:exercise_image, :read)
+        def index  
 
-          exercise_images = case @exercise.blank?
+          @exercise_images = case @exercise.blank?
           when true
             ExerciseImage.where(token: params[:exercise_id])
           when false
             @exercise.exercise_images
           end
 
-          render json: { exercises: exercise_images.as_json }
+          render json: { exercises: @exercise_images.as_json }
         end
 
         # GET /exercise_images/1
         # GET /exercise_images/1.json
         def show
-          exercise_image = case @exercise.blank?
+          @exercise_image = case @exercise.blank?
           when true
             ExerciseImage.where(token: params[:exercise_id], id: params[:id])
           when false
             @exercise.exercise_images.find(params[:id])
           end
-          authorize_request!(:exercise_image, :read, :model=>@exercise_image)
+          
 
-          render json: exercise_image
+          render json: @exercise_image
         end
 
         # POST /exercise_images
         # POST /exercise_images.json
         def create
-          # authorize_request!(:exercise_image, :create)
           params[:exercise_image][:token] = params[:exercise_id]
           @exercise_image = case @exercise.blank?
           when true
@@ -82,7 +69,7 @@ module Api
           when false
             @exercise.exercise_images.find(params[:id])
           end
-          authorize_request!(:exercise_image, :delete, :model=>@exercise_image)
+          
           @exercise_image.destroy
           head :no_content
         end

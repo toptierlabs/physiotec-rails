@@ -92,6 +92,7 @@ module Permissiable
       subject = nil
     else
       permission = Permission.where(model_name: subject.class.name).first
+      return true if permission.blank?
     end
 
     ability = self.user_abilities

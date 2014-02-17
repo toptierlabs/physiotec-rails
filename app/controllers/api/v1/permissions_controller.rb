@@ -5,16 +5,12 @@ module Api
 
 			# GET /permissions
 			# GET /permissions.json
-			def index
-				authorize_request!(:permission, :read)
-				@permissions = Permission.all
+			def index				
 			end
 
 			# GET /permissions/1
 			# GET /permissions/1.json
-			def show
-				@permission = Permission.find(params[:id])
-				authorize_request!(:permission, :read, :model=>@permission)
+			def show				
 			end
 
 		end

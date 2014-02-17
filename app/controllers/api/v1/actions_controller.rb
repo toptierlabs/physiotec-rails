@@ -4,12 +4,12 @@ module Api
 
       #Returns all the actions available in the system
       def index
-        authorize_request!(:permission, :read)
+        
         @actions = Action.all
       end
 
       def show
-        authorize_request!(:permission, :read)
+        
         @action = Action.find(params[:id])
       end
 

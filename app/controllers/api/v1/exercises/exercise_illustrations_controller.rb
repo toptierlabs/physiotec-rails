@@ -3,31 +3,21 @@ module Api
     module Exercises
     
       class ExerciseIllustrationsController < Api::V1::ApiController
-        before_filter :identify_user,
-                      :identify_exercise
 
-        def identify_exercise
-          @exercise = case params[:exercise_id].represents_number?
-          when true
-            Exercise.find(params[:exercise_id])
-          when false
-            Exercise.find_by_token(params[:exercise_id])
-          end
-        end
+
 
         # GET /exercise_illustrations
         # GET /exercise_illustrations.json
-        def index
-          authorize_request!(:exercise_illustration, :read)
+        def index     
 
-          exercise_illustrations = case @exercise.blank?
+          @exercise_illustrations = case @exercise.blank?
           when true
             ExerciseIllustration.where(token: params[:exercise_id])
           when false
             @exercise.exercise_illustrations
           end
 
-          render json: { exercises: exercise_illustrations.as_json }
+          render json: { exercises: @exercise_illustrations.as_json }
         end
 
         # GET /exercise_illustrations/1
@@ -39,7 +29,6 @@ module Api
           when false
             @exercise.exercise_illustrations.find(params[:id])
           end
-          authorize_request!(:exercise_illustration, :read, :model=>exercise_illustration)
 
           render json: exercise_illustration
         end
@@ -47,7 +36,7 @@ module Api
         # POST /exercise_illustrations
         # POST /exercise_illustrations.json
         def create
-          # authorize_request!(:exercise_illustration, :create)
+
           params[:exercise_illustration][:token] = params[:exercise_id]
           @exercise_illustration = case @exercise.blank?
           when true
@@ -82,7 +71,7 @@ module Api
           when false
             @exercise.exercise_illustrations.find(params[:id])
           end
-          authorize_request!(:exercise_illustration, :delete, :model=>@exercise_illustration)
+          
           @exercise_illustration.destroy
           head :no_content
         end

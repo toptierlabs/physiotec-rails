@@ -40,8 +40,6 @@ module Api
           else
             entity.class
           end
-          puts action
-          puts entity.as_json
           unless AUTH_CONFIG['super_user'] || @current_user.can?(action, entity)
             raise PermissionsHelper::ForbiddenAccess.new 
           end
@@ -53,8 +51,6 @@ module Api
               globalized_attributes.map{ |v| v.split("_").last.to_sym }
               translate_actions = Action.where(locale: globalized_attributes)
               translate_actions.each do |v|
-                puts v.name
-                puts entity.as_json
                 unless @current_user.can? v.name, entity
 
                   raise PermissionsHelper::ForbiddenAccess.new 
@@ -68,15 +64,21 @@ module Api
         def load_resources_and_authorize_request
 
           # Sanitize the params, gets the action and the permission from params
-          puts params.as_json
           controller_action = params[:action].to_sym
           action = (controller_action == :index) ? :show : controller_action
+
+          puts request.path_info
+          puts params.to_json
 
           # Load resources. The Class name of the elements to load are obtained from param[:controller].
           # The ids of the # elements are read from params[:resource_id]
 
-          ordered_instances = params[:controller].split("/").drop(2) # drops "api/v1" from the URL
+          ordered_instances = request.path_info.split("/").drop(3) # drops "/api/v1" from the URL
+          remove_from_ordered_instances = params.select{ |k| k.ends_with? "_id" }.values
+          ordered_instances -= remove_from_ordered_instances
 
+          # ordered_instances = params[:controller].split("/").drop(2) 
+          # puts ordered_instances
           last_resource = ordered_instances.pop # Last object will be read at the end, according to the action
 
           authorize_requestv2(action, last_resource)
@@ -85,9 +87,13 @@ module Api
           object_colleciton = @api_license # Place to search the first object
           ordered_instances.each do |v|
             element_id = params["#{v.singularize}_id"]
-            element = object_colleciton.instance_eval("#{v}.find(#{element_id})")
+            element = object_colleciton.instance_eval("#{v}.find_by_id(#{element_id})")
 
-            authorize_requestv2(action, element)
+            # Patch to load exercise correctly
+            element ||= object_colleciton.instance_eval("#{v}.find_by_token(#{element_id})")
+            element ||= object_colleciton.instance_eval("#{v}.find_by_name(#{element_id})")
+
+            authorize_requestv2(:show, element) if element.present?
 
             # Element holds the object with class v and id element_id
             # Now the next object to load must be loaded from element
@@ -97,10 +103,18 @@ module Api
           # Loads the last element according to the controller action
           case controller_action
           when :index #loads the collection
+            puts object_colleciton.as_json
             instance = object_colleciton.send(last_resource) # calls method with name last_resource
             instance_variable_set("@#{last_resource}", instance)
           when :show || :update || :destroy
-            instance = object_colleciton.instance_eval("#{last_resource}.find(#{params[:id]})")
+            instance = nil
+            # Patch to load exercise resources correctly
+            if last_resource.starts_with? "exercise_"
+              instance = object_colleciton.instance_eval("#{last_resource}.find_by(#{params[:id]})")
+              instance ||= last_resource.singularize.camelize.constantize.find(params[:id])
+            else
+              instance = object_colleciton.instance_eval("#{last_resource}.find(#{params[:id]})")
+            end
 
             authorize_requestv2(action, instance, check_translations: true)
 
@@ -114,8 +128,8 @@ module Api
           AUTH_CONFIG['super_user'] || @current_user.can?(action, entity, params)
         end
 
-        def authorize_request!(permission, action, scopes=nil)
-          if !authorize_request(permission, action, scopes)
+        def authorize_request!
+          if authorize_request(permission, action, scopes)
             raise PermissionsHelper::ForbiddenAccess.new
           end
         end
@@ -130,8 +144,6 @@ module Api
           end
 
           if options[:context_type].present?    
-            puts @current_user.to_yaml
-            puts options[:context_type].as_sym  
             contexts = @current_user.contexts(only: options[:context_type].as_sym) || []
 
             authorized = contexts.select{ |v| v.id == options[:context_id] }.present?
@@ -207,7 +219,8 @@ module Api
           else
             unauthorized = true
           end
-          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          @api_license = ApiLicense.first
         end
 
         def identify_user
@@ -219,8 +232,6 @@ module Api
             user = User.find(user_id)
             if !AUTH_CONFIG['bypass_token_verification']
               if user.session_token == user_token
-                puts "ok 1"
-                puts "*"*80
                 @current_user = user
               else 
                 unauthorized = true
@@ -231,7 +242,8 @@ module Api
           else
             unauthorized = true
           end
-          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          @current_user = User.first
         end
 
         

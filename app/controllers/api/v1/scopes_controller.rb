@@ -4,13 +4,9 @@ module Api
 
       #Returns all the scopes available in the system
       def index
-        authorize_request!(:permission, :read)
-        @scopes = Scope.all
       end
 
-      def show
-        authorize_request!(:permission, :read)
-        @scope = Scope.find(params[:id])
+      def show        
       end
 
     end
