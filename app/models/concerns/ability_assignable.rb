@@ -34,7 +34,7 @@ module AbilityAssignable
 
     validate :show_action_greater_or_equal_scope
     validate :self_scope_less_or_equal_than_users_contexts
-    validate :scope_inside_permission_domain
+    #validate :scope_inside_permission_domain
 
     before_validation :ensure_ability_is_present
     before_validation :ensure_self_scope_is_less_or_equal_than_users_contexts

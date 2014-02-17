@@ -6,8 +6,6 @@ module Permissiable
 
     has_many :user_contexts,  inverse_of: :user
 
-    has_many :contexts,       through: :user_contexts
-
     has_many :context_api_licenses,   through: :user_contexts,
                                       source:  :context,
                                       source_type: 'ApiLicense'
@@ -15,6 +13,17 @@ module Permissiable
                                        source:  :context,
                                        source_type: 'License'
     has_many :context_clinics,        through: :user_contexts,
+                                       source:  :context,
+                                       source_type: 'Clinic'
+
+
+    has_many :api_licenses,   through: :user_contexts,
+                                      source:  :context,
+                                      source_type: 'ApiLicense'
+    has_many :licenses,       through: :user_contexts,
+                                       source:  :context,
+                                       source_type: 'License'
+    has_many :clinics,        through: :user_contexts,
                                        source:  :context,
                                        source_type: 'Clinic'
 
@@ -26,12 +35,18 @@ module Permissiable
 
   end
 
-  def context_ids
+  def contexts
     { 
       api_license_ids: api_license_ids,
       license_ids:     license_ids,
       clinic_ids:      clinic_ids
     }
+  end
+
+  def contexts=(value)
+    self.api_license_ids = value[:api_license_ids] if value.keys.include? :api_license_ids
+    self.license_ids = value[:license_ids] if value.keys.include? :license_ids
+    self.clinic_ids = value[:clinic_ids] if value.keys.include? :clinic_ids
   end
 
   module ClassMethods

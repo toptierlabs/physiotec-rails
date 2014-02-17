@@ -297,16 +297,16 @@ for i in 0..5
   if (i%3==0)
     u.profiles << Profile.find_by_name('API Administrator')
     u.profiles << Profile.find_by_name('Translator')
-    u.api_licenses << ApiLicense.first
+    u.context_api_licenses << ApiLicense.first
 
 
   elsif (i%3==1)
     u.profiles << Profile.find_by_name('License administrator')
     u.profiles << Profile.find_by_name('Translator')
-    u.licenses << licenses[i%licenses.length]
+    u.context_licenses << licenses[i%licenses.length]
   else
     u.profiles << Profile.find_by_name('Clinic administrator')
-    u.clinics << clinics[i%clinics.length]
+    u.context_clinics << clinics[i%clinics.length]
   end
   u.apply_profiles_abilities
   u.save

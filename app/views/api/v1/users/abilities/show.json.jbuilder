@@ -11,8 +11,4 @@ json.ability do |json|
     json.extract! @ability.scope, :id, :name
   end
 
-
-  if @ability.language_ids.present?
-  	json.language_ids @ability.language_ids
-  end
 end

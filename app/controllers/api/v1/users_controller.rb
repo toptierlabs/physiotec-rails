@@ -57,7 +57,7 @@
 
 				validate_and_sanitize_context(formatted_params)
 
-				@user = User.new(formatted_params)
+				@user = User.new(params[:user])
 				@user.api_license = @api_license
 
 				if @user.save
@@ -88,7 +88,7 @@
 
 				validate_and_sanitize_context(formatted_params)
 
-				if @selected_user.update_attributes(formatted_params)
+				if @selected_user.update_attributes(params[:user])
 					head :no_content
 				else
 					render json: @selected_user.errors.full_messages, status: :unprocessable_entity

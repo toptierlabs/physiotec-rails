@@ -37,7 +37,7 @@ class License < ActiveRecord::Base
                         dependent:  :destroy
   has_many :users,      as:         :context,
                         dependent:  :destroy,
-                        inverse_of: :licenses
+                        inverse_of: :context_licenses
   has_many :clinics,    dependent:  :destroy,
                         inverse_of: :license
 

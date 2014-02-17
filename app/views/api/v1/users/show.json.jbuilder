@@ -5,7 +5,13 @@ json.user do |json|
   json.abilities do |json|
     json.array! @user.user_abilities do |ability|
       json.extract! ability, :id, :permission_id, :action_id, :scope_id
-      json.extract! ability, :language_ids if ability.language_ids.present?
     end
   end
+
+  json.assignable_profiles do |json|
+    json.array! @user.assignable_profiles do |profile|
+      json.extract! profile, :id, :name
+    end
+  end
+
 end

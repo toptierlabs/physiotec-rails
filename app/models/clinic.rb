@@ -24,7 +24,6 @@ class Clinic < ActiveRecord::Base
 	has_many :exercises,      as: :context,
 	                          dependent: :destroy
 	has_many :users,          as: :context,
-														inverse_of: :context,
 	                          dependent: :destroy
 	has_many :categories,     as: :context                               
 
