@@ -73,13 +73,19 @@ module Api
           # Load resources. The Class name of the elements to load are obtained from param[:controller].
           # The ids of the # elements are read from params[:resource_id]
 
-          ordered_instances = request.path_info.split("/").drop(3) # drops "/api/v1" from the URL
-          remove_from_ordered_instances = params.select{ |k| k.ends_with? "_id" }.values
-          ordered_instances -= remove_from_ordered_instances
+          # ordered_instances = request.path_info.split("/").drop(3) # drops "/api/v1" from the URL
+          # remove_from_ordered_instances = params.select{ |k| k.ends_with? "_id" }.values
+          # ordered_instances -= remove_from_ordered_instances
 
-          # ordered_instances = params[:controller].split("/").drop(2) 
-          # puts ordered_instances
-          last_resource = ordered_instances.pop # Last object will be read at the end, according to the action
+          ordered_instances = params[:controller].split("/").drop(2)
+          last_resource = ordered_instances.pop
+          puts last_resource
+          # # puts ordered_instances
+          # if ordered_instances.last == params[:id]
+          #   last_resource = ordered_instances.pop(2).first
+          # else
+          #   last_resource = ordered_instances.pop
+          # end
 
           authorize_requestv2(action, last_resource)
 

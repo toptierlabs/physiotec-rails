@@ -31,7 +31,7 @@ class ApiLicense < ActiveRecord::Base
   has_many :profiles,       dependent: :destroy
   has_many :clinics,        dependent: :destroy
   has_many :licenses,       dependent: :destroy
-  has_many :exercises,      dependent: :destroy
+  has_many :exercise_media,      dependent: :destroy
   has_many :sections,       dependent: :destroy
   has_many :api_categories, as:        :context,
                             dependent: :destroy,

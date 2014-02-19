@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140207164732) do
+ActiveRecord::Schema.define(:version => 20140219173412) do
 
   create_table "abilities", :force => true do |t|
     t.integer  "permission_id"
@@ -111,54 +111,7 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
   add_index "clinics", ["api_license_id"], :name => "index_clinics_on_api_license_id"
   add_index "clinics", ["license_id"], :name => "index_clinics_on_license_id"
 
-  create_table "exercise_illustrations", :force => true do |t|
-    t.integer  "exercise_id"
-    t.string   "illustration"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.string   "token"
-  end
-
-  add_index "exercise_illustrations", ["exercise_id"], :name => "index_exercise_illustrations_on_exercise_id"
-
-  create_table "exercise_images", :force => true do |t|
-    t.integer  "exercise_id"
-    t.string   "image"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "token"
-  end
-
-  add_index "exercise_images", ["exercise_id"], :name => "index_exercise_images_on_exercise_id"
-
-  create_table "exercise_translations", :force => true do |t|
-    t.integer  "exercise_id"
-    t.string   "locale",      :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "title"
-    t.string   "short_title"
-    t.string   "description"
-  end
-
-  add_index "exercise_translations", ["exercise_id"], :name => "index_exercise_translations_on_exercise_id"
-  add_index "exercise_translations", ["locale"], :name => "index_exercise_translations_on_locale"
-
-  create_table "exercise_videos", :force => true do |t|
-    t.integer  "exercise_id"
-    t.string   "video"
-    t.string   "token"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "job_id"
-    t.string   "status"
-  end
-
-  add_index "exercise_videos", ["exercise_id"], :name => "index_exercise_videos_on_exercise_id"
-  add_index "exercise_videos", ["token", "video", "exercise_id"], :name => "index_exercise_videos_on_token_and_video_and_exercise_id", :unique => true
-  add_index "exercise_videos", ["token"], :name => "index_exercise_videos_on_token"
-
-  create_table "exercises", :force => true do |t|
+  create_table "exercise_media", :force => true do |t|
     t.integer  "context_id"
     t.string   "context_type"
     t.integer  "owner_id"
@@ -169,8 +122,55 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
     t.string   "token"
   end
 
-  add_index "exercises", ["api_license_id"], :name => "index_exercises_on_api_license_id"
-  add_index "exercises", ["owner_id"], :name => "index_exercises_on_owner_id"
+  add_index "exercise_media", ["api_license_id"], :name => "index_exercise_media_on_api_license_id"
+  add_index "exercise_media", ["owner_id"], :name => "index_exercise_media_on_owner_id"
+
+  create_table "exercise_medium_illustrations", :force => true do |t|
+    t.integer  "exercise_medium_id"
+    t.string   "illustration"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "token"
+  end
+
+  add_index "exercise_medium_illustrations", ["exercise_medium_id"], :name => "index_exercise_medium_illustrations_on_exercise_medium_id"
+
+  create_table "exercise_medium_images", :force => true do |t|
+    t.integer  "exercise_medium_id"
+    t.string   "image"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "token"
+  end
+
+  add_index "exercise_medium_images", ["exercise_medium_id"], :name => "index_exercise_medium_images_on_exercise_medium_id"
+
+  create_table "exercise_medium_translations", :force => true do |t|
+    t.integer  "exercise_medium_id"
+    t.string   "locale",             :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "title"
+    t.string   "short_title"
+    t.string   "description"
+  end
+
+  add_index "exercise_medium_translations", ["exercise_medium_id"], :name => "index_exercise_medium_translations_on_exercise_medium_id"
+  add_index "exercise_medium_translations", ["locale"], :name => "index_exercise_medium_translations_on_locale"
+
+  create_table "exercise_medium_videos", :force => true do |t|
+    t.integer  "exercise_medium_id"
+    t.string   "video"
+    t.string   "token"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "job_id"
+    t.string   "status"
+  end
+
+  add_index "exercise_medium_videos", ["exercise_medium_id"], :name => "index_exercise_medium_videos_on_exercise_medium_id"
+  add_index "exercise_medium_videos", ["token", "video", "exercise_medium_id"], :name => "index_videos_on_token_and_video_and_exercise_medium", :unique => true
+  add_index "exercise_medium_videos", ["token"], :name => "index_exercise_medium_videos_on_token"
 
   create_table "languages", :force => true do |t|
     t.integer  "api_license_id"
@@ -300,15 +300,29 @@ ActiveRecord::Schema.define(:version => 20140207164732) do
   add_index "subsection_datum_translations", ["locale"], :name => "index_subsection_datum_translations_on_locale"
   add_index "subsection_datum_translations", ["subsection_datum_id"], :name => "index_subsection_datum_translations_on_subsection_datum_id"
 
-  create_table "subsection_exercises", :force => true do |t|
-    t.integer  "subsection_id"
-    t.integer  "exercise_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+  create_table "subsection_exercise_medium_translations", :force => true do |t|
+    t.integer  "subsection_exercise_medium_id"
+    t.string   "locale",                        :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.text     "keywords"
+    t.text     "description"
+    t.string   "title"
+    t.string   "short_title"
   end
 
-  add_index "subsection_exercises", ["exercise_id", "subsection_id"], :name => "index_subsection_exercises_on_exercise_id_and_subsection_id", :unique => true
-  add_index "subsection_exercises", ["exercise_id"], :name => "index_subsection_exercises_on_exercise_id"
+  add_index "subsection_exercise_medium_translations", ["locale"], :name => "index_subsection_exercise_medium_translations_on_locale"
+  add_index "subsection_exercise_medium_translations", ["subsection_exercise_medium_id"], :name => "index_17c9cadeb676c5f3a6dbf6e20d01ccf4b3722e51"
+
+  create_table "subsection_exercises", :force => true do |t|
+    t.integer  "subsection_id"
+    t.integer  "exercise_medium_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "subsection_exercises", ["exercise_medium_id", "subsection_id"], :name => "index_subsection_exercises_on_exercise_medium_and_subsection", :unique => true
+  add_index "subsection_exercises", ["exercise_medium_id"], :name => "index_subsection_exercises_on_exercise_medium_id"
   add_index "subsection_exercises", ["subsection_id"], :name => "index_subsection_exercises_on_subsection_id"
 
   create_table "subsections", :force => true do |t|

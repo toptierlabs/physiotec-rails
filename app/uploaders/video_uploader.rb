@@ -56,7 +56,7 @@ class VideoUploader < CarrierWave::Uploader::Base
     model.update_column(:job_id, aws_et_job.job[:id])
     
     #set to convering the video status
-    model.update_column(:status, ExerciseVideo::STATES[:converting])
+    model.update_column(:status, ExerciseMediumVideo::STATES[:converting])
 
   end
 

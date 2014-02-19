@@ -16,7 +16,7 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :exercise do
+  factory :exercise_medium do
     api_license ApiLicense.find_by_name('API test name')
     context ApiLicense.find_by_name('API test name')
     title "MyString"

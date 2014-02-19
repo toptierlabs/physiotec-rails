@@ -24,7 +24,7 @@ puts Action.all.to_json
 
 # Creates the permissions
 permissions = [ ["Clinic", Clinic.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
-                ["Exercise", Exercise.name, Scope.api_license_scope.id, Scope.user_scope.id],
+                ["ExerciseMedium", ExerciseMedium.name, Scope.api_license_scope.id, Scope.user_scope.id],
                 ["License", License.name, Scope.api_license_scope.id, Scope.license_scope.id],
                 ["User", User.name, Scope.api_license_scope.id, Scope.user_scope.id],
                 ["Permission", Permission.name, Scope.api_license_scope.id, Scope.api_license_scope.id],
@@ -32,9 +32,9 @@ permissions = [ ["Clinic", Clinic.name, Scope.api_license_scope.id, Scope.clinic
                 ["AssignProfile", UserProfile.name, Scope.api_license_scope.id, Scope.user_scope.id],
                 ["Module", Category.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
                 ["Section", SectionDatum.name, Scope.api_license_scope.id, Scope.clinic_scope.id],
-                ["ExerciseIllustration",ExerciseIllustration.name, Scope.api_license_scope.id, Scope.user_scope.id],
-                ["ExerciseImage", ExerciseImage.name, Scope.api_license_scope.id, Scope.user_scope.id],
-                ["ExerciseVideo", ExerciseVideo.name, Scope.api_license_scope.id, Scope.user_scope.id],
+                ["ExerciseMediumIllustration",ExerciseMediumIllustration.name, Scope.api_license_scope.id, Scope.user_scope.id],
+                ["ExerciseMediumImage", ExerciseMediumImage.name, Scope.api_license_scope.id, Scope.user_scope.id],
+                ["ExerciseMediumVideo", ExerciseMediumVideo.name, Scope.api_license_scope.id, Scope.user_scope.id],
                 ["UserContexts", UserContext.name, Scope.api_license_scope.id, Scope.user_scope.id],
                 ["AssignAbility", UserAbility.name, Scope.api_license_scope.id, Scope.user_scope.id]
                 
@@ -74,10 +74,10 @@ profile_abilities = {
       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.show_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.destroy_action.id, scope_id: Scope.api_license_scope.id},
 
       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.api_license_scope.id},
       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.api_license_scope.id},
@@ -116,10 +116,10 @@ profile_abilities = {
       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
       {permission_id: Permission.find_by_name("Clinic").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
@@ -155,10 +155,10 @@ profile_abilities = {
       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
       {permission_id: Permission.find_by_name("Section").id, action_id: Action.destroy_action.id, scope_id: Scope.clinic_scope.id},
 
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.clinic_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.clinic_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.clinic_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.create_action.id, scope_id: Scope.clinic_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.update_action.id, scope_id: Scope.clinic_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.destroy_action.id, scope_id: Scope.clinic_scope.id},
 
       {permission_id: Permission.find_by_name("User").id, action_id: Action.create_action.id, scope_id: Scope.clinic_scope.id},
       {permission_id: Permission.find_by_name("User").id, action_id: Action.update_action.id, scope_id: Scope.clinic_scope.id},
@@ -186,10 +186,10 @@ profile_abilities = {
 
   :"Author" =>
     [
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.create_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.destroy_action.id, scope_id: Scope.license_scope.id},
 
       {permission_id: Permission.find_by_name("Module").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
@@ -199,12 +199,12 @@ profile_abilities = {
 
   :"Translator" =>
     [
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_to_spanish_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_to_english_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_to_french_action.id, scope_id: Scope.api_license_scope.id},
-      {permission_id: Permission.find_by_name("Exercise").id, action_id: Action.translate_to_portuguese_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.translate_to_spanish_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.translate_to_english_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.translate_to_french_action.id, scope_id: Scope.api_license_scope.id},
+      {permission_id: Permission.find_by_name("ExerciseMedium").id, action_id: Action.translate_to_portuguese_action.id, scope_id: Scope.api_license_scope.id},
 
       {permission_id: Permission.find_by_name("Section").id, action_id: Action.update_action.id, scope_id: Scope.license_scope.id},
       {permission_id: Permission.find_by_name("Section").id, action_id: Action.show_action.id, scope_id: Scope.license_scope.id},
@@ -316,7 +316,7 @@ end
 contexts = [c1,c2,c3, l, l2, ApiLicense.first]
 #Create exercises
 for i in 0..20
-  e = Exercise.new(title: "test exercise #{i+1}", description: 'test description')
+  e = ExerciseMedium.new(title: "test exercise #{i+1}", description: 'test description')
   e.owner = users[i%5]
   e.api_license =  ApiLicense.first
   e.context = contexts[i%6]

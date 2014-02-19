@@ -16,7 +16,6 @@ class Action < ActiveHash::Base
 
   def self.create_by_language(value)
     method_name = "translate_to_#{value.description.parameterize.underscore}_action".to_sym
-    puts "entra"
     unless Action.respond_to? method_name
       a = Action.create!(name: "Translate To #{value.description.titleize}", locale: value.locale.to_sym)
       define_singleton_method(method_name) { 

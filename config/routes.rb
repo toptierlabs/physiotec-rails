@@ -81,8 +81,8 @@ PhysiotecV3::Application.routes.draw do
       resources :licenses
       resources :clinics
       resources :permissions, :except => [:new, :create, :update]
-      resources :exercise_images
-      resources :exercise_illustrations
+      resources :exercise_medium_images
+      resources :exercise_medium_illustrations
       resources :categories, path: 'modules', :controller => 'categories'
       resources :notifications
 
@@ -119,14 +119,14 @@ PhysiotecV3::Application.routes.draw do
         end
       end
 
-      resources :exercises do
+      resources :exercise_media do
         member do
           post 'add_to_subsection', path: 'subsections'
           delete 'remove_from_subsection', path: 'subsections/:subsection_id'
         end
-        resources :exercise_images, :controller => 'exercises/exercise_images'
-        resources :exercise_illustrations, :controller => 'exercises/exercise_illustrations'
-        resources :exercise_videos, :controller => 'exercises/exercise_videos'
+        resources :exercise_medium_images, :controller => 'exercises/exercise_images'
+        resources :exercise_medium_illustrations, :controller => 'exercises/exercise_illustrations'
+        resources :exercise_medium_videos, :controller => 'exercises/exercise_videos'
       end
         
     end

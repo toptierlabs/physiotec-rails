@@ -33,11 +33,9 @@ module AbilityAssignable
     belongs_to_active_hash :scope
 
     validate :show_action_greater_or_equal_scope
-    validate :self_scope_less_or_equal_than_users_contexts
     #validate :scope_inside_permission_domain
 
     before_validation :ensure_ability_is_present
-    before_validation :ensure_self_scope_is_less_or_equal_than_users_contexts
 
     validates _owner_class_name,  presence: true
     validates :ability,           presence: true
@@ -82,28 +80,12 @@ module AbilityAssignable
 
   private
 
-    def ensure_self_scope_is_less_or_equal_than_users_contexts
-      if self.respond_to?(:user) && ((permission.minimum_scope..permission.maximum_scope).cover?(self.scope))
-        self.scope = [self.user.maximum_context_cache, self.scope].min 
-      end
-    end
-
     def scope_inside_permission_domain
       unless (permission.minimum_scope..permission.maximum_scope).cover? self.scope
         errors[:scope_id] << "not valid for the given permission"
         puts "not valid for the given permission"
       end
     end
-
-    def self_scope_less_or_equal_than_users_contexts
-      if self.respond_to? :user
-        if self.scope > self.user.maximum_context_cache
-          errors[:scope_id] << "must be less or equal than the maximum user contexts"
-          puts "must be less or equal than the maximum user contexts"
-        end
-      end
-    end
-
 
     def show_action_greater_or_equal_scope
       unless action.is_show?

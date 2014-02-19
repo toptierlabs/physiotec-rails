@@ -9,12 +9,12 @@ module Api
             # GET licenses/:id/modules/:id/sections
             def index
               subsections = @subsections
-              render json: { sections: @subsections.as_json(methods: :name, include: :exercises) }
+              render json: { sections: @subsections.as_json(methods: :name, include: :exercise_media) }
             end
 
             # GET licenses/:id/modules/:id/sections/1
             def show
-              render json: @subsection.as_json(methods: :name, include: :exercises)
+              render json: @subsection.as_json(methods: :name, include: :exercise_media)
             end
 
             # POST licenses/:id/modules/:id/sectionss

@@ -33,11 +33,14 @@ class License < ActiveRecord::Base
 
   belongs_to :api_license
   
-  has_many :exercises,  as:         :context,
+  has_many :exercise_media,  as:         :context,
                         dependent:  :destroy
-  has_many :users,      as:         :context,
-                        dependent:  :destroy,
-                        inverse_of: :context_licenses
+
+  has_many :user_contexts, dependent: :destroy,
+                           as: :context
+
+  has_many :users,         through: :user_contexts
+  
   has_many :clinics,    dependent:  :destroy,
                         inverse_of: :license
 

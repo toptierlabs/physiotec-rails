@@ -15,7 +15,7 @@ class Subsection < ActiveRecord::Base
   belongs_to :subsection_datum
 
   has_many   :subsection_exercises
-  has_many   :exercises, through: :subsection_exercises
+  has_many   :exercise_media, through: :subsection_exercises
 
   delegate   :name,
              :translations, to: :subsection_datum

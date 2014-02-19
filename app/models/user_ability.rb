@@ -14,17 +14,24 @@ class UserAbility < ActiveRecord::Base
   require 'concerns/ability_assignable'
 	include AbilityAssignable
 	
-  # belongs_to :user,      inverse_of: :user_abilities
-  # belongs_to :ability,   inverse_of: :user_abilities
+  before_validation :ensure_self_scope_is_less_or_equal_than_users_contexts
+  validate :self_scope_less_or_equal_than_users_contexts
 
-  # validates :user,       presence: true
-  # validates :ability,    presence: true
-  # validates :scope,      presence: true
+  private
 
-  # validates :scope,      uniqueness: { scope: [:user_id, :ability_id] }
+    def ensure_self_scope_is_less_or_equal_than_users_contexts
+      if (permission.minimum_scope..permission.maximum_scope).cover?(self.scope)
+        self.scope = [self.user.maximum_context_cache, self.scope].min 
+      end
+    end
 
-  # def scope
-  #   @scope ||= Scope.new scope_id: self[:scope]
-  # end
+    def self_scope_less_or_equal_than_users_contexts
+      if self.respond_to? :user
+        if self.scope > self.user.maximum_context_cache
+          errors[:scope_id] << "must be less or equal than the maximum user contexts"
+          puts "must be less or equal than the maximum user contexts"
+        end
+      end
+    end
 
 end
