@@ -62,7 +62,7 @@ module AbilityAssignable
       if @permission.present? && @permission.id == @permission_id
         @permission
       else
-        @permission = Permission.find(@permission_id)
+        @permission = Permission.find(permission_id)
       end
     end
 

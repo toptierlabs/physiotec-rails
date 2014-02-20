@@ -42,6 +42,10 @@ class Action < ActiveHash::Base
     end
   end
 
+  def self.scoped(options = nil)
+    self
+  end
+
   private
 
     self.data.each do |v|

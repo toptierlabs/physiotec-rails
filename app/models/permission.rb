@@ -22,15 +22,6 @@ class Permission < ActiveRecord::Base
   
   has_many  :abilities,  dependent: :destroy
 
-  validates :name,       uniqueness: true,
-                         presence: true
-  validates :model_name, uniqueness: true,
-                         presence: true,
-                         inclusion: {
-                          # Must exist an active record model with the given name
-                          in: lambda {|v| ActiveRecord::Base.descendants.map{ |v| v.name } }
-                        }
-
   belongs_to_active_hash :minimum_scope,
                          class_name: "Scope",
                          foreign_key: "minimum_scope_id"
@@ -39,6 +30,16 @@ class Permission < ActiveRecord::Base
                          class_name: "Scope",
                          foreign_key: "maximum_scope_id"
 
+  validates :minimum_scope,    presence: true
+  validates :maximum_scope,    presence: true
+  validates :name,             uniqueness: true,
+                               presence: true
+  validates :model_name,       uniqueness: true,
+                               presence: true,
+                               inclusion: {
+                               # Must exist an active record model with the given name
+                                 in: lambda {|v| ActiveRecord::Base.descendants.map{ |v| v.name } }
+                               }
 
   validate :domain_scope_consistency
 
@@ -51,13 +52,8 @@ class Permission < ActiveRecord::Base
     classes.each do |v|
       return false unless Object.const_defined?(v.camelize)
       return false unless model_name.constantize.new.respond_to? v.to_sym
-
     end
     true
-  end
-
-  def model_class
-    self.model_name.constantize
   end
 
   private

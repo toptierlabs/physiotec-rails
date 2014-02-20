@@ -112,7 +112,7 @@ module Api
             puts object_colleciton.as_json
             instance = object_colleciton.send(last_resource) # calls method with name last_resource
             instance_variable_set("@#{last_resource}", instance)
-          when :show || :update || :destroy
+          else
             instance = nil
             # Patch to load exercise resources correctly
             if last_resource.starts_with? "exercise_"

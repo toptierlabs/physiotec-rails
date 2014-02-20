@@ -5,16 +5,20 @@ module Api
 
 			# GET /profiles
 			def index				
-				render json: { profiles: @profiles.as_json }
 			end
 
 			# GET /profiles/1
-			def show				
-				render json: @profile.as_json
+			def show
 			end
 
 			# POST /profiles
 			def create
+				# { profile:
+				# 	{ "name"=>string,
+				# 		profile_abilities_attributes:
+				# 			[ { scope_id:references, permission_id:references, action_id:references } ]
+				# 	}
+				# }
 				@profile = Profile.new(params[:profile])
 				@profile.api_license_id = @api_license.id
 				if @profile.save
@@ -26,6 +30,12 @@ module Api
 
 			#PUT /profiles/1
 			def update
+				# { profile:
+				# 	{ "name"=>string,
+				# 		profile_abilities_attributes:
+				# 			[ { id:integer, scope_id:references, permission_id:references, action_id:references, _destroy:boolean } ]
+				# 	}
+				# }
 				if @profile.update_attributes(params[:profile])
 					head :no_content
 				else

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: exercises
+# Table name: exercise_media
 #
 #  id             :integer          not null, primary key
 #  context_id     :integer

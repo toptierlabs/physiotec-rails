@@ -1,13 +1,13 @@
 # == Schema Information
 #
-# Table name: exercise_illustrations
+# Table name: exercise_medium_illustrations
 #
-#  id           :integer          not null, primary key
-#  exercise_id  :integer
-#  illustration :string(255)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  token        :string(255)
+#  id                 :integer          not null, primary key
+#  exercise_medium_id :integer
+#  illustration       :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  token              :string(255)
 #
 
 class ExerciseMediumIllustration < ActiveRecord::Base

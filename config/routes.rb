@@ -96,10 +96,14 @@ PhysiotecV3::Application.routes.draw do
       resources :scopes,  :only => [:index, :show]
 
       resources :users do
+        member do
+          get 'assignable_profiles'
+        end
         resources :abilities,     controller: 'users/abilities',
                                   only:       [:index, :show]
         resources :user_profiles, controller: 'users/user_profiles',
                                   only: [:index, :show]
+
 
         collection do
           post '/login' => 'users#login'

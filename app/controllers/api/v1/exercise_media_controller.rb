@@ -3,17 +3,17 @@ module Api
     
     class ExerciseMediaController < Api::V1::ApiController
 
-      # GET /exercises
-      # GET /exercises.json
+      # GET /exercise_media
+      # GET /exercise_media.json
       def index
-        render json: { exercises: @exercises.as_json }
+        render json: { exercise_media: @exercise_media.as_json }
       end
 
-      # GET /exercises/1
-      # GET /exercises/1.json
+      # GET /exercise_media/1
+      # GET /exercise_media/1.json
       def show
         
-        render json: @exercise.as_json(:include=>[:exercise_medium_images,
+        render json: @exercise_medium.as_json(:include=>[:exercise_medium_images,
                                                   :exercise_medium_illustrations,
                                                   :exercise_medium_videos,
                                                   subsections:{methods: [:name],
@@ -21,52 +21,38 @@ module Api
                                                                                   methods: :name}}}])
       end
 
-      # POST /exercise
-      # POST /exercise.json
+      # POST /exercise_media
+      # POST /exercise_media.json
       def create
-        @exercise = ExerciseMedium.new(params[:exercise_medium])
-        @exercise.api_license = @api_license
-        @exercise.owner = @current_user
+        @exercise_medium = exercise_medium.new(params[:exercise_medium])
+        @exercise_medium.api_license = @api_license
+        @exercise_medium.owner = @current_user
 
-        if @exercise.save
-          render json: @exercise, status: :created
+        if @exercise_medium.save
+          render json: @exercise_medium, status: :created
         else
-          render json: @exercise.errors.full_messages, status: :unprocessable_entity
+          render json: @exercise_medium.errors.full_messages, status: :unprocessable_entity
         end
       end
 
-      # PUT /exercise/1
-      # PUT /exercise/1.json
+      # PUT /exercise_media/1
+      # PUT /exercise_media/1.json
       def update
-        if @exercise.update_attributes(params[:exercise_medium])
+        if @exercise_medium.update_attributes(params[:exercise_medium])
           head :no_content
         else
-          render json: @exercise.errors.full_messages, status: :unprocessable_entity
+          render json: @exercise_medium.errors.full_messages, status: :unprocessable_entity
         end
       end
 
-      # DELETE /exercise/1
-      # DELETE /exercise/1.json
+      # DELETE /exercise_media/1
+      # DELETE /exercise_media/1.json
       def destroy        
-        if @exercise.destroy
+        if @exercise_medium.destroy
           head :no_content
         else
-          render json: @exercise.errors.full_messages, status: :unprocessable_entity
+          render json: @exercise_medium.errors.full_messages, status: :unprocessable_entity
         end
-      end
-
-      #POST /exercise/1/subsections
-      def add_to_subsection
-        subsection = Subsection.find(params[:subsection_id])
-        subsection.exercises << @exercise
-        head :no_content
-      end
-
-      #DELETE /exercise/1/subsections/:id
-      def remove_from_subsection
-        subsection = Subsection.find(params[:subsection_id])
-        subsection.exercises.delete @exercise
-        head :no_content
       end
 
     end

@@ -5,6 +5,7 @@
 #  id            :integer          not null, primary key
 #  permission_id :integer
 #  action_id     :integer
+#  scope_id      :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

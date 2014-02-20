@@ -8,7 +8,6 @@ module Api
 
             # GET licenses/:id/modules/:id/sections
             def index
-              subsections = @subsections
               render json: { sections: @subsections.as_json(methods: :name, include: :exercise_media) }
             end
 
@@ -19,17 +18,29 @@ module Api
 
             # POST licenses/:id/modules/:id/sectionss
             def create
-              section = @section.subsections.new(params[:section])
-              if section.save
-                render json:   section, status: :created
+              # {
+              #   subsection: {
+              #     subsection_datum_id: references,
+              #   }
+              # }
+              subsection = @section.subsections.new(params[:section])
+              if subsection.save
+                render json:   subsection, status: :created
               else
-                render json:   section.errors.full_messages,
+                render json:   subsection.errors.full_messages,
                        status: :unprocessable_entity
               end
             end
 
             # PUT licenses/:id/modules/:id/sections/1
-            def update              
+            def update
+              # {
+              #   subsection: {
+              #    id: integer,
+              #    subsection_datum_id: references,
+              #   }
+              # }
+
               if @subsection.update_attributes(params[:section])
                 head :no_content
               else

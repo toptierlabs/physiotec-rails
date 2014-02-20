@@ -17,6 +17,10 @@ class Scope < ActiveHash::Base
     id <=> value.id
   end
 
+  def self.scoped(options = nil)
+    self
+  end
+
   private
 
     self.data.each do |v|

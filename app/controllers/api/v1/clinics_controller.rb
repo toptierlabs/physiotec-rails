@@ -18,13 +18,15 @@ module Api
       # POST /clinics
       # POST /clinics.json
       def create
+
+        # { clinic: {"license_id"=>nil, "name"=>string } }
         
         license = License.find(params[:clinic][:license_id])
         clinic = Clinic.new(params[:clinic])
 
         #Add the clinic to the license so it's counted during the license validation
         license.clinics << clinic
-        clinic.api_license_id = @api_license.id
+        clinic.api_license = @api_license
         if clinic.save
           render json: clinic, status: :created
         else
@@ -34,7 +36,8 @@ module Api
 
       # PUT /clinics/1
       # PUT /clinics/1.json
-      def update        
+      def update
+        # { clinic: {id: references, "license_id"=>nil, "name"=>string } }
         
         if @clinic.update_attributes(params[:clinic].except(:api_license_id))
           head :no_content

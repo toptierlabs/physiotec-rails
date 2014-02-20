@@ -18,7 +18,7 @@ module Api
 			# POST /licenses
 			# POST /licenses.json
 			# Recieves #:email, :first_name, :last_name, :maximum_clinics, :maximum_users, :phone as params, :company_name
-			def create				
+			def create
 				@license = @api_license.licenses.new(params[:license])
 				if @license.save
 					render json: @license, status: :created

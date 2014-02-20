@@ -11,21 +11,19 @@ ActiveAdmin.register Profile do
       attributes_table do
         row :id
         row :name
+
+        # column 'Profile abilities' do |v|      
+        #   v.profile_abilities.each do | a |
+        #     ul do
+        #       status_tag(a.action.name, :warning)
+        #       status_tag(a.permission.name, :ok)
+        #       status_tag(a.scope.name, :default)              
+        #     end
+        #   end
+        # end
+
         row :created_at
         row :updated_at
-        row "Permission scopes" do |obj|
-          ul do
-            obj.permissions_pretty_list.each do | ppl |
-              li do
-                status_tag(ppl[:action], :warning)
-                status_tag(ppl[:permission], :ok)
-                ppl[:scopes].each do | scope |
-                  status_tag(scope)
-                end
-              end
-            end
-          end
-        end
       end
     end
 
@@ -33,19 +31,6 @@ ActiveAdmin.register Profile do
 
   index do
     column :name
-    column 'Permissions' do |obj|
-      ul do
-        obj.permissions_pretty_list.each do | ppl |
-          li do
-            status_tag(ppl[:action], :warning)
-            status_tag(ppl[:permission], :ok)
-            ppl[:scopes].each do | scope |
-              status_tag(scope)
-            end
-          end
-        end
-      end
-    end
 
     default_actions
   end
@@ -57,8 +42,10 @@ ActiveAdmin.register Profile do
       f.input :api_license
     end
     f.inputs "Profile Scopes" do
-      f.has_many :profile_scope_permissions, :allow_destroy => true, :heading => 'Profile Scopes', :new_record => true do |cf|
-        cf.input :scope_permission
+      f.has_many :profile_abilities, :allow_destroy => true, :heading => 'Profile Abilities', :new_record => true do |a|
+        a.input :permission
+        a.input :action
+        a.input :scope
       end
     end
     f.actions

@@ -32,16 +32,13 @@ ActiveAdmin.register User do
         end
       end
     end
-    column 'Permissions' do |obj|
-      ul do
-        obj.permissions_pretty_list.each do | ppl |
-          li do
-            status_tag(ppl[:action], :warning)
-            status_tag(ppl[:permission], :ok)
-            ppl[:scopes].each do | scope |
-              status_tag(scope)
-            end
-          end
+
+    column 'User abilities' do |v|      
+      v.user_abilities.each do | a |
+        ul do
+          status_tag(a.action.name, :warning)
+          status_tag(a.permission.name, :ok)
+          status_tag(a.scope.name, :default)              
         end
       end
     end

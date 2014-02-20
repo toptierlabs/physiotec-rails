@@ -33,17 +33,14 @@
 			# { email: String,
 			#   first_name: String,
 			#   last_name: String,
-			#   profiles: [String] }
+			#   profile_ids: [integer],
+			#   user_abilities_attributes:
+			# 			[ { scope_id:references, permission_id:references, action_id:references } ]}
 			def create
 				#if user can create another user
 				#new user from parameters
-				
 
-				formatted_params = params[:user].except(:user_profiles, :profiles)
-				formatted_params[:scope_permission_ids] ||= []
-				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
-
-				validate_and_sanitize_context(formatted_params)
+				validate_and_sanitize_context(params[:user])
 
 				@user = User.new(params[:user])
 				@user.api_license = @api_license
@@ -59,22 +56,16 @@
 
 			# PUT /users/1
 			# PUT /users/1.json
+			#The content of the request must have a json with the following format:
+			# { id: references,
+			#   email: String,
+			#   first_name: String,
+			#   last_name: String,
+			#   profile_ids: [integer],
+			#   user_abilities_attributes:
+			# 			[ { id:references, scope_id:references, permission_id:references, action_id:references, _destroy:boolean } ]}
 			def update
-				
-
-				formatted_params = params[:user].except(:user_profiles, :profiles)
-				formatted_params[:profile_ids] = params[:user][:user_profiles] || []
-				formatted_params[:scope_permission_ids] ||= []
-				
-				if (formatted_params[:scope_permission_ids] - @user.scope_permission_ids).present?
-					
-				end
-
-				if (formatted_params[:profile_ids] - @user.profile_ids).present?
-					
-				end
-
-				validate_and_sanitize_context(formatted_params)
+				validate_and_sanitize_context(params[:user])
 
 				if @user.update_attributes(params[:user])
 					head :no_content
@@ -87,7 +78,7 @@
 			# DELETE /users/1.json
 			def destroy				
 				if @current_user == @user
-					render json: {error: "User cannot delete to himself"}, status: :unprocessable_entity
+					render json: {error: " User cannot delete to himself" }, status: :unprocessable_entity
 				elsif @user.destroy
 					head :no_content
 				else
@@ -97,8 +88,7 @@
 
 			def assignable_profiles
 				# List all the profiles that the user user can assign to other users
-				result = @user.assignable_profiles
-				render json: { assignable_profiles: result }
+				@assignable_profiles = @user.assignable_profiles
 			end
 
 		end

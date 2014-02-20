@@ -3,51 +3,37 @@ module Api
     module Licenses
     
       class CategoriesController < Api::V1::ApiController
-        before_filter :identify_user,
-                      :identify_license
-        before_filter :identify_category, only: [:show, :update, :destroy]
 
-        def identify_license
-          @current_license = @api_license.licenses.find(params[:license_id])      
-
-        end
-
-        def identify_category
-          @current_category = @current_license.categories
-                                            .find(params[:id])
-        end
 
         # GET /licenses/:id/sections
         def index
-          
-
-
-          categories = @current_license.categories
-          render json: { modules: categories.as_json(include: 
+          render json: { modules: @categories.as_json(include: 
                                       { sections: { only: [:id], methods: :name } }) }
         end
 
         # GET /licenses/:id/modules/1
         def show
-          
-
-
           render json: @current_category.as_json(include: { sections:
                                                     { :only=>[:id], methods: :name } })
         end
 
         # GET /licenses/:id/sections
         def create
+          # { module:
+          #   { *name_lc: string
+          #     sections_attributes: [{sectium_data_id:references,
+          #                                 subsection_datum_ids:[references]}]
+          #   }
+          # }
+          # The name attribute is translatable.
+          # So, It also gives you access to methods: name_fr, name_en, etc.
+          @category = @current_license.categories.new(params[:module])
+          @category.owner = @current_user
 
-          
-
-          category = @current_license.categories.new(params[:module])
-          category.owner = @current_user
-
-          if category.save
-            render json: category, status: :created
+          if @category.save
+            render json: @category, status: :created
           else
-            render json:   category.errors.full_messages,
+            render json:   @category.errors.full_messages,
                    status: :unprocessable_entity
           end
         end

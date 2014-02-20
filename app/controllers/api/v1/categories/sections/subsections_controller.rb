@@ -3,7 +3,7 @@ module Api
     module Categories
       module Sections
     
-        class SectionsController < Api::V1::ApiController
+        class SubsectionsController < Api::V1::ApiController
 
           # GET /modules/:id/sections/:id/subsections
           def index
@@ -19,6 +19,11 @@ module Api
 
           # POST /modules/:id/sections/:id/subsections
           def create
+            # { subsection:
+            #   {
+            #     "subsection_datum_id",:references
+            #   }
+            # }
             subsection = Subection.new(params[:subsection])
             if subection.save
               subection json: subection, status: :created
@@ -31,6 +36,12 @@ module Api
           # PUT /modules/:id/sections/:id/subsections/1
           # PUT /modules/:id/sections/:id/subsections/1.json
           def update
+            # { subsection:
+            #   {
+            #     "id" : id
+            #     "subsection_datum_id":references
+            #   }
+            # }
             if @subsection.update_attributes(params[:module])
               head :no_content
             else

@@ -23,7 +23,7 @@ class ApiLicense < ActiveRecord::Base
   has_many :user_contexts, dependent: :destroy,
                            as: :context
 
-  has_many :users,         through: :user_contexts
+  has_many :users
 
   has_many :languages,      dependent: :destroy
   has_many :api_users,      dependent: :destroy,

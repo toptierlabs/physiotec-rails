@@ -28,6 +28,13 @@ module Api
       # POST /module
       # POST /module.json
       def create
+          # { module:
+          #   { *name_lc: string
+          #     sections_attributes: [{sectium_data_id:references,
+          #                                 subsection_datum_ids:[references]}]
+          #   }
+          # }
+          # The name attribute is translatable.
         validate_and_sanitize_context(params[:module])
         category = Category.new(params[:module])
         category.owner = @current_user
@@ -42,6 +49,14 @@ module Api
       # PUT /module/1
       # PUT /module/1.json
       def update
+          # { module:
+          #   {  id: integer
+          #     *name_lc: string
+          #     sections_attributes: [{id: integer, sectium_data_id:references,
+          #                                 subsection_datum_ids:[references]}]
+          #   }
+          # }
+          # The name attribute is translatable.
         validate_and_sanitize_context(params[:module])
         I18n.locale = params[:module][:translations_attributes].first[:locale]
         if @category.update_attributes(params[:module])

@@ -19,11 +19,8 @@ class Profile < ActiveRecord::Base
                   :profile_assignment,
                   :profile_assignment_attributes,
                   :destination_profiles_attributes,
-                  :scope_permissions_attributes,
                   :source_profiles,
-                  :profile_scope_permissions_attributes,
                   :destination_profiles,
-                  :scope_permissions,
                   :api_license_id
 
   belongs_to :api_license
@@ -53,23 +50,6 @@ class Profile < ActiveRecord::Base
   def self.license_administrator_profile
     self.find_by_name("License administrator")
   end
-
-
-  # returns an array of arrays with the name of the destination profiles as elements
-  def hash_formatter(permission, action, s)
-    {:permission => permission, :action => action, :scopes => [s.parameterize.underscore.to_sym] }
-  end
-
-
-  def permission_scopes_list
-    result = []
-    self.destination_profiles.each do |p|
-      result << hash_formatter(:profile, :assign, p.name)
-      result << hash_formatter(:profile, :unassign, p.name)
-    end
-    result
-  end
-
 
   def assignable_profiles
     res = []

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: exercises
+# Table name: exercise_media
 #
 #  id             :integer          not null, primary key
 #  context_id     :integer
@@ -68,15 +68,15 @@ class ExerciseMedium < ActiveRecord::Base
   validates :code,             uniqueness: { scope: :api_license_id }
   
   def link_orphan_media
-    ExerciseMediumImage.where("exercise_id is null && token=?", self.token).each do |ei|
+    ExerciseMediumImage.where("exercise_medium_id is null && token=?", self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
-    ExerciseMediumIllustration.where("exercise_id is null && token=?",  self.token).each do |ei|
+    ExerciseMediumIllustration.where("exercise_medium_id is null && token=?",  self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
-    ExerciseMediumVideo.where("exercise_id is null && token=?",  self.token).each do |ei|
+    ExerciseMediumVideo.where("exercise_medium_id is null && token=?",  self.token).each do |ei|
       ei.exercise = self
       ei.save
     end
