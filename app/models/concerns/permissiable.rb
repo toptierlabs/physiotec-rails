@@ -79,9 +79,9 @@ module Permissiable
   end
 
   def contexts=(value)
-    self.api_license_ids = value[:api_license_ids] if value.keys.include? :api_license_ids
-    self.license_ids = value[:license_ids] if value.keys.include? :license_ids
-    self.clinic_ids = value[:clinic_ids] if value.keys.include? :clinic_ids
+    self.context_api_license_ids = value[:api_license_ids] if value.keys.include? :api_license_ids
+    self.context_license_ids = value[:license_ids] if value.keys.include? :license_ids
+    self.context_clinic_ids = value[:clinic_ids] if value.keys.include? :clinic_ids
   end
 
   module ClassMethods
