@@ -9,7 +9,7 @@ json.user do |json|
   end
 
   json.assignable_profiles do |json|
-    json.array! @user.assignable_profiles.in do |profile|
+    json.array! @user.assignable_profiles do |profile|
       json.extract! profile, :id, :name
     end
   end
