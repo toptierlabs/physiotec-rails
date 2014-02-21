@@ -25,12 +25,14 @@ class ApiLicense < ActiveRecord::Base
 
   has_many :users
 
+  has_many :section_data,   dependent: :destroy
+
   has_many :languages,      dependent: :destroy
   has_many :api_users,      dependent: :destroy,
                             class_name: "User"
   has_many :clinics,        dependent: :destroy
   has_many :licenses,       dependent: :destroy
-  has_many :exercise_media,      dependent: :destroy
+  has_many :exercise_media, dependent: :destroy
   has_many :sections,       dependent: :destroy
   has_many :api_categories, as:        :context,
                             dependent: :destroy,
