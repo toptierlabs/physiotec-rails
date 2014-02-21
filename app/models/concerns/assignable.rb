@@ -1,6 +1,11 @@
+# This module is applicable to every model. It gives to the model
+# the nesesary methods to be protected trough can method.
+
 module Assignable
 
   def minimum_scope_for(user)
+    # Returns the minimum scope that the given user needs in
+    # order to access the model instance
     if !self.respond_to?(:context)
       return Scope.user_scope
     elsif self.respond_to?(:owner) && (self.owner == user)

@@ -103,12 +103,11 @@ module Api
           end
 
           # Loads the last element according to the controller action
-          case controller_action
-          when :index #loads the collection
+          if (controller_action == :index) #loads the collection
             puts object_colleciton.as_json
             instance = object_colleciton.send(last_resource) # calls method with name last_resource
             instance_variable_set("@#{last_resource}", instance)
-          when :show || :update || :destroy
+          elsif (controller_action == :show) || (controller_action == :update) || (controller_action == :destroy)
             instance = nil
             # Patch to load exercise resources correctly
             if last_resource.starts_with? "exercise_"
@@ -219,8 +218,8 @@ module Api
           else
             unauthorized = true
           end
-          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-          @api_license = ApiLicense.first
+          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #@api_license = ApiLicense.first
         end
 
         def identify_user
@@ -242,8 +241,8 @@ module Api
           else
             unauthorized = true
           end
-          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-          @current_user = User.first
+          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #@current_user = User.first
         end
 
         

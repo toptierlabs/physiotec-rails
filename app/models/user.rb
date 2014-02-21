@@ -171,40 +171,6 @@ class User < ActiveRecord::Base
       v
     end
     self.user_abilities_attributes = user_abilities_attributes
-
-    # profile_abilities = ProfileAbility.where(profile_id: self.profile_ids)
-    # profile_abilitities_group = profile_abilities.group_by(&:ability_id)
-    # profile_abilities = []
-    # # If there are repeated abilities between each profile,
-    # # then get the maximum ability by comparing their scope
-    # profile_abilitities_group.each do |k, v|
-    #   if v.size == 1
-    #     profile_abilities << v.first.as_json(methods: :language_ids)
-    #   else
-    #     profile_abilities << v.max_by(&:scope_id).as_json(methods: :language_ids)
-    #   end
-    # end
-
-    # # Just get the ability_id and the scope_id from the profile abilities
-    # profile_abilities.map! do |v|
-    #   v.slice!("ability_id", "scope_id", :language_ids)
-    #   v["scope_id"] = [Scope.find(v["scope_id"]), self.maximum_context_cache].min.id
-    #   v
-    # end
-
-    # delete_list = []
-    # self.user_abilities.each do |user_ability|      
-    #   profile_ability = profile_abilities.detect do |v|
-    #     v["ability_id"] == user_ability.ability_id        
-    #   end
-      
-    #   if profile_ability.present?
-    #     delete_list << profile_ability
-    #     user_ability.scope = profile_ability["scope_id"] if (user_ability.scope_id < profile_ability["scope_id"])
-    #   end
-    # end
-    # profile_abilities -= delete_list
-    # self.user_abilities_attributes = profile_abilities
   end
 
 

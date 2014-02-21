@@ -21,13 +21,12 @@ class Clinic < ActiveRecord::Base
 	belongs_to :license,      inverse_of: :clinics
 	belongs_to :api_license
 
-	has_many :exercise_media,      as: :context,
+	has_many :exercise_media, as: :context,
 	                          dependent: :destroy
 
   has_many :user_contexts,  dependent: :destroy,
                             as: :context
   has_many :users,          through: :user_contexts
-
 
 	has_many :categories,     as: :context                               
 

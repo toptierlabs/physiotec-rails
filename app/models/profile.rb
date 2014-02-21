@@ -17,8 +17,7 @@ class Profile < ActiveRecord::Base
 
   attr_accessible :name,
                   :profile_assignment,
-                  :profile_assignment_attributes,
-                  :destination_profiles_attributes,
+                  :profile_abilities_attributes,
                   :source_profiles,
                   :destination_profiles,
                   :api_license_id

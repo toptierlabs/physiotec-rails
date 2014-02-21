@@ -17,6 +17,9 @@ class UserContext < ActiveRecord::Base
   validates :user,     presence: true
   validates :context,  presence: true
   validates :user_id,  uniqueness: { scope: [:context_type, :context_id] }
+
+  validate :context_is_alredy_reachable
+  validate :license_user_quota
   
   attr_accessible :user_id,
                   :context_type,
@@ -43,6 +46,18 @@ class UserContext < ActiveRecord::Base
       self.user.save!
     end
 
+    def license_user_quota
+      if (context_type == "License")
+        unless self.context.can_add_users?
+          errors[:context] << "license reached maximum quota"
+        end
+      elsif (context_type == "Clinic")
+        unless self.context.license.can_add_users?
+          errors[:context] << "license reached maximum quota"
+        end
+      end
+    end
+
     def ensure_user_abilities_are_valid
       corrupted_abilities = UserAbility.where(
                                   "user_id = ? AND scope_id > ?",
@@ -54,6 +69,10 @@ class UserContext < ActiveRecord::Base
           v.destroy
         end
       end     
+    end
+
+    def context_is_alredy_reachable
+      # TODO
     end
 
 end
