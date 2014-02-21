@@ -44,7 +44,7 @@ module Api
             raise PermissionsHelper::ForbiddenAccess.new 
           end
 
-          if check_translations && entity_class.translates?
+          if check_translations && entity_class.respond_to?(:translates?) && entity_class.translates?
             globalized_attributes = entity.class.globalize_attribute_names
             globalized_attributes -= params["#{entity_class.name.constantize}"].keys
             if globalized_attributes.present?
@@ -67,9 +67,6 @@ module Api
           controller_action = params[:action].to_sym
           action = (controller_action == :index) ? :show : controller_action
 
-          puts request.path_info
-          puts params.to_json
-
           # Load resources. The Class name of the elements to load are obtained from param[:controller].
           # The ids of the # elements are read from params[:resource_id]
 
@@ -79,7 +76,6 @@ module Api
 
           ordered_instances = params[:controller].split("/").drop(2)
           last_resource = ordered_instances.pop
-          puts last_resource
           # # puts ordered_instances
           # if ordered_instances.last == params[:id]
           #   last_resource = ordered_instances.pop(2).first
@@ -121,12 +117,10 @@ module Api
             else
               instance = object_colleciton.instance_eval("#{last_resource}.find(#{params[:id]})")
             end
-
             authorize_requestv2(action, instance, check_translations: true)
 
             instance_variable_set("@#{last_resource.singularize}", instance)
           end
-
         end
 
         def authorize_request(permission, action, params)

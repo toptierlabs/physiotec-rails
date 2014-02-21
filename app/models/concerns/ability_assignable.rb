@@ -27,6 +27,7 @@ module AbilityAssignable
                     :scope_id
 
     belongs_to :ability,              inverse_of: _pluralized_class_name
+    belongs_to :permission
     belongs_to _owner_class_name,     inverse_of: _pluralized_class_name
 
     belongs_to_active_hash :action
@@ -51,28 +52,28 @@ module AbilityAssignable
                     :ability_id
 
     def action_id
-      @action_id ||= self.ability.action_id
+      @action_id ||= ability.present? ? self.ability.action_id : nil
     end
     
     def permission_id
-      @permission_id ||= self.ability.permission_id
+      @permission_id ||= ability.present? ? self.ability.permission_id : nil
     end
 
     def permission
       if @permission.present? && @permission.id == @permission_id
         @permission
       else
-        @permission = Permission.find(permission_id)
+        @permission = Permission.find_by_id(permission_id)
       end
     end
 
     def permission=(value)
-      @permission_id = value.id
+      permission_id = value.id
       @permission = value
     end
 
     def scope_id
-      @scope_id ||= self.ability.scope_id
+      @scope_id ||= ability.present? ? self.ability.scope_id : nil
     end
 
   end

@@ -48,6 +48,18 @@ class ApiLicense < ActiveRecord::Base
     clinic_categories + user_categories
   end
 
+  def permissions
+    Permission.where(nil).scoped
+  end
+ 
+  def actions
+    Action
+  end
+
+  def scopes
+    Scope
+  end
+
   #Set the attributes validations
   validates :name,
             :description,

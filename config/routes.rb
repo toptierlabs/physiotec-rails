@@ -115,7 +115,7 @@ PhysiotecV3::Application.routes.draw do
       resources :section_data
       
       resources :licenses do
-        resources :clinics
+        resources :clinics, :controller => 'licenses/clinics'
         resources :categories, path: 'modules', :controller => 'licenses/categories' do
           resources :sections, :controller => 'licenses/categories/sections' do
             resources :subsections, :controller => 'licenses/categories/sections/subsections'

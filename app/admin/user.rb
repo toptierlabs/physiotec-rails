@@ -59,6 +59,14 @@ ActiveAdmin.register User do
       f.input :last_name
     end
 
+    f.inputs "User Abilities" do
+      f.has_many :user_abilities, :allow_destroy => true, :heading => 'user Abilities', :new_record => true do |a|
+        #a.input :permission, as: :select, collection: Permission.all
+        a.input :permission
+        a.input :action
+        a.input :scope
+      end
+    end
     f.actions
   end
 

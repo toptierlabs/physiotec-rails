@@ -43,6 +43,7 @@ ActiveAdmin.register Profile do
     end
     f.inputs "Profile Scopes" do
       f.has_many :profile_abilities, :allow_destroy => true, :heading => 'Profile Abilities', :new_record => true do |a|
+        #a.input :permission, as: :select, collection: Permission.all
         a.input :permission
         a.input :action
         a.input :scope
