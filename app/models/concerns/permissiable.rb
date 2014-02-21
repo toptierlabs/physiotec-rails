@@ -1,3 +1,9 @@
+# PRECONDITIONS:
+# ==============
+# The model to apply the module must have different contexts,
+# through a class named Self.name + Contexts. Also, it must
+# be associated with many abilities
+
 module Permissiable
 
   extend ActiveSupport::Concern
@@ -79,9 +85,9 @@ module Permissiable
   end
 
   def contexts=(value)
-    self.context_api_license_ids = value[:api_license_ids] if value.keys.include? :api_license_ids
-    self.context_license_ids = value[:license_ids] if value.keys.include? :license_ids
-    self.context_clinic_ids = value[:clinic_ids] if value.keys.include? :clinic_ids
+    self.context_api_license_ids = value[:api_license_ids] #if value.keys.include? :api_license_ids
+    self.context_license_ids = value[:license_ids] #if value.keys.include? :license_ids
+    self.context_clinic_ids = value[:clinic_ids] #if value.keys.include? :clinic_ids
   end
 
   module ClassMethods
