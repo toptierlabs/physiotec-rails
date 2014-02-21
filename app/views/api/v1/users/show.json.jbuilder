@@ -8,7 +8,7 @@ json.user do |json|
     end
   end
 
-  json.assignable_profiles.includes(:profile) do |json|
+  json.assignable_profiles do |json|
     json.array! @user.assignable_profiles.in do |profile|
       json.extract! profile, :id, :name
     end
