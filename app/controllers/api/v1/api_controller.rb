@@ -17,7 +17,7 @@ module Api
       before_filter :cors_access_control, :except=>:cors_access_control
       before_filter :restrict_access, :except=>:cors_access_control
       before_filter :identify_user, :except=>[:login, :cors_access_control]
-      before_filter :load_resources_and_authorize_request
+      before_filter :load_resources_and_authorize_request, :except=>[:login, :cors_access_control]
 
       def cors_access_control
         headers['Access-Control-Allow-Origin'] = '*'
@@ -219,8 +219,8 @@ module Api
           else
             unauthorized = true
           end
-          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-          @api_license = ApiLicense.first
+          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #@api_license = ApiLicense.first
         end
 
         def identify_user
@@ -242,8 +242,8 @@ module Api
           else
             unauthorized = true
           end
-          #render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
-          @current_user = User.first
+          render json: {:error => "Not Authorized"}, :status => :unauthorized if unauthorized
+          #@current_user = User.first
         end
 
         
