@@ -29,7 +29,6 @@ class UserAbility < ActiveRecord::Base
       if self.respond_to? :user
         if self.scope > self.user.maximum_context_cache
           errors[:scope_id] << "must be less or equal than the maximum user contexts"
-          puts "must be less or equal than the maximum user contexts"
         end
       end
     end

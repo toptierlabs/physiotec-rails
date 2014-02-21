@@ -28,7 +28,6 @@ class ApiLicense < ActiveRecord::Base
   has_many :languages,      dependent: :destroy
   has_many :api_users,      dependent: :destroy,
                             class_name: "User"
-  has_many :profiles,       dependent: :destroy
   has_many :clinics,        dependent: :destroy
   has_many :licenses,       dependent: :destroy
   has_many :exercise_media,      dependent: :destroy
@@ -50,6 +49,10 @@ class ApiLicense < ActiveRecord::Base
 
   def permissions
     Permission.where(nil).scoped
+  end
+
+  def profiles
+    Profile.where(api_license_id: [nil, self.id]).scoped
   end
  
   def actions
