@@ -33,7 +33,7 @@ module AbilityAssignable
     belongs_to_active_hash :action
     belongs_to_active_hash :scope
 
-    validate :show_action_greater_or_equal_scope
+    #validate :show_action_greater_or_equal_scope
     #validate :scope_inside_permission_domain
 
     before_validation :ensure_ability_is_present
