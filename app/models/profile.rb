@@ -16,7 +16,7 @@ class Profile < ActiveRecord::Base
   scope :on_api_license, ->(api_license) { where("api_license_id = ? OR api_license_id IS NULL", api_license.id) }
 
   attr_accessible :name,
-                  :profile_assignment,
+                  :destination_profile_ids,
                   :profile_abilities_attributes,
                   :source_profiles,
                   :destination_profiles,

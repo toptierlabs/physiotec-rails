@@ -3,13 +3,13 @@ json.user do |json|
   json.contexts @user.contexts
   json.profile_ids @user.profile_ids
   json.abilities do |json|
-    json.array! @user.user_abilities do |ability|
+    json.array! @user.user_abilities.includes(:ability) do |ability|
       json.extract! ability, :id, :permission_id, :action_id, :scope_id
     end
   end
 
-  json.assignable_profiles do |json|
-    json.array! @user.assignable_profiles do |profile|
+  json.assignable_profiles.includes(:profile) do |json|
+    json.array! @user.assignable_profiles.in do |profile|
       json.extract! profile, :id, :name
     end
   end
